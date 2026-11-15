@@ -100,6 +100,14 @@
 - 静音时不播音频：成年单击字幕「哈哈哈哈哈」，双击字幕为安迪类，幼体字幕为安迪类。
 - 验证：CDP 和真实系统鼠标双击都只播一条安迪类、不播大笑；移动 5px 不触发点击。
 
+## 2026-11-16 — Phase 14：点击只命中角色本体
+
+- 用户反馈桌宠窗口旁边的透明区域也会触发点击。原因是非透明字符 span 也被 `.pet-visual { pointer-events: none }` 关掉了，所有点击都由整块 `.pet-stage` 接收。
+- 现在给 `.pet-ascii [class^="tone-"]:not(.tone-empty)` 重新开启 `pointer-events: auto`；透明格保持 none。按下时再用 `closest()` 确认目标是否为非透明字符。
+- 透明区域仍可拖动窗口（pointermove 超过 5px 就 `startDragging()`），但松开不会触发点击、语音或字幕。
+- 额外修复：pointermove 在 `buttons === 0` 时清空 pressRef，window pointerup/pointercancel/blur 也清理；否则 pointerup 丢失后窗口会跟随鼠标漂移。
+- 验证：`elementFromPoint` 在中心返回 `SPAN.tone-shade`，在角落返回 `MAIN.pet-stage`；CDP 点中心播一条 meme，点角落 0 次播放、无气泡、HUD 保持 IDLE。
+
 ## 待人工确认
 
 - 托盘菜单的物理点击仍需在桌面通知区实际点一遍；窗口 show/hide/设置/退出逻辑已实现。
