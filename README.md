@@ -10,7 +10,7 @@
 
 - 透明、无边框、始终置顶的桌宠窗口
 - 左键拖动、点击互动、右键原生菜单
-- 点击播放奶蛙经典笑声，设置里可以静音
+- 点击播放对应奶蛙语音，设置里可以静音
 - Idle / Walk / Happy / Click / Wave 五种状态
 - 成年奶蛙 / 幼体奶蛙，量子模式蓝黑 / 原色模式暖黄两套配色
 - 应用界面中文；英文说明保留在 `README.en.md`
@@ -137,13 +137,27 @@ pnpm tauri build --bundles dmg
 
 ## 台词与声音来源
 
-点击气泡里的“安迪 / 嘎嘎滴辣虾 / 卡脚先 / 无了 / 甘巴爹 / 有用不 / 哈哈哈哈哈”来自中文互联网的奶蛙衍生语，不是本项目自编的台词：
+点击台词和音频一一对应，全部来自中文互联网的奶蛙衍生语，不是本项目自编的台词：
+
+| 台词 | 文件 | 时长 |
+| --- | --- | --- |
+| 安迪 | `naiwa-andi.wav` | 1.85s |
+| 嘎嘎提拉瞎 | `naiwa-gaga.wav` | 1.17s |
+| 干巴得 | `naiwa-ganbade.wav` | 1.11s |
+| 哈哈哈哈哈 | `naiwa-laugh-long.wav` | 4.11s |
+| 哦啦 | `naiwa-ola.wav` | 0.96s |
+| 噶韭菜 | `naiwa-gajiucai.wav` | 0.89s |
+
+六段语音取自 [VIPmrgj/Dragon-frog](https://github.com/VIPmrgj/Dragon-frog) 的 `音效/` 目录。该仓库没有声明 LICENSE；本项目按粉丝二创、非商业方式使用，并在 `src/assets/audio/README.md` 标注原始文件名与来源。奶蛙形象和语音的权利归各自原作者/二创作者，若权利人要求会立即移除。
+
+台词考据与旧版 1.8 秒 MIT 笑声来源：
 
 - 《捧腹大笑思想与奶龙学概论》第六章「奶蛙的衍生语」：<https://xn--psszg58c9c2281ajit.lol/files/history.pdf>
 - naiwa.meme 奶蛙表情包档案：<https://naiwa.meme/stickers>
 - Milk Frog Keyboard 的 13 个奶蛙音效列表：<https://mwm.ai/it/apps/milk-frog-music-meme-beats/6762385358>
+- [Nailong-Studio/NaiWa-Wallpaper](https://github.com/Nailong-Studio/NaiWa-Wallpaper) 的 `audio/奶蛙-桌宠笑声.wav`（MIT，1.8 秒，仓库内保留为 `naiwa-laugh.wav` 备用）
 
-点击笑声来自 [Nailong-Studio/NaiWa-Wallpaper](https://github.com/Nailong-Studio/NaiWa-Wallpaper) 的 `audio/奶蛙-桌宠笑声.wav`（1.8 秒）。该音频和奶蛙形象的权利归原作者/二创作者；本项目只做非商业粉丝展示，若权利人要求会移除。
+“卡球赛”目前更可能是“卡脚先”或《喀秋莎》的空耳；没有找到可确认授权的独立“卡球赛”原声，因此没有把它单独打包。
 
 ## 平台说明与已知限制
 
@@ -158,7 +172,7 @@ pnpm tauri build --bundles dmg
 
 MIT License，见 [LICENSE](LICENSE)。
 
-CyberNaiwa 是粉丝向、非商业的开源项目，灵感来自中文互联网迷因「奶蛙」。奶蛙形象源自 AI 生成与网友二创；本项目与奶龙官方及其权利方无关联。仓库内的 ASCII 角色帧由本项目基于公开参考图转换和绘制，不包含第三方图片素材；点击笑声来自上述公开素材库，权利归原作者。
+CyberNaiwa 是粉丝向、非商业的开源项目，灵感来自中文互联网迷因「奶蛙」。奶蛙形象源自 AI 生成与网友二创；本项目与奶龙官方及其权利方无关联。仓库内的 ASCII 角色帧由本项目基于公开参考图转换和绘制，不包含第三方图片素材；六段点击语音来自上述公开素材仓库，权利归各自原作者/二创作者，若权利人要求会移除。
 
 ## 构建状态
 

@@ -9,7 +9,7 @@ import {
   loadWindowPosition,
   saveWindowPosition,
 } from "../services/settings";
-import { playNaiwaLaugh } from "../services/sound";
+import { playNaiwaVoice } from "../services/sound";
 import {
   applyPetWindowLiveSettings,
   applyPetWindowOnStartup,
@@ -37,9 +37,9 @@ export default function Pet() {
   );
   const interaction = usePetInteraction({
     onInteract: () => {
-      interact();
+      const nextReaction = interact();
       if (settings.soundEnabled) {
-        playNaiwaLaugh(settings.age);
+        playNaiwaVoice(nextReaction.voice, settings.age);
       }
     },
     language: settings.language,
