@@ -23,8 +23,8 @@
 
 | 平台 | 安装包 | 说明 |
 | --- | --- | --- |
-| Windows 10/11 x64 | [CyberNaiwa_0.2.0_x64-setup.exe](https://github.com/natricknye/CyberNaiw/releases/download/v0.2.0/CyberNaiwa_0.2.0_x64-setup.exe) | NSIS，当前用户安装，不要求管理员 |
-| macOS 11+ Apple Silicon | [CyberNaiwa_0.2.0_aarch64.dmg](https://github.com/natricknye/CyberNaiw/releases/download/v0.2.0/CyberNaiwa_0.2.0_aarch64.dmg) | 未签名/未公证；首次打开需右键 → 打开 |
+| Windows 10/11 x64 | [CyberNaiwa_0.2.1_x64-setup.exe](https://github.com/natricknye/CyberNaiw/releases/download/v0.2.1/CyberNaiwa_0.2.1_x64-setup.exe) | NSIS，当前用户安装，不要求管理员 |
+| macOS 11+ Apple Silicon | [CyberNaiwa_0.2.1_aarch64.dmg](https://github.com/natricknye/CyberNaiw/releases/download/v0.2.1/CyberNaiwa_0.2.1_aarch64.dmg) | 未签名/未公证；首次打开需右键 → 打开 |
 
 [所有版本](https://github.com/natricknye/CyberNaiw/releases) · [构建日志](https://github.com/natricknye/CyberNaiw/actions)
 
@@ -176,4 +176,4 @@ CyberNaiwa 是粉丝向、非商业的开源项目，灵感来自中文互联网
 
 ## 构建状态
 
-GitHub Actions 工作流在 `.github/workflows/build.yml`，在 Windows 和 macOS Runner 上分别构建 NSIS 安装包和 DMG。v0.2.0（量子模式 128×80 / 原色模式 112×70）已发布到 [Releases](https://github.com/natricknye/CyberNaiw/releases/tag/v0.2.0)。签名/公证 secrets 未配置，因此产物为未签名版本。
+GitHub Actions 工作流在 `.github/workflows/build.yml`，在 Windows 和 macOS Runner 上分别构建 NSIS 安装包和 DMG。v0.2.1（量子模式 128×80 / 原色模式 112×70、五态、六段点击语音）发布到 [Releases](https://github.com/natricknye/CyberNaiw/releases/tag/v0.2.1)。签名/公证 secrets 未配置，因此产物为未签名版本。
