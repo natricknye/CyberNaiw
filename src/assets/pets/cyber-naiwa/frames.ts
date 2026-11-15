@@ -7,7 +7,7 @@ import type { PetAnimationState } from "../../../types/pet";
 /**
  * Original-colour frames are 112 × 70; the cyber palette uses a denser
  * 128 × 80 grid so its fine terminal lines stay sharp. Both sets share the
- * same seven states and two frames per state.
+ * same five states and two frames per state.
  */
 export const CYBER_NAIWA_FRAMES = rawFrames as Record<
   PetAnimationState,
@@ -87,5 +87,4 @@ export const FRAME_INTERVAL_MS: Record<PetAnimationState, number> = {
   happy: 320,
   click: 180,
   wave: 500,
-  sad: 900,
 };

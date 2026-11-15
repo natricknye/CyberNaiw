@@ -11,7 +11,7 @@ Cyber Naiwa (赛博奶蛙) is a cross-platform desktop pet built around 奶蛙 (
 - A transparent, frameless, always-on-top pet window
 - Left-drag to move, click to interact, right-click for a native menu
 - Click to play Naiwa's laugh, with a mute switch in Settings
-- Six states: Idle / Walk / Happy / Click / Wave / Sad
+- Five states: Idle / Walk / Happy / Click / Wave
 - Adult and baby Naiwa, in Quantum blue-black or warm Original colours
 - Chinese app UI; English documentation in `README.en.md`
 - Tray menu to show, hide, open settings, or quit
@@ -42,7 +42,7 @@ The pet is a coloured ASCII grid: 128×80 for Quantum mode, 112×70 for Original
 | --- | --- |
 | Growth stage | Adult (tall pear) / Baby (short, round, big-headed, tiny limbs) |
 | Palette | Quantum mode (blue-black + cyan terminal, 128×80) / Original mode (warm yellow + cream + olive, 112×70) |
-| Actions | Idle, walk, happy, click-to-interact (adult laugh / baby hands-on-hips), wave, downcast |
+| Actions | Idle, walk, happy, click-to-interact (adult laugh / baby hands-on-hips), wave |
 
 Baby preview:
 
@@ -127,7 +127,7 @@ Two keys live in that file: `settings` (always-on-top, scale, animation, sound, 
 
 ## Character art
 
-The default `cyber-naiwa` skin stores Original-mode adult/baby frames in `naiwa-frames.json` and `naiwa-baby-frames.json` (112×70), and Quantum-mode adult/baby frames in `naiwa-cyber-frames.json` and `naiwa-cyber-baby-frames.json` (128×80). Each set has six states and two frames per state. `frames.ts` maps characters to colour tones and declares frame timing. The grids were pixel-mapped from the official design database's adult, juvenile, laugh, wave, and downcast references; no reference image files themselves are shipped in the repo.
+The default `cyber-naiwa` skin stores Original-mode adult/baby frames in `naiwa-frames.json` and `naiwa-baby-frames.json` (112×70), and Quantum-mode adult/baby frames in `naiwa-cyber-frames.json` and `naiwa-cyber-baby-frames.json` (128×80). Each set has five states and two frames per state. `frames.ts` maps characters to colour tones and declares frame timing. The grids were pixel-mapped from the official design database's adult, juvenile, laugh, and wave references; no reference image files themselves are shipped in the repo.
 
 Want to try a PNG/WEBP/GIF skin? `src/assets/pets/README.md` shows how to register an `ImagePetSkin`. The renderer already handles both ASCII and image sequences. Please only add art you have the right to redistribute.
 
@@ -142,7 +142,7 @@ Want to try a PNG/WEBP/GIF skin? `src/assets/pets/README.md` shows how to regist
 
 ## Design notes
 
-The character follows the official Naiwa design database and the [Naiwa wiki](https://neta.art/app/milk-frog-wiki): the adult is tall and long-limbed, the baby is short, round, big-headed, with tiny limbs; both have a pale cream belly, pale green eye rings with centred black pupils, and a tiny horizontal mouth. Click-to-interact is the core interaction, with waving and looking down as extra actions. The [Nailong-Studio/NaiWa-Wallpaper](https://github.com/Nailong-Studio/NaiWa-Wallpaper) public asset index was also used for character poses and audio; artwork-integrated images were deliberately ignored.
+The character follows the official Naiwa design database and the [Naiwa wiki](https://neta.art/app/milk-frog-wiki): the adult is tall and long-limbed, the baby is short, round, big-headed, with tiny limbs; both have a pale cream belly, pale green eye rings with centred black pupils, and a tiny horizontal mouth. Click-to-interact is the core interaction, with waving as an extra action. The [Nailong-Studio/NaiWa-Wallpaper](https://github.com/Nailong-Studio/NaiWa-Wallpaper) public asset index was also used for character poses and audio; artwork-integrated images were deliberately ignored.
 
 ## Voice and audio sources
 

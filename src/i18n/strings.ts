@@ -108,7 +108,6 @@ const ZH: UiStrings = {
       happy: "赛博奶蛙，开心",
       click: "赛博奶蛙，被点击",
       wave: "赛博奶蛙，挥手",
-      sad: "赛博奶蛙，有点低落",
     },
     settingsError: "设置读取失败，已使用默认值",
     // Naiwa meme sound words, not self-written. Sources:
@@ -184,7 +183,6 @@ const EN: UiStrings = {
       happy: "Cyber Naiwa, happy",
       click: "Cyber Naiwa, clicked",
       wave: "Cyber Naiwa, waving",
-      sad: "Cyber Naiwa, feeling low",
     },
     settingsError: "Couldn't read settings; using defaults.",
     // These are Naiwa meme sound words; keep the Chinese originals in both locales.

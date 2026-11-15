@@ -76,22 +76,22 @@ CyberNaiwa/
 
 ## 角色状态机
 
-`PetAnimationState = "idle" | "walk" | "happy" | "click" | "wave" | "sad"`。
+`PetAnimationState = "idle" | "walk" | "happy" | "click" | "wave"`。
 
 - `usePetState` 持有唯一状态，避免动画互相冲突。
 - 点击：`click` 380ms → `happy` 1100ms → `idle`。
-- 动画开启且 idle 时，7–14 秒随机进入 `walk`（3.2s）、`wave`（2.4s）或 `sad`（3s）。
+- 动画开启且 idle 时，7–14 秒随机进入 `walk`（3.2s）或 `wave`（2.4s）。
 - 动画关闭时强制回到 idle，并取消进行中的状态定时器；点击仍保留表情反馈。
 - `PetAnimation` 只在当前状态内轮播帧，切状态立即重置到第 0 帧。
-- 成年：Idle / Walk 使用站立正面（第二帧闭眼）；Click / Happy 使用官方仰头大笑；Wave / Sad 使用官方挥手 / 低头。
-- 幼体：Idle / Walk 使用幼体正面；Happy / Click 使用幼体素材右一叉腰；Wave 使用幼体素材中间抬手；Sad 用幼体正面闭眼/低头。幼体不使用成年大笑、挥手、低头素材。
-- Sleep 状态已移除（用户反馈睡觉界面太丑）；不再生成/播放 sleep 帧。
-- 帧间隔：idle 1200ms、walk 260ms、happy 320ms、click 180ms、wave 500ms、sad 900ms。
+- 成年：Idle / Walk 使用站立正面（第二帧闭眼）；Click / Happy 使用官方仰头大笑；Wave 使用官方挥手。
+- 幼体：Idle / Walk 使用幼体正面；Happy / Click 使用幼体素材右一叉腰；Wave 使用幼体素材中间抬手。幼体不使用成年大笑、挥手素材。
+- Sleep 与 Sad 状态均已移除（用户反馈睡觉和伤心界面不好看）；不再生成/播放 sleep 或 sad 帧。
+- 帧间隔：idle 1200ms、walk 260ms、happy 320ms、click 180ms、wave 500ms。
 
 ### ASCII 渲染
 
-- 原色模式帧在 `naiwa-frames.json` / `naiwa-baby-frames.json`：112 列 × 70 行；量子模式帧在 `naiwa-cyber-frames.json` / `naiwa-cyber-baby-frames.json`：128 列 × 80 行。用 `.` 表示透明格。帧由官方设计资料库的成年 / 幼体 / 大笑 / 挥手 / 低头参考图逐像素映射到字符 tone；仓库不包含参考图片本身。
-- `PetAnimation` 根据 `settings.palette` 选择 `cyberFrames` / `cyberBabyFrames`，原色模式走 `frames` / `babyFrames`；两套都是 6 态、每态 2 帧。
+- 原色模式帧在 `naiwa-frames.json` / `naiwa-baby-frames.json`：112 列 × 70 行；量子模式帧在 `naiwa-cyber-frames.json` / `naiwa-cyber-baby-frames.json`：128 列 × 80 行。用 `.` 表示透明格。帧由官方设计资料库的成年 / 幼体 / 大笑 / 挥手参考图逐像素映射到字符 tone；仓库不包含参考图片本身。
+- `PetAnimation` 根据 `settings.palette` 选择 `cyberFrames` / `cyberBabyFrames`，原色模式走 `frames` / `babyFrames`；两套都是 5 态、每态 2 帧。
 - 逐字符 tone：黄身体 `#`、亮黄 `&`、橙色阴影 `%`、奶油肚皮 `+`、绿眼 `O/~/^`、瞳孔 `@`、嘴腔 `_`、牙齿 `=`、嘴线 `-`、棕色四肢 `|`、高亮 `*/!`、透明 `.`。
 - 闭嘴帧只保留官方源图里的极短嘴线，不再合成嘴线/下巴硬线：试过按眼睛位置画大范围 `-`/`;`，用户反馈像“鼻子 + 大嘴”，已撤销；现在只用 `mouthline` 把源图已有的 5–9 个嘴像素轻微加深，不延长、不画下巴。
 - 幼体直接取 `official-juvenile.png` 05 幼态版左一；保留素材的短圆身体、短手脚和原始腿间缝，不做全局 chibi 压扁、不全局填洞。局部加工只保留：眼睛在源像素上向外扩 1 格、嘴线加深、笑牙按源图嘴腔内部空洞生成。
@@ -172,7 +172,7 @@ cargo check --manifest-path src-tauri/Cargo.toml
 - 设置页/图标：`pnpm build` 通过；设置页改为中文-only，实际点击 幼体 → 原色 → 恢复默认 均正确；`settings-cn-final.png` 为完整中文截图，`settings-scrolled-bottom.png` 显示底部说明可见；shell `clientHeight 700 / scrollHeight 778 / overflow-y auto`，可滚到底。
 - 声音：点击时实际调用 `http://localhost:1420/src/assets/audio/naiwa-laugh.wav`；关闭“声音”开关后再次点击不再调用，重新打开恢复。点击气泡使用 `安迪 / 嘎嘎滴辣虾 / 卡脚先 / 无了 / 甘巴爹 / 有用不 / 哈哈哈哈哈`。
 - 成年正面改用桌面提供的 `mature-official-front-side-back.webp` 中间正面（长腿/瘦高）；大笑/挥手/低头仍用官方成年动作素材，动作帧与站立帧的体型可能会有差异。
-- 2026-11-16 最终 CDP 验证：成年点击 `playbackRate 1`、幼体 `1.35` 且 `preservesPitch false`；声音开启时气泡为空，静音后点击显示字幕「卡脚先」；设置页 `clientHeight 700 / scrollHeight 793 / overflow-y auto`；`_qa/art/settings-rename-final.png` 与 `_qa/art/baby-six-final.png` 确认新名称、六态和幼体叉腰肘部完整。
+- 2026-11-16 最终 CDP 验证：成年点击 `playbackRate 1`、幼体 `1.35` 且 `preservesPitch false`；声音开启时气泡为空，静音后点击显示字幕「卡脚先」；设置页 `clientHeight 700 / scrollHeight 793 / overflow-y auto`；点击状态序列 `IDLE → CLICK → HAPPY → IDLE`，页面无 SAD/伤心内容；`_qa/art/settings-rename-final.png` 与 `_qa/art/baby-five-final.png` 确认新名称、五态和幼体叉腰肘部完整。
 - macOS 本机无法验证，只能依赖 CI 构建。
 
 ## 坑与注意事项
@@ -204,4 +204,5 @@ cargo check --manifest-path src-tauri/Cargo.toml
 - 2026-11-16 add the Naiwa classic laugh audio from `Nailong-Studio/NaiWa-Wallpaper`, use researched Naiwa meme sound words for click bubbles, add a sound switch, and make the app UI Chinese-only (English stays in README.en.md).
 - 2026-11-16 fix the settings scroll container (`height:100%` + `overflow-y:auto`) so the bottom note is reachable; use the user-provided tall adult front reference for adult idle/walk.
 - 2026-11-16 rename the app to 赛博奶蛙, rename the palettes to 原色模式/量子模式, remove the sleep state entirely, play the laugh at 1.0× for adults and 1.35× without pitch preservation for babies, hide the bubble while sound is on and show meme lines as subtitles when muted, and fit the baby hands-on-hips pose by both width and height so the elbows stay complete.
+- 2026-11-16 remove the sad state as well (user clarified the ugly state was 伤心), leaving five states: idle / walk / happy / click / wave; regenerate all four frame sets without sad and update ARIA/docs.
 - 2026-11-16 bump to 0.2.1 and replace `docs/settings.png` with the 赛博奶蛙 settings screenshot (原色模式/量子模式, no sleep copy, version 0.2.1).
