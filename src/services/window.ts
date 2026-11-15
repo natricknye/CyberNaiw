@@ -71,10 +71,37 @@ async function monitorForWindow(
   const position = await win.outerPosition();
   const size = await win.outerSize();
 
-  return monitorFromPoint(
+  const centreMonitor = await monitorFromPoint(
     position.x + Math.round(size.width / 2),
     position.y + Math.round(size.height / 2),
   );
+  if (centreMonitor) {
+    return centreMonitor;
+  }
+
+  // A window dragged or resized past the edge can have its centre outside every
+  // monitor. Fall back to the monitor with the largest overlap, then to the
+  // primary monitor, so clamp/default positioning can always bring it back.
+  const monitors = await availableMonitors();
+  let best: Monitor | null = null;
+  let bestOverlap = 0;
+
+  for (const monitor of monitors) {
+    const area = monitor.workArea;
+    const overlapX =
+      Math.min(position.x + size.width, area.position.x + area.size.width) -
+      Math.max(position.x, area.position.x);
+    const overlapY =
+      Math.min(position.y + size.height, area.position.y + area.size.height) -
+      Math.max(position.y, area.position.y);
+    const overlap = Math.max(0, overlapX) * Math.max(0, overlapY);
+    if (overlap > bestOverlap) {
+      best = monitor;
+      bestOverlap = overlap;
+    }
+  }
+
+  return best ?? monitors[0] ?? null;
 }
 
 async function placePetAtDefaultPosition(win: ManagedWindow): Promise<void> {
