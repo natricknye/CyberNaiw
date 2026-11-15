@@ -28,6 +28,10 @@
 
 [所有版本](https://github.com/natricknye/CyberNaiw/releases) · [构建日志](https://github.com/natricknye/CyberNaiw/actions)
 
+安装器也使用幼体原色 ASCII 主题，欢迎页和完成页都是量子蓝黑配色：
+
+<img src="docs/installer.png" alt="赛博奶蛙安装器" width="420" />
+
 > 当前 macOS 包是 **arm64**，Intel Mac 版本待补。Windows/macOS 均未签名：Windows SmartScreen 可能提示，macOS 首次打开请右键选择“打开”。
 
 ## 预览

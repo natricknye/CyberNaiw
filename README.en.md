@@ -28,6 +28,10 @@ Cyber Naiwa (赛博奶蛙) is a cross-platform desktop pet built around 奶蛙 (
 
 [All releases](https://github.com/natricknye/CyberNaiw/releases) · [Build logs](https://github.com/natricknye/CyberNaiw/actions)
 
+The installer uses the same baby Original-mode ASCII art and Quantum blue-black palette:
+
+<img src="docs/installer.png" alt="Cyber Naiwa installer" width="420" />
+
 > The current macOS build is **arm64 only**. Intel Mac support is still on the list. Neither build is code-signed yet: Windows SmartScreen may warn, and macOS needs the right-click → Open dance on first launch.
 
 ## Preview
