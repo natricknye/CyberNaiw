@@ -13,7 +13,7 @@ CyberNaiwa is a cross-platform desktop pet built around 奶蛙 (Naiwa), the glee
 - Click to play Naiwa's classic laugh, with a mute switch in Settings
 - Seven states: Idle / Walk / Sleep / Happy / Click / Wave / Sad
 - Adult and baby Naiwa, in cyber blue-black or warm original colours
-- Chinese and English UI, Chinese by default, with a top-bar switcher
+- Chinese app UI; English documentation in `README.en.md`
 - Tray menu to show, hide, open settings, or quit
 - Local JSON settings that survive a restart
 - Fully offline; no database or sign-up
@@ -54,7 +54,7 @@ Baby preview:
 
 <img src="docs/settings.png" alt="CyberNaiwa settings" width="420" />
 
-Always-on-top, size, adult/baby, cyber/original, animation, sound, and restore defaults live in one panel; the language switch sits at the top.
+Always-on-top, size, adult/baby, cyber/original, animation, sound, and restore defaults live in one panel.
 
 ## Stack
 

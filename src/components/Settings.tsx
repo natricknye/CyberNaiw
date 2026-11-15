@@ -5,12 +5,10 @@ import { useEffect, useState } from "react";
 import type { CSSProperties } from "react";
 import { useSettings } from "../hooks/useSettings";
 import type { SettingsStatus } from "../hooks/useSettings";
-import { LANGUAGE_NAMES, UI_STRINGS } from "../i18n/strings";
+import { UI_STRINGS } from "../i18n/strings";
 import { hideSettingsWindow } from "../services/window";
-import { MAX_PET_SCALE, MIN_PET_SCALE, type Language } from "../types/pet";
+import { MAX_PET_SCALE, MIN_PET_SCALE } from "../types/pet";
 import "../styles/settings.css";
-
-const LANGUAGE_OPTIONS: readonly Language[] = ["zh", "en"];
 
 export default function Settings() {
   const { settings, loaded, status, error, update, reset } = useSettings();
@@ -102,24 +100,6 @@ export default function Settings() {
             <h1>{strings.settings.title}</h1>
           </div>
 
-          <div
-            className="language-switch"
-            role="group"
-            aria-label={strings.settings.languageLabel}
-          >
-            {LANGUAGE_OPTIONS.map((language) => (
-              <button
-                key={language}
-                type="button"
-                className={settings.language === language ? "is-active" : ""}
-                aria-pressed={settings.language === language}
-                onClick={() => update({ language })}
-                disabled={!loaded}
-              >
-                {LANGUAGE_NAMES[language]}
-              </button>
-            ))}
-          </div>
         </div>
 
         <p className="settings-intro">
