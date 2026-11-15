@@ -168,7 +168,7 @@ cargo check --manifest-path src-tauri/Cargo.toml
 ## 测试与验证记录
 
 - `pnpm build`：通过（TypeScript + Vite），112×70 原色帧、128×80 赛博帧与 `teeth` tone 均通过类型检查。
-- `cargo check --manifest-path src-tauri/Cargo.toml`：通过（0.2.1）。
+- `cargo check --manifest-path src-tauri/Cargo.toml`：通过（0.2.2）。
 - 前端页面用 Edge headless + 固定 iframe 做了 380×420 角色预览、460×700 设置页预览；新预览图在 `docs/preview.png`。
 - 真实 `tauri dev` + CDP：
   - 点击把 HUD 从 IDLE 切到 CLICK，ARIA 变为「赛博奶蛙，被点击」，气泡出现。
