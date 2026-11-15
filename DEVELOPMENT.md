@@ -15,6 +15,7 @@ Rust 只负责系统级部分：托盘图标/菜单、窗口显示隐藏、退�
 CyberNaiwa/
 ├── src/
 │   ├── assets/
+│   │   ├── audio/                    # 六段点击语音 + 来源/授权说明
 │   │   ├── branding/icon.svg        # 品牌图标源文件（tauri icon 生成各平台图标）
 │   │   └── pets/
 │   │       ├── README.md            # 图片皮肤扩展说明
@@ -22,8 +23,8 @@ CyberNaiwa/
 │   │       └── cyber-naiwa/
 │   │           ├── naiwa-frames.json            # 112×70 原色成年帧
 │   │           ├── naiwa-baby-frames.json       # 112×70 原色幼体帧
-│   │           ├── naiwa-cyber-frames.json      # 128×80 赛博成年帧
-│   │           ├── naiwa-cyber-baby-frames.json # 128×80 赛博幼体帧
+│   │           ├── naiwa-cyber-frames.json      # 128×80 量子模式成年帧
+│   │           ├── naiwa-cyber-baby-frames.json # 128×80 量子模式幼体帧
 │   │           └── frames.ts              # tone、帧间隔、JSON 导入
 │   ├── components/
 │   │   ├── Pet.tsx                  # 桌宠启动、设置同步、位置持久化
@@ -32,11 +33,12 @@ CyberNaiwa/
 │   │   ├── Settings.tsx             # 设置窗口
 │   │   └── SpeechBubble.tsx
 │   ├── hooks/
-│   │   ├── usePetState.ts           # 七态状态机 + 自动行为
+│   │   ├── usePetState.ts           # 五态状态机 + 自动行为
 │   │   ├── usePetInteraction.ts     # 点击 + 原生拖动 + 右键
 │   │   └── useSettings.ts           # 读取/防抖保存/跨窗口通知
 │   ├── services/
 │   │   ├── settings.ts              # store JSON、校验、事件
+│   │   ├── sound.ts                 # 六段语音缓存 / 成年与幼体倍速
 │   │   └── window.ts                # 尺寸/位置/置顶/显示/拖动
 │   ├── i18n/strings.ts               # 中英文 UI 文案
 │   ├── styles/{base,pet,settings}.css
@@ -161,14 +163,14 @@ cargo check --manifest-path src-tauri/Cargo.toml
 ## 测试与验证记录
 
 - `pnpm build`：通过（TypeScript + Vite），112×70 原色帧、128×80 赛博帧与 `teeth` tone 均通过类型检查。
-- `cargo check --manifest-path src-tauri/Cargo.toml`：通过（0.2.0）。
+- `cargo check --manifest-path src-tauri/Cargo.toml`：通过（0.2.1）。
 - 前端页面用 Edge headless + 固定 iframe 做了 380×420 角色预览、460×700 设置页预览；新预览图在 `docs/preview.png`。
 - 真实 `tauri dev` + CDP：
   - 点击把 HUD 从 IDLE 切到 CLICK，ARIA 变为「赛博奶蛙，被点击」，气泡出现。
   - 设置页点 English 后，设置页、宠物 ARIA、气泡、托盘调用全部切英文；点中文恢复。
   - 点 Baby 后宠物窗口类是 `pet-stage--baby`，原色帧缩放到 0.3×`--pet-scale`（赛博 0.2625）；点 Original 后 tone 背景变为暖黄实体色，再切回 Cyber。
   - 点 Restore defaults 后窗口回到 380×420、`--pet-scale: 1`，语言中文、成年、赛博、动画开启。
-  - 原生设置窗口标题在中文下为「CyberNaiwa 设置」，英文下为「CyberNaiwa Settings」（通过 Tauri internals 查询）。
+  - 原生设置窗口标题为「赛博奶蛙 设置」；HTML 标题和 pet 窗口初始标题为「赛博奶蛙」（通过 Tauri internals / CDP 查询）。
   - 设置窗口重载时 `set_tray_language` 无报错；托盘物理点击仍未自动化。
   - 112×70 原色与 128×80 赛博帧在 100% 缩放下都渲染为 336×358 CSS px，窗口 380×420，未溢出；赛博为 80 行 / transform 0.32，原色为 70 行 / transform 0.3657；赛博幼体 0.2625，原色幼体 0.3。
 - 真实鼠标拖拽 release 窗口：从 (15,284) 移到 (158,500)，尺寸保持 475×525 物理像素（0.1.0 版本验证）。
@@ -214,4 +216,5 @@ cargo check --manifest-path src-tauri/Cargo.toml
 - 2026-11-16 rename the app to 赛博奶蛙, rename the palettes to 原色模式/量子模式, remove the sleep state entirely, play the laugh at 1.0× for adults and 1.35× without pitch preservation for babies, hide the bubble while sound is on and show meme lines as subtitles when muted, and fit the baby hands-on-hips pose by both width and height so the elbows stay complete.
 - 2026-11-16 remove the sad state as well (user clarified the ugly state was 伤心), leaving five states: idle / walk / happy / click / wave; regenerate all four frame sets without sad and update ARIA/docs.
 - 2026-11-16 bind six click lines to six matching Naiwa meme WAVs (安迪/嘎嘎提拉瞎/干巴得/哈哈哈哈哈/哦啦/噶韭菜), play the selected line's audio at 1.0× for adults and 1.35× for babies, and document the no-LICENSE fan-use source plus removal policy.
+- 2026-11-16 set the HTML title and initial pet/settings window titles to 赛博奶蛙, fix the mojibake settings title, and remove the remaining sleep tone/CSS rules.
 - 2026-11-16 bump to 0.2.1 and replace `docs/settings.png` with the 赛博奶蛙 settings screenshot (原色模式/量子模式, no sleep copy, version 0.2.1).

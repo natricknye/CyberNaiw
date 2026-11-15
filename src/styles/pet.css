@@ -48,14 +48,6 @@
   animation: pet-float 4.8s ease-in-out infinite;
 }
 
-.pet-visual--sleep {
-  animation-duration: 7s;
-}
-
-.pet-stage--sleeping .pet-visual {
-  animation-duration: 7s;
-}
-
 .pet-ascii-frame {
   position: relative;
   display: inline-block;
@@ -158,13 +150,6 @@
     0 0 14px rgba(126, 249, 255, 0.45);
 }
 
-.pet-ascii .tone-sleep {
-  color: #b6ffdd;
-  text-shadow:
-    0 0 4px rgba(182, 255, 221, 0.9),
-    0 0 14px rgba(125, 255, 178, 0.45);
-}
-
 .pet-ascii .tone-empty {
   color: transparent;
   text-shadow: none;
@@ -176,10 +161,6 @@
 
 .pet-visual--click .pet-ascii {
   filter: drop-shadow(0 10px 16px rgba(0, 0, 0, 0.6)) brightness(1.12);
-}
-
-.pet-visual--sleep .pet-ascii {
-  opacity: 0.88;
 }
 
 .pet-scanlines {
@@ -689,10 +670,6 @@
   background-color: rgba(126, 249, 255, 0.22);
 }
 
-.pet-ascii .tone-sleep {
-  background-color: rgba(140, 255, 200, 0.2);
-}
-
 .pet-ascii .tone-empty {
   background-color: transparent;
 }
@@ -820,11 +797,6 @@
   text-shadow:
     0 0 4px rgba(126, 249, 255, 0.95),
     0 0 14px rgba(126, 249, 255, 0.45);
-}
-
-.pet-stage--palette-cyber .pet-ascii .tone-sleep {
-  color: #9affd5;
-  background-color: rgba(0, 30, 24, 0.55);
 }
 
 .pet-stage--palette-cyber .pet-scanlines {
