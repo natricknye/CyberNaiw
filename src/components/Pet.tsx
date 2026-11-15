@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import { usePetInteraction } from "../hooks/usePetInteraction";
 import { usePetState } from "../hooks/usePetState";
@@ -25,6 +25,9 @@ import PetAnimation from "./PetAnimation";
 import SpeechBubble from "./SpeechBubble";
 import "../styles/pet.css";
 
+const DOUBLE_CLICK_WINDOW_MS = 300;
+const LAUGH_DELAY_MS = 300;
+
 export default function Pet() {
   const [settings, setSettings] = useState<PetSettings>(DEFAULT_SETTINGS);
   const [ready, setReady] = useState(false);
@@ -35,13 +38,67 @@ export default function Pet() {
     ready && settings.animationsEnabled,
     settings.language,
   );
-  const interaction = usePetInteraction({
-    onInteract: () => {
-      const nextReaction = interact();
-      if (settings.soundEnabled) {
-        playNaiwaVoice(nextReaction.voice, settings.age);
+
+  const laughTimer = useRef<number | null>(null);
+  const lastClickAt = useRef(0);
+
+  const clearLaughTimer = useCallback(() => {
+    if (laughTimer.current !== null) {
+      window.clearTimeout(laughTimer.current);
+      laughTimer.current = null;
+    }
+  }, []);
+
+  const handleInteract = useCallback(() => {
+    const now = Date.now();
+    const isDouble = now - lastClickAt.current < DOUBLE_CLICK_WINDOW_MS;
+    lastClickAt.current = now;
+
+    // The baby has no laugh clip: every click is one of the meme lines.
+    if (settings.age === "baby") {
+      if (isDouble) {
+        return;
       }
-    },
+
+      const nextReaction = interact("meme");
+      if (settings.soundEnabled) {
+        playNaiwaVoice(nextReaction.voice, "baby");
+      }
+      return;
+    }
+
+    // Adult double-click: cancel the pending laugh and play a meme line.
+    if (isDouble) {
+      clearLaughTimer();
+      const nextReaction = interact("meme");
+      if (settings.soundEnabled) {
+        playNaiwaVoice(nextReaction.voice, "adult");
+      }
+      return;
+    }
+
+    // Adult single-click: laugh only. Delay it briefly so a second click can
+    // cancel it and switch to the meme line instead.
+    interact("laugh");
+    if (!settings.soundEnabled) {
+      return;
+    }
+
+    clearLaughTimer();
+    laughTimer.current = window.setTimeout(() => {
+      laughTimer.current = null;
+      playNaiwaVoice("laugh", "adult");
+    }, LAUGH_DELAY_MS);
+  }, [clearLaughTimer, interact, settings.age, settings.soundEnabled]);
+
+  useEffect(() => {
+    lastClickAt.current = 0;
+    clearLaughTimer();
+    return clearLaughTimer;
+  }, [clearLaughTimer, settings.age, settings.soundEnabled]);
+
+  const interaction = usePetInteraction({
+    onInteract: handleInteract,
     language: settings.language,
   });
 

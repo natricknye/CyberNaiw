@@ -81,6 +81,7 @@ CyberNaiwa/
 `PetAnimationState = "idle" | "walk" | "happy" | "click" | "wave"`。
 
 - `usePetState` 持有唯一状态，避免动画互相冲突。
+- `usePetInteraction`：pointerdown 只记录起点；移动 ≥5px 才调用 `startDragging()`，避免原生拖拽吞掉点击；pointerup 且未拖动才算一次点击。300ms 内的第二次点击算双击。
 - 点击：`click` 380ms → `happy` 1100ms → `idle`。
 - 动画开启且 idle 时，7–14 秒随机进入 `walk`（3.2s）或 `wave`（2.4s）。
 - 动画关闭时强制回到 idle，并取消进行中的状态定时器；点击仍保留表情反馈。
@@ -93,7 +94,8 @@ CyberNaiwa/
 ### 点击语音
 
 - 六句台词和六个 WAV 一一对应：安迪、嘎嘎提拉瞎、干巴得、哈哈哈哈哈、哦啦、噶韭菜。
-- `usePetState.interact()` 先随机选 `NaiwaReaction`（含 `text` 和 `voice`），`Pet.tsx` 再用同一个 `voice` 调 `playNaiwaVoice()`，避免字幕和声音不一致。
+- 成年单击：`interact("laugh")`，只选「哈哈哈哈哈」，延迟 300ms 播放，给双击留取消窗口。成年双击：取消待播大笑，`interact("meme")` 随机选安迪类台词。幼体：没有大笑语音，单击/双击都只选安迪类，双击只触发一次。
+- `usePetState.interact(kind)` 先随机选 `NaiwaReaction`（含 `text` 和 `voice`），`Pet.tsx` 再用同一个 `voice` 调 `playNaiwaVoice()`，避免字幕和声音不一致。
 - `sound.ts` 为每个 `voice` 缓存一个 `HTMLAudioElement`；成年 `playbackRate 1`，幼体 `1.35`，两者都设 `preservesPitch false`。
 - 声音开启时气泡不渲染文字；静音时才显示同一句台词作为字幕。
 - 音频来自 `VIPmrgj/Dragon-frog` 的 `音效/`（无 LICENSE），按粉丝二创非商业使用，来源和移除声明写在 `src/assets/audio/README.md`。旧版 1.8 秒 MIT 笑声保留为 `naiwa-laugh.wav` 备用。
@@ -101,6 +103,7 @@ CyberNaiwa/
 ### ASCII 渲染
 
 - 原色模式帧在 `naiwa-frames.json` / `naiwa-baby-frames.json`：112 列 × 70 行；量子模式帧在 `naiwa-cyber-frames.json` / `naiwa-cyber-baby-frames.json`：128 列 × 80 行。用 `.` 表示透明格。帧由官方设计资料库的成年 / 幼体 / 大笑 / 挥手参考图逐像素映射到字符 tone；仓库不包含参考图片本身。
+- 幼体挥手源图裁切框从 `X=365/W=270` 改为 `X=310/W=285`：原框正好从 V 字手中间切过，导致手指缺失；新框完整包住中间幼体的抬手，112×70 与 128×80 两套网格都已重新采样。
 - `PetAnimation` 根据 `settings.palette` 选择 `cyberFrames` / `cyberBabyFrames`，原色模式走 `frames` / `babyFrames`；两套都是 5 态、每态 2 帧。
 - 逐字符 tone：黄身体 `#`、亮黄 `&`、橙色阴影 `%`、奶油肚皮 `+`、绿眼 `O/~/^`、瞳孔 `@`、嘴腔 `_`、牙齿 `=`、嘴线 `-`、棕色四肢 `|`、高亮 `*/!`、透明 `.`。
 - 闭嘴帧只保留官方源图里的极短嘴线，不再合成嘴线/下巴硬线：试过按眼睛位置画大范围 `-`/`;`，用户反馈像“鼻子 + 大嘴”，已撤销；现在只用 `mouthline` 把源图已有的 5–9 个嘴像素轻微加深，不延长、不画下巴。
@@ -183,6 +186,8 @@ cargo check --manifest-path src-tauri/Cargo.toml
 - 声音：六段 WAV 与六句台词一一对应；CDP 采集到 `naiwa-andi / naiwa-gaga / naiwa-ganbade / naiwa-laugh-long / naiwa-ola / naiwa-gajiucai`，成年 1.0×、幼体 1.35× 且 `preservesPitch false`；开启声音时气泡为空，关闭后 0 次播放且六句字幕可见。
 - 成年正面改用桌面提供的 `mature-official-front-side-back.webp` 中间正面（长腿/瘦高）；大笑/挥手/低头仍用官方成年动作素材，动作帧与站立帧的体型可能会有差异。
 - 2026-11-16 最终 CDP 验证：成年点击 `playbackRate 1`、幼体 `1.35` 且 `preservesPitch false`；六段语音都实际命中，声音开启时气泡为空，静音后 0 次播放且显示六句字幕之一；设置页 `clientHeight 700 / scrollHeight 793 / overflow-y auto`；点击状态序列 `IDLE → CLICK → HAPPY → IDLE`，页面无 SAD/伤心内容；`_qa/art/settings-rename-final.png` 与 `_qa/art/baby-five-final.png` 确认新名称、五态和幼体叉腰肘部完整。
+- 2026-11-16 幼体挥手修复：裁切框改为 `X=310/W=285` 后，112×70 帧边界为 x=5–92，128×80 为 x=6–105，V 字手完整；`_qa/art/baby-five-wavefix.png` 与 `baby-five-wavefix-cyber.png` 两套配色均确认。
+- 2026-11-16 点击语音规则：CDP 验证成年单击只播 `naiwa-laugh-long`、成年双击只播一条安迪类 WAV、幼体单击/双击都不播大笑且只触发一次；静音成年单击字幕「哈哈哈哈哈」、双击字幕为安迪类、幼体字幕为安迪类；真实系统鼠标双击也只播一条安迪类语音。移动 5px 的拖拽测试不触发点击。
 - macOS 本机无法验证，只能依赖 CI 构建。
 
 ## 坑与注意事项
@@ -217,4 +222,5 @@ cargo check --manifest-path src-tauri/Cargo.toml
 - 2026-11-16 remove the sad state as well (user clarified the ugly state was 伤心), leaving five states: idle / walk / happy / click / wave; regenerate all four frame sets without sad and update ARIA/docs.
 - 2026-11-16 bind six click lines to six matching Naiwa meme WAVs (安迪/嘎嘎提拉瞎/干巴得/哈哈哈哈哈/哦啦/噶韭菜), play the selected line's audio at 1.0× for adults and 1.35× for babies, and document the no-LICENSE fan-use source plus removal policy.
 - 2026-11-16 set the HTML title and initial pet/settings window titles to 赛博奶蛙, fix the mojibake settings title, and remove the remaining sleep tone/CSS rules.
+- 2026-11-16 expand the baby wave crop to include the full V-sign hand, delay native dragging until the pointer moves 5px so double-clicks survive, and split click audio: adult single = laugh only, adult double = meme line, baby = meme lines only.
 - 2026-11-16 bump to 0.2.1 and replace `docs/settings.png` with the 赛博奶蛙 settings screenshot (原色模式/量子模式, no sleep copy, version 0.2.1).
