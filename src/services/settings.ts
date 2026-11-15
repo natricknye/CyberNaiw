@@ -50,6 +50,10 @@ export function normalizeSettings(value: unknown): PetSettings {
       typeof value.animationsEnabled === "boolean"
         ? value.animationsEnabled
         : DEFAULT_SETTINGS.animationsEnabled,
+    soundEnabled:
+      typeof value.soundEnabled === "boolean"
+        ? value.soundEnabled
+        : DEFAULT_SETTINGS.soundEnabled,
     language: value.language === "en" ? "en" : "zh",
     age: value.age === "baby" ? "baby" : "adult",
     palette: value.palette === "original" ? "original" : "cyber",

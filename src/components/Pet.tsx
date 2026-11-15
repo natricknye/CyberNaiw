@@ -9,6 +9,7 @@ import {
   loadWindowPosition,
   saveWindowPosition,
 } from "../services/settings";
+import { playNaiwaLaugh } from "../services/sound";
 import {
   applyPetWindowLiveSettings,
   applyPetWindowOnStartup,
@@ -35,7 +36,12 @@ export default function Pet() {
     settings.language,
   );
   const interaction = usePetInteraction({
-    onInteract: interact,
+    onInteract: () => {
+      interact();
+      if (settings.soundEnabled) {
+        playNaiwaLaugh();
+      }
+    },
     language: settings.language,
   });
 

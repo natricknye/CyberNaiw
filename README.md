@@ -10,6 +10,7 @@ CyberNaiwa 是一只住在你桌面上的赛博奶蛙。它不是一张贴图，
 
 - 透明、无边框、始终置顶的桌宠窗口
 - 左键拖动、点击互动、右键原生菜单
+- 点击播放奶蛙经典笑声，设置里可以静音
 - Idle / Walk / Sleep / Happy / Click / Wave / Sad 七种状态
 - 成年奶蛙 / 幼体奶蛙，赛博蓝黑 / 原色暖黄两套配色
 - 中文 / English 界面，默认中文，顶部一键切换
@@ -53,7 +54,7 @@ CyberNaiwa 是一只住在你桌面上的赛博奶蛙。它不是一张贴图，
 
 <img src="docs/settings.png" alt="CyberNaiwa 设置页" width="420" />
 
-透明置顶、桌宠大小、成年/幼体、赛博/原色、动画开关和恢复默认都在同一个面板里；语言在顶部切换。
+透明置顶、桌宠大小、成年/幼体、赛博/原色、动画开关、声音开关和恢复默认都在同一个面板里；语言在顶部切换。
 
 ## 技术栈
 
@@ -132,7 +133,17 @@ pnpm tauri build --bundles dmg
 
 ## 设计参考
 
-角色设定参考奶蛙官方设计资料库与 [奶蛙百科](https://neta.art/app/milk-frog-wiki)：暖黄色梨形身体、浅奶油色大肚皮、短粗的橄榄褐手脚、浅绿眼环和居中黑瞳、极短水平嘴线；成年版重心下沉，幼体版更圆更紧凑。点击大笑是核心互动，挥手和低头是额外动作。另参考了 [Nailong-Studio/NaiWa-Wallpaper](https://github.com/Nailong-Studio/NaiWa-Wallpaper) 的公开素材目录，只取角色动作参考，不使用与艺术作品结合的整图。
+角色设定参考奶蛙官方设计资料库与 [奶蛙百科](https://neta.art/app/milk-frog-wiki)：成年是长腿瘦高版，幼体是短圆大头、短手脚；浅奶油色大肚皮、浅绿眼环和居中黑瞳、极短水平嘴线。点击互动是核心，挥手和低头是额外动作。另参考了 [Nailong-Studio/NaiWa-Wallpaper](https://github.com/Nailong-Studio/NaiWa-Wallpaper) 的公开素材目录，只取角色动作参考，不使用与艺术作品结合的整图。
+
+## 台词与声音来源
+
+点击气泡里的“安迪 / 嘎嘎滴辣虾 / 卡脚先 / 无了 / 甘巴爹 / 有用不 / 哈哈哈哈哈”来自中文互联网的奶蛙衍生语，不是本项目自编的台词：
+
+- 《捧腹大笑思想与奶龙学概论》第六章「奶蛙的衍生语」：<https://xn--psszg58c9c2281ajit.lol/files/history.pdf>
+- naiwa.meme 奶蛙表情包档案：<https://naiwa.meme/stickers>
+- Milk Frog Keyboard 的 13 个奶蛙音效列表：<https://mwm.ai/it/apps/milk-frog-music-meme-beats/6762385358>
+
+点击笑声来自 [Nailong-Studio/NaiWa-Wallpaper](https://github.com/Nailong-Studio/NaiWa-Wallpaper) 的 `audio/奶蛙-桌宠笑声.wav`（1.8 秒）。该音频和奶蛙形象的权利归原作者/二创作者；本项目只做非商业粉丝展示，若权利人要求会移除。
 
 ## 平台说明与已知限制
 
@@ -147,7 +158,7 @@ pnpm tauri build --bundles dmg
 
 MIT License，见 [LICENSE](LICENSE)。
 
-CyberNaiwa 是粉丝向、非商业的开源项目，灵感来自中文互联网迷因「奶蛙」。奶蛙形象源自 AI 生成与网友二创；本项目与奶龙官方及其权利方无关联。仓库内的 ASCII 角色帧由本项目基于公开参考图转换和绘制，不包含第三方图片素材。
+CyberNaiwa 是粉丝向、非商业的开源项目，灵感来自中文互联网迷因「奶蛙」。奶蛙形象源自 AI 生成与网友二创；本项目与奶龙官方及其权利方无关联。仓库内的 ASCII 角色帧由本项目基于公开参考图转换和绘制，不包含第三方图片素材；点击笑声来自上述公开素材库，权利归原作者。
 
 ## 构建状态
 

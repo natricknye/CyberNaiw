@@ -275,6 +275,26 @@ export default function Settings() {
         </div>
 
         <p className="settings-note">{strings.settings.animationNote}</p>
+
+        <div className="settings-row">
+          <div className="settings-row__copy">
+            <span className="settings-label">{strings.settings.sound}</span>
+            <span className="settings-hint">{strings.settings.soundHint}</span>
+          </div>
+          <button
+            type="button"
+            role="switch"
+            aria-label={strings.settings.sound}
+            aria-checked={settings.soundEnabled}
+            className={`toggle${settings.soundEnabled ? " is-on" : ""}`}
+            onClick={() =>
+              update({ soundEnabled: !settings.soundEnabled })
+            }
+            disabled={!loaded}
+          >
+            <span className="toggle__thumb" />
+          </button>
+        </div>
       </section>
 
       <footer className="settings-footer">
