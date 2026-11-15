@@ -1,6 +1,6 @@
 import { isTauri } from "@tauri-apps/api/core";
 import { getCurrentWindow } from "@tauri-apps/api/window";
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import type {
   MouseEvent as ReactMouseEvent,
   PointerEvent as ReactPointerEvent,
@@ -29,7 +29,23 @@ export function usePetInteraction({
     x: number;
     y: number;
     dragged: boolean;
+    onCharacter: boolean;
   } | null>(null);
+
+  useEffect(() => {
+    const resetPress = () => {
+      pressRef.current = null;
+    };
+
+    window.addEventListener("pointerup", resetPress);
+    window.addEventListener("pointercancel", resetPress);
+    window.addEventListener("blur", resetPress);
+    return () => {
+      window.removeEventListener("pointerup", resetPress);
+      window.removeEventListener("pointercancel", resetPress);
+      window.removeEventListener("blur", resetPress);
+    };
+  }, []);
 
   const handlePointerDown = useCallback(
     (event: ReactPointerEvent<HTMLElement>) => {
@@ -37,11 +53,18 @@ export function usePetInteraction({
         return;
       }
 
+      const target = event.target;
+      const character =
+        target instanceof Element
+          ? target.closest('.pet-ascii [class^="tone-"]:not(.tone-empty)')
+          : null;
+
       event.preventDefault();
       pressRef.current = {
         x: event.clientX,
         y: event.clientY,
         dragged: false,
+        onCharacter: Boolean(character),
       };
     },
     [],
@@ -50,7 +73,16 @@ export function usePetInteraction({
   const handlePointerMove = useCallback(
     (event: ReactPointerEvent<HTMLElement>) => {
       const press = pressRef.current;
-      if (!press || press.dragged) {
+      if (!press) {
+        return;
+      }
+
+      if ((event.buttons & 1) === 0) {
+        pressRef.current = null;
+        return;
+      }
+
+      if (press.dragged) {
         return;
       }
 
@@ -84,7 +116,7 @@ export function usePetInteraction({
 
       const press = pressRef.current;
       pressRef.current = null;
-      if (!press || press.dragged) {
+      if (!press || press.dragged || !press.onCharacter) {
         return;
       }
 

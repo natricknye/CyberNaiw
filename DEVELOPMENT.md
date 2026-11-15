@@ -82,6 +82,8 @@ CyberNaiwa/
 
 - `usePetState` 持有唯一状态，避免动画互相冲突。
 - `usePetInteraction`：pointerdown 只记录起点；移动 ≥5px 才调用 `startDragging()`，避免原生拖拽吞掉点击；pointerup 且未拖动才算一次点击。300ms 内的第二次点击算双击。
+- 只有 `event.target` 命中 `.pet-ascii [class^="tone-"]:not(.tone-empty)` 才标记 `onCharacter`；透明格或 stage 上按下仍可拖动窗口，但松开不会触发语音/字幕。
+- `pointermove` 在 `buttons === 0` 时清空 `pressRef`；window 的 pointerup / pointercancel / blur 也会清理，避免 pointerup 丢失后窗口跟着鼠标漂移。
 - 点击：`click` 380ms → `happy` 1100ms → `idle`。
 - 动画开启且 idle 时，7–14 秒随机进入 `walk`（3.2s）或 `wave`（2.4s）。
 - 动画关闭时强制回到 idle，并取消进行中的状态定时器；点击仍保留表情反馈。
@@ -188,6 +190,7 @@ cargo check --manifest-path src-tauri/Cargo.toml
 - 2026-11-16 最终 CDP 验证：成年点击 `playbackRate 1`、幼体 `1.35` 且 `preservesPitch false`；六段语音都实际命中，声音开启时气泡为空，静音后 0 次播放且显示六句字幕之一；设置页 `clientHeight 700 / scrollHeight 793 / overflow-y auto`；点击状态序列 `IDLE → CLICK → HAPPY → IDLE`，页面无 SAD/伤心内容；`_qa/art/settings-rename-final.png` 与 `_qa/art/baby-five-final.png` 确认新名称、五态和幼体叉腰肘部完整。
 - 2026-11-16 幼体挥手修复：裁切框改为 `X=310/W=285` 后，112×70 帧边界为 x=5–92，128×80 为 x=6–105，V 字手完整；`_qa/art/baby-five-wavefix.png` 与 `baby-five-wavefix-cyber.png` 两套配色均确认。
 - 2026-11-16 点击语音规则：CDP 验证成年单击只播 `naiwa-laugh-long`、成年双击只播一条安迪类 WAV、幼体单击/双击都不播大笑且只触发一次；静音成年单击字幕「哈哈哈哈哈」、双击字幕为安迪类、幼体字幕为安迪类；真实系统鼠标双击也只播一条安迪类语音。移动 5px 的拖拽测试不触发点击。
+- 2026-11-16 点击命中限制：`elementFromPoint` 在窗口中心返回 `SPAN.tone-shade`，在角落返回 `MAIN.pet-stage`；CDP 在中心点击播一条 meme，在角落点击 0 次播放、无气泡、HUD 保持 IDLE。透明区域仍可拖动窗口。
 - macOS 本机无法验证，只能依赖 CI 构建。
 
 ## 坑与注意事项
@@ -223,4 +226,5 @@ cargo check --manifest-path src-tauri/Cargo.toml
 - 2026-11-16 bind six click lines to six matching Naiwa meme WAVs (安迪/嘎嘎提拉瞎/干巴得/哈哈哈哈哈/哦啦/噶韭菜), play the selected line's audio at 1.0× for adults and 1.35× for babies, and document the no-LICENSE fan-use source plus removal policy.
 - 2026-11-16 set the HTML title and initial pet/settings window titles to 赛博奶蛙, fix the mojibake settings title, and remove the remaining sleep tone/CSS rules.
 - 2026-11-16 expand the baby wave crop to include the full V-sign hand, delay native dragging until the pointer moves 5px so double-clicks survive, and split click audio: adult single = laugh only, adult double = meme line, baby = meme lines only.
+- 2026-11-16 restrict click effects to non-transparent character cells (transparent margins can still drag the window), and clear stale press state on `buttons === 0` / global pointerup/blur so the window cannot drift with the mouse.
 - 2026-11-16 bump to 0.2.1 and replace `docs/settings.png` with the 赛博奶蛙 settings screenshot (原色模式/量子模式, no sleep copy, version 0.2.1).

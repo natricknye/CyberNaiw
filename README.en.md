@@ -135,7 +135,7 @@ Want to try a PNG/WEBP/GIF skin? `src/assets/pets/README.md` shows how to regist
 
 - **Windows**: built and exercised on this machine. Transparency, the frameless window, native drag, tray, and settings persistence all work.
 - **macOS**: transparent windows rely on `macOSPrivateApi`, which rules out the Mac App Store. The app hasn't been run on a Mac here; CI only proves it builds. Code signing and notarization are not configured yet.
-- The whole pet window accepts mouse input; transparent margins don't click through yet. That's a known v1 limitation.
+- Only non-transparent character pixels trigger a click effect; transparent margins can still drag the window but never play a voice line or show a subtitle. The window itself still catches the mouse and does not click through to the desktop yet, which is a known v1 limitation.
 - Closing the settings window only hides it. Use the tray menu or Naiwa's right-click menu to quit.
 - A click both gives feedback and starts the native drag, so a drag shows the "gotcha" face.
 - With animation off, Naiwa stays still; clicks still change the expression, but there's no automatic walking.

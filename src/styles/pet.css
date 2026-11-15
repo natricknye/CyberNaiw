@@ -81,6 +81,17 @@
   display: block;
 }
 
+/* Only actual character cells are clickable; transparent cells fall through
+   to the stage, where the pointer handler ignores them. */
+.pet-ascii [class^="tone-"]:not(.tone-empty) {
+  pointer-events: auto;
+  cursor: grab;
+}
+
+.pet-ascii [class^="tone-"]:not(.tone-empty):active {
+  cursor: grabbing;
+}
+
 .pet-ascii .tone-body {
   color: #ffd84d;
   text-shadow:
