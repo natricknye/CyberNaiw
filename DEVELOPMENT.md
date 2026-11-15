@@ -103,10 +103,10 @@ CyberNaiwa/
 ## 设置持久化
 
 - 使用官方 `tauri-plugin-store`，文件 `settings.json`，`autoSave: false`，显式 `save()`。
-- 键 `settings`：`{ alwaysOnTop, scale, animationsEnabled, language, age, palette }`。
+- 键 `settings`：`{ alwaysOnTop, scale, animationsEnabled, soundEnabled, language, age, palette }`。
 - 键 `windowPosition`：`{ x, y }`（物理像素）。
 - 读取时做类型校验和范围夹取：`scale` 限制在 0.7–1.5，`language` 只接受 `zh/en`，`age` 只接受 `adult/baby`，`palette` 只接受 `cyber/original`，非法值回退默认。
-- 语言变化时前端调用 Rust `set_tray_language`，同步托盘菜单；设置窗口标题也随语言更新。
+- App 界面固定中文（设置页不再提供语言切换）；README 保留 `README.en.md`。托盘语言固定调用 `zh`，设置窗口标题为中文。
 - 设置窗口保存防抖 180ms；跨窗口通知立即发出，保证滑杆跟手。
 - 浏览器预览模式用 `localStorage` 作为回退，不涉及 Tauri store。
 
@@ -168,7 +168,9 @@ cargo check --manifest-path src-tauri/Cargo.toml
 - `pnpm tauri build --bundles nsis`：0.1.0 通过，生成 `CyberNaiwa_0.1.0_x64-setup.exe`（约 1.47 MiB）；0.2.0 通过，生成 `CyberNaiwa_0.2.0_x64-setup.exe`（约 1.48 MiB）。
 - 0.2.0 release exe 在生产 CSP 下启动成功；原色/赛博帧都实际渲染 336×358，点击后 HUD 切到 CLICK，气泡和 ARIA 正常。
 - 托盘菜单由 Rust 在启动时创建；托盘的物理点击未纳入自动化测试，需要人工点一次确认。
-- 设置页/图标：`pnpm build` 通过；无头 Edge CDP 实际点击 English → Baby → Original → Restore defaults，语言/体型/配色/恢复默认均正确；中文和英文 460×700 截图在 `_qa/art/settings-after4.png`、`settings-en-after2.png`；新图标 32×32 仍能辨认黄身、绿眼和奶油肚。
+- 设置页/图标：`pnpm build` 通过；设置页改为中文-only，实际点击 幼体 → 原色 → 恢复默认 均正确；`settings-cn-final.png` 为完整中文截图，`settings-scrolled-bottom.png` 显示底部说明可见；shell `clientHeight 700 / scrollHeight 778 / overflow-y auto`，可滚到底。
+- 声音：点击时实际调用 `http://localhost:1420/src/assets/audio/naiwa-laugh.wav`；关闭“声音”开关后再次点击不再调用，重新打开恢复。点击气泡使用 `安迪 / 嘎嘎滴辣虾 / 卡脚先 / 无了 / 甘巴爹 / 有用不 / 哈哈哈哈哈`。
+- 成年正面改用桌面提供的 `mature-official-front-side-back.webp` 中间正面（长腿/瘦高）；大笑/挥手/低头仍用官方成年动作素材，动作帧与站立帧的体型可能会有差异。
 - macOS 本机无法验证，只能依赖 CI 构建。
 
 ## 坑与注意事项
@@ -194,6 +196,8 @@ cargo check --manifest-path src-tauri/Cargo.toml
 - 2026-11-15 add Windows/macOS GitHub Actions build workflow and project docs.
 - 2026-11-15 verify release CSP, real drag, native context menu, settings restart persistence; build Windows NSIS installer; change identifier to com.cybernaiwa.desktop.
 - 2026-11-16 replace 64×40 art with official-reference adult/baby frames, seven states, teeth tone and solid cell backing; cyber uses 128×80, original uses 112×70 (128 original tested but too fine for the default window).
-- 2026-11-16 add Chinese/English UI, localized tray menu and window title, adult/baby and cyber/original modes; bump to 0.2.0.
+- 2026-11-16 add initial Chinese/English UI, localized tray menu and window title, adult/baby and cyber/original modes; bump to 0.2.0; the app UI is now Chinese-only, with English kept in README.en.md.
 - 2026-11-16 align the baby to the official juvenile reference (short round body, big eyes, tiny limbs), keep local eye enlargement/mouth darkening/teeth, and stop using global chibi compression or full hole filling; revert experimental mouth/chin contour lines because they read as a nose and an oversized mouth.
 - 2026-11-16 redesign the settings window with a warm-black + Naiwa-yellow palette, all-sharp rectangles, one flat panel, rectangular segmented controls, no avatar/`[N]` mark, CJK-safe sans/mono font stacks, and the title “这就叫奶娃桌宠”; redraw the app icon and regenerate all platform icons.
+- 2026-11-16 add the Naiwa classic laugh audio from `Nailong-Studio/NaiWa-Wallpaper`, use researched Naiwa meme sound words for click bubbles, add a sound switch, and make the app UI Chinese-only (English stays in README.en.md).
+- 2026-11-16 fix the settings scroll container (`height:100%` + `overflow-y:auto`) so the bottom note is reachable; use the user-provided tall adult front reference for adult idle/walk.
