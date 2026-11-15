@@ -159,6 +159,13 @@ Each click line has a matching audio clip; all come from Chinese Naiwa memes, no
 
 The six clips come from the `音效/` directory of [VIPmrgj/Dragon-frog](https://github.com/VIPmrgj/Dragon-frog). That repository declares no LICENSE. This project uses them as a non-commercial fan work and records the original file names and source in `src/assets/audio/README.md`; the rights remain with their creators, and the clips will be removed on request.
 
+Click behaviour:
+
+- **Adult single-click**: plays only the laugh clip, never the meme lines.
+- **Adult double-click**: cancels the pending laugh and plays one of 安迪 / 嘎嘎提拉瞎 / 干巴得 / 哦啦 / 噶韭菜.
+- **Baby**: has no laugh clip; single or double click plays one meme line only.
+- With sound off, the same line is shown as a subtitle instead.
+
 Line research and the older 1.8 s MIT laugh:
 
 - 《捧腹大笑思想与奶龙学概论》 chapter 6, “奶蛙的衍生语”: <https://xn--psszg58c9c2281ajit.lol/files/history.pdf>

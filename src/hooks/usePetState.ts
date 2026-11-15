@@ -12,6 +12,8 @@ export interface PetReaction {
   voice: NaiwaVoice;
 }
 
+export type PetReactionKind = "laugh" | "meme";
+
 const CLICK_STATE_MS = 380;
 const HAPPY_STATE_MS = 1100;
 const REACTION_MS = 2400;
@@ -39,13 +41,17 @@ export function usePetState(
     }
   }, []);
 
-  const interact = useCallback(() => {
+  const interact = useCallback((kind: PetReactionKind = "meme") => {
     clearTransition();
     setState("click");
 
     reactionId.current += 1;
     const reactions = UI_STRINGS[language].pet.reactions;
-    const picked = reactions[Math.floor(Math.random() * reactions.length)];
+    const pool =
+      kind === "laugh"
+        ? reactions.filter((reaction) => reaction.voice === "laugh")
+        : reactions.filter((reaction) => reaction.voice !== "laugh");
+    const picked = pool[Math.floor(Math.random() * pool.length)] ?? reactions[0];
     const nextReaction: PetReaction = {
       id: reactionId.current,
       message: picked.text,
