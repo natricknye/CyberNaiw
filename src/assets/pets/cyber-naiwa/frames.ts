@@ -1,13 +1,30 @@
 import rawFrames from "./naiwa-frames.json";
+import rawBabyFrames from "./naiwa-baby-frames.json";
+import rawCyberFrames from "./naiwa-cyber-frames.json";
+import rawCyberBabyFrames from "./naiwa-cyber-baby-frames.json";
 import type { PetAnimationState } from "../../../types/pet";
 
 /**
- * 64 × 40 pixel-mapped ASCII frames. The base frame is a pixel restoration of
- * the yellow 奶蛙 reference; the mouth is filled/opened programmatically for
- * the different states. Every frame is exactly 64 characters wide and
- * 40 lines tall.
+ * Original-colour frames are 112 × 70; the cyber palette uses a denser
+ * 128 × 80 grid so its fine terminal lines stay sharp. Both sets share the
+ * same seven states and two frames per state.
  */
 export const CYBER_NAIWA_FRAMES = rawFrames as Record<
+  PetAnimationState,
+  readonly string[]
+>;
+
+export const CYBER_NAIWA_BABY_FRAMES = rawBabyFrames as Record<
+  PetAnimationState,
+  readonly string[]
+>;
+
+export const CYBER_NAIWA_CYBER_FRAMES = rawCyberFrames as Record<
+  PetAnimationState,
+  readonly string[]
+>;
+
+export const CYBER_NAIWA_CYBER_BABY_FRAMES = rawCyberBabyFrames as Record<
   PetAnimationState,
   readonly string[]
 >;
@@ -20,6 +37,8 @@ export type AsciiTone =
   | "eye"
   | "pupil"
   | "mouth"
+  | "teeth"
+  | "mouthline"
   | "limb"
   | "accent"
   | "sleep"
@@ -40,10 +59,13 @@ export function toneForChar(char: string): AsciiTone {
     case "^":
       return "eye";
     case "@":
-    case "-":
       return "pupil";
     case "_":
       return "mouth";
+    case "=":
+      return "teeth";
+    case "-":
+      return "mouthline";
     case "/":
     case "\\":
     case "|":
@@ -65,4 +87,6 @@ export const FRAME_INTERVAL_MS: Record<PetAnimationState, number> = {
   sleep: 1300,
   happy: 320,
   click: 180,
+  wave: 500,
+  sad: 900,
 };

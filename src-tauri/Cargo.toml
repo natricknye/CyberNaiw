@@ -1,6 +1,6 @@
 [package]
 name = "cybernaiwa"
-version = "0.1.0"
+version = "0.2.0"
 description = "A cyber ASCII frog that lives on your desktop"
 authors = ["CyberNaiwa contributors"]
 edition = "2024"
@@ -22,3 +22,4 @@ lto = true
 opt-level = 3
 panic = "abort"
 strip = true
+

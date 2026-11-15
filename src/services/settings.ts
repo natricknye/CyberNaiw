@@ -50,6 +50,9 @@ export function normalizeSettings(value: unknown): PetSettings {
       typeof value.animationsEnabled === "boolean"
         ? value.animationsEnabled
         : DEFAULT_SETTINGS.animationsEnabled,
+    language: value.language === "en" ? "en" : "zh",
+    age: value.age === "baby" ? "baby" : "adult",
+    palette: value.palette === "original" ? "original" : "cyber",
   };
 }
 
@@ -152,8 +155,24 @@ export async function listenSettingsChanged(
       );
     };
 
+    const storageListener = (event: StorageEvent) => {
+      if (event.key !== WEB_STORAGE_KEY || !event.newValue) {
+        return;
+      }
+
+      try {
+        handler(normalizeSettings(JSON.parse(event.newValue)));
+      } catch {
+        // Ignore malformed values written by another tab.
+      }
+    };
+
     window.addEventListener(SETTINGS_CHANGED_EVENT, listener);
-    return () => window.removeEventListener(SETTINGS_CHANGED_EVENT, listener);
+    window.addEventListener("storage", storageListener);
+    return () => {
+      window.removeEventListener(SETTINGS_CHANGED_EVENT, listener);
+      window.removeEventListener("storage", storageListener);
+    };
   }
 
   return listen<unknown>(SETTINGS_CHANGED_EVENT, (event) => {

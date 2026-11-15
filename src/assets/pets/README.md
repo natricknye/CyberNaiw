@@ -4,11 +4,13 @@ All character artwork lives here. The app never downloads artwork at runtime.
 
 ## Default skin
 
-`cyber-naiwa` is the default ASCII skin. Its 64×40 frames are in
-`cyber-naiwa/naiwa-frames.json`; `cyber-naiwa/frames.ts` imports the JSON,
-maps characters to colour tones and declares frame timing. The grid uses
-printable ASCII only and was pixel-mapped from a local reference. Reference
-images are not shipped in this repository.
+`cyber-naiwa` is the default ASCII skin. Original-colour frames are 112×70 in
+`cyber-naiwa/naiwa-frames.json` and `naiwa-baby-frames.json`; cyber frames are
+128×80 in `naiwa-cyber-frames.json` and `naiwa-cyber-baby-frames.json`.
+`cyber-naiwa/frames.ts` imports the JSON, maps characters to colour tones and
+declares frame timing. The grids use printable ASCII only and were
+pixel-mapped from official reference images; those images are not shipped in
+this repository.
 
 ## Adding an image skin
 

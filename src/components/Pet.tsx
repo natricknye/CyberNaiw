@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import type { CSSProperties } from "react";
 import { usePetInteraction } from "../hooks/usePetInteraction";
 import { usePetState } from "../hooks/usePetState";
+import { UI_STRINGS } from "../i18n/strings";
 import {
   listenSettingsChanged,
   loadSettings,
@@ -28,10 +29,15 @@ export default function Pet() {
   const [ready, setReady] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
 
+  const strings = UI_STRINGS[settings.language];
   const { state, reaction, interact } = usePetState(
     ready && settings.animationsEnabled,
+    settings.language,
   );
-  const interaction = usePetInteraction({ onInteract: interact });
+  const interaction = usePetInteraction({
+    onInteract: interact,
+    language: settings.language,
+  });
 
   useEffect(() => {
     let cancelled = false;
@@ -118,20 +124,29 @@ export default function Pet() {
     };
   }, []);
 
+  useEffect(() => {
+    document.documentElement.lang = settings.language === "zh" ? "zh-CN" : "en";
+  }, [settings.language]);
+
   const bubbleMessage =
-    reaction?.message ??
-    (loadError ? "设置读取失败，已使用默认值" : null);
+    reaction?.message ?? (loadError ? strings.pet.settingsError : null);
 
   return (
     <main
-      className={`pet-stage${state === "sleep" ? " pet-stage--sleeping" : ""}`}
+      className={`pet-stage pet-stage--${settings.age} pet-stage--palette-${settings.palette}${state === "sleep" ? " pet-stage--sleeping" : ""}`}
       style={{ "--pet-scale": settings.scale } as CSSProperties}
-      aria-label="CyberNaiwa 桌面宠物"
+      aria-label={strings.pet.aria}
       {...interaction}
     >
       <SpeechBubble message={bubbleMessage} nonce={reaction?.id} />
       <div className="pet-shadow" aria-hidden="true" />
-      <PetAnimation state={state} animated={settings.animationsEnabled} />
+      <PetAnimation
+        state={state}
+        animated={settings.animationsEnabled}
+        language={settings.language}
+        age={settings.age}
+        palette={settings.palette}
+      />
       <div className="pet-hud" aria-hidden="true">
         <span className={`pet-hud-dot${ready ? " is-online" : ""}`} />
         NAIWA//{PET_STATE_LABELS[state]}

@@ -5,21 +5,22 @@ import {
   type AsciiTone,
 } from "../assets/pets/cyber-naiwa/frames";
 import { getPetSkin } from "../assets/pets";
-import type { PetAnimationState } from "../types/pet";
+import { UI_STRINGS } from "../i18n/strings";
+import type {
+  Language,
+  PetAge,
+  PetAnimationState,
+  PetPalette,
+} from "../types/pet";
 
 interface PetAnimationProps {
   state: PetAnimationState;
   animated: boolean;
+  language: Language;
+  age: PetAge;
+  palette: PetPalette;
   skinId?: string;
 }
-
-const STATE_ARIA: Record<PetAnimationState, string> = {
-  idle: "待机",
-  walk: "走动",
-  sleep: "睡觉",
-  happy: "开心",
-  click: "被点击",
-};
 
 interface AsciiSegment {
   tone: AsciiTone;
@@ -54,15 +55,27 @@ function renderAsciiLine(line: string, lineIndex: number) {
 export default function PetAnimation({
   state,
   animated,
+  language,
+  age,
+  palette,
   skinId,
 }: PetAnimationProps) {
   const skin = useMemo(() => getPetSkin(skinId), [skinId]);
-  const frames = skin.frames[state];
+  const ariaLabel = UI_STRINGS[language].pet.stateAria[state];
+  const cyberSkin =
+    skin.kind === "ascii" && palette === "cyber" ? skin.cyberFrames : undefined;
+  const baseFrames = cyberSkin ?? skin.frames;
+  const frameSet =
+    age === "baby" && skin.kind === "ascii"
+      ? (palette === "cyber" ? skin.cyberBabyFrames : skin.babyFrames) ??
+        baseFrames
+      : baseFrames;
+  const frames = frameSet[state];
   const [frameIndex, setFrameIndex] = useState(0);
 
   useEffect(() => {
     setFrameIndex(0);
-  }, [state, skin.id]);
+  }, [state, skin.id, age, palette]);
 
   useEffect(() => {
     if (!animated) {
@@ -84,7 +97,7 @@ export default function PetAnimation({
     }, interval);
 
     return () => window.clearInterval(timer);
-  }, [animated, frames, state, skin]);
+  }, [animated, frames, state, skin, age]);
 
   if (frames.length === 0) {
     return null;
@@ -97,7 +110,7 @@ export default function PetAnimation({
       <div
         className={`pet-visual pet-visual--ascii pet-visual--${state}`}
         role="img"
-        aria-label={`赛博奶蛙，${STATE_ARIA[state]}`}
+        aria-label={ariaLabel}
       >
         <div className="pet-ascii-frame">
           <pre className="pet-ascii" aria-hidden="true">
@@ -113,7 +126,7 @@ export default function PetAnimation({
     <div
       className={`pet-visual pet-visual--image pet-visual--${state}`}
       role="img"
-      aria-label={`奶蛙皮肤，${STATE_ARIA[state]}`}
+      aria-label={ariaLabel}
     >
       <img src={frame} alt="" draggable={false} />
     </div>

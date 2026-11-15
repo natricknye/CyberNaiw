@@ -2,22 +2,27 @@ import { getVersion } from "@tauri-apps/api/app";
 import { isTauri } from "@tauri-apps/api/core";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { useEffect, useState } from "react";
+import type { CSSProperties } from "react";
 import { useSettings } from "../hooks/useSettings";
 import type { SettingsStatus } from "../hooks/useSettings";
+import { LANGUAGE_NAMES, UI_STRINGS } from "../i18n/strings";
 import { hideSettingsWindow } from "../services/window";
-import { MAX_PET_SCALE, MIN_PET_SCALE } from "../types/pet";
+import { MAX_PET_SCALE, MIN_PET_SCALE, type Language } from "../types/pet";
 import "../styles/settings.css";
 
-const STATUS_TEXT: Record<SettingsStatus, string> = {
-  loading: "读取中",
-  saving: "保存中…",
-  saved: "已保存",
-  error: "保存失败",
-};
+const LANGUAGE_OPTIONS: readonly Language[] = ["zh", "en"];
 
 export default function Settings() {
   const { settings, loaded, status, error, update, reset } = useSettings();
-  const [version, setVersion] = useState("0.1.0");
+  const [version, setVersion] = useState("0.2.0");
+
+  const strings = UI_STRINGS[settings.language];
+  const statusText = {
+    loading: strings.settings.loading,
+    saving: strings.settings.saving,
+    saved: strings.settings.saved,
+    error: strings.settings.saveFailed,
+  } satisfies Record<SettingsStatus, string>;
 
   useEffect(() => {
     if (!isTauri()) {
@@ -30,6 +35,20 @@ export default function Settings() {
         console.error("Unable to read the app version", versionError);
       });
   }, []);
+
+  useEffect(() => {
+    document.documentElement.lang = settings.language === "zh" ? "zh-CN" : "en";
+
+    if (!isTauri()) {
+      return;
+    }
+
+    void getCurrentWindow()
+      .setTitle(strings.settings.windowTitle)
+      .catch((titleError: unknown) => {
+        console.error("Unable to set the settings window title", titleError);
+      });
+  }, [settings.language, strings.settings.windowTitle]);
 
   useEffect(() => {
     if (!isTauri()) {
@@ -70,49 +89,77 @@ export default function Settings() {
   }, []);
 
   const sliderValue = Math.round(settings.scale * 100);
+  const sliderMin = Math.round(MIN_PET_SCALE * 100);
+  const sliderMax = Math.round(MAX_PET_SCALE * 100);
+  const sliderFill = `${((sliderValue - sliderMin) / (sliderMax - sliderMin)) * 100}%`;
 
   return (
     <main className="settings-shell">
       <header className="settings-header">
-        <div className="settings-brand">
-          <span className="settings-brand__mark" aria-hidden="true">
-            [N]
-          </span>
-          <div>
-            <p className="settings-eyebrow">CYBERNAIWA // CONTROL</p>
-            <h1>奶蛙控制台</h1>
+        <div className="settings-header__top">
+          <div className="settings-brand">
+            <p className="settings-eyebrow">CYBERNAIWA</p>
+            <h1>{strings.settings.title}</h1>
+          </div>
+
+          <div
+            className="language-switch"
+            role="group"
+            aria-label={strings.settings.languageLabel}
+          >
+            {LANGUAGE_OPTIONS.map((language) => (
+              <button
+                key={language}
+                type="button"
+                className={settings.language === language ? "is-active" : ""}
+                aria-pressed={settings.language === language}
+                onClick={() => update({ language })}
+                disabled={!loaded}
+              >
+                {LANGUAGE_NAMES[language]}
+              </button>
+            ))}
           </div>
         </div>
+
         <p className="settings-intro">
-          一只住在桌面上的赛博 ASCII 奶蛙。
+          {strings.settings.intro}
           <br />
-          设置只保存在本机，不联网、不登录。
+          {strings.settings.introSecond}
         </p>
       </header>
 
       {error ? (
         <div className="settings-alert" role="alert">
-          设置读写失败：{error}
+          {strings.settings.errorPrefix}
+          {error}
         </div>
       ) : null}
 
-      <section className="settings-card" aria-labelledby="appearance-title">
+      <section
+        className="settings-card settings-card--main"
+        aria-labelledby="appearance-title"
+      >
         <div className="settings-card__head">
-          <h2 id="appearance-title">外观</h2>
+          <h2 id="appearance-title">{strings.settings.appearance}</h2>
           <span className={`settings-status settings-status--${status}`}>
-            {STATUS_TEXT[status]}
+            {statusText[status]}
           </span>
         </div>
 
         <div className="settings-row">
           <div className="settings-row__copy">
-            <span className="settings-label">始终置顶</span>
-            <span className="settings-hint">让奶蛙待在其他窗口上方。</span>
+            <span className="settings-label">
+              {strings.settings.alwaysOnTop}
+            </span>
+            <span className="settings-hint">
+              {strings.settings.alwaysOnTopHint}
+            </span>
           </div>
           <button
             type="button"
             role="switch"
-            aria-label="始终置顶"
+            aria-label={strings.settings.alwaysOnTop}
             aria-checked={settings.alwaysOnTop}
             className={`toggle${settings.alwaysOnTop ? " is-on" : ""}`}
             onClick={() => update({ alwaysOnTop: !settings.alwaysOnTop })}
@@ -124,17 +171,18 @@ export default function Settings() {
 
         <div className="settings-row settings-row--stack">
           <div className="settings-row__copy">
-            <span className="settings-label">桌宠大小</span>
-            <span className="settings-hint">窗口和 ASCII 角色一起缩放。</span>
+            <span className="settings-label">{strings.settings.petSize}</span>
+            <span className="settings-hint">{strings.settings.petSizeHint}</span>
           </div>
           <div className="settings-slider">
             <input
               type="range"
-              min={Math.round(MIN_PET_SCALE * 100)}
-              max={Math.round(MAX_PET_SCALE * 100)}
+              min={sliderMin}
+              max={sliderMax}
               step={5}
               value={sliderValue}
-              aria-label="桌宠大小"
+              aria-label={strings.settings.petSize}
+              style={{ "--range-fill": sliderFill } as CSSProperties}
               onChange={(event) =>
                 update({ scale: Number(event.currentTarget.value) / 100 })
               }
@@ -144,17 +192,77 @@ export default function Settings() {
           </div>
         </div>
 
+        <div className="settings-row settings-row--choice">
+          <div className="settings-row__copy">
+            <span className="settings-label">{strings.settings.age}</span>
+            <span className="settings-hint">{strings.settings.ageHint}</span>
+          </div>
+          <div className="segmented" role="group" aria-label={strings.settings.age}>
+            <button
+              type="button"
+              className={settings.age === "adult" ? "is-active" : ""}
+              aria-pressed={settings.age === "adult"}
+              onClick={() => update({ age: "adult" })}
+              disabled={!loaded}
+            >
+              {strings.settings.adult}
+            </button>
+            <button
+              type="button"
+              className={settings.age === "baby" ? "is-active" : ""}
+              aria-pressed={settings.age === "baby"}
+              onClick={() => update({ age: "baby" })}
+              disabled={!loaded}
+            >
+              {strings.settings.baby}
+            </button>
+          </div>
+        </div>
+
+        <div className="settings-row settings-row--choice">
+          <div className="settings-row__copy">
+            <span className="settings-label">{strings.settings.palette}</span>
+            <span className="settings-hint">
+              {strings.settings.paletteHint}
+            </span>
+          </div>
+          <div
+            className="segmented"
+            role="group"
+            aria-label={strings.settings.palette}
+          >
+            <button
+              type="button"
+              className={settings.palette === "original" ? "is-active" : ""}
+              aria-pressed={settings.palette === "original"}
+              onClick={() => update({ palette: "original" })}
+              disabled={!loaded}
+            >
+              {strings.settings.original}
+            </button>
+            <button
+              type="button"
+              className={settings.palette === "cyber" ? "is-active" : ""}
+              aria-pressed={settings.palette === "cyber"}
+              onClick={() => update({ palette: "cyber" })}
+              disabled={!loaded}
+            >
+              {strings.settings.cyber}
+            </button>
+          </div>
+        </div>
+
         <div className="settings-row">
           <div className="settings-row__copy">
-            <span className="settings-label">动画</span>
+            <span className="settings-label">{strings.settings.animation}</span>
             <span className="settings-hint">
-              待机、走动、睡觉和逐帧动画。
+              {strings.settings.animationHint}
             </span>
           </div>
           <button
             type="button"
             role="switch"
-            aria-label="动画"
+            aria-label={strings.settings.animation}
             aria-checked={settings.animationsEnabled}
             className={`toggle${settings.animationsEnabled ? " is-on" : ""}`}
             onClick={() =>
@@ -166,33 +274,7 @@ export default function Settings() {
           </button>
         </div>
 
-        <p className="settings-note">
-          关闭动画后奶蛙保持静态；点击仍会切换表情作为即时反馈，但不会自动走动或睡觉。
-        </p>
-      </section>
-
-      <section className="settings-card" aria-labelledby="about-title">
-        <div className="settings-card__head">
-          <h2 id="about-title">关于</h2>
-          <span className="settings-badge">LOCAL ONLY</span>
-        </div>
-        <dl className="settings-meta">
-          <div>
-            <dt>版本</dt>
-            <dd>{version}</dd>
-          </div>
-          <div>
-            <dt>数据</dt>
-            <dd>本地 JSON · 无云端</dd>
-          </div>
-          <div>
-            <dt>许可</dt>
-            <dd>MIT</dd>
-          </div>
-        </dl>
-        <p className="settings-note">
-          关闭设置窗口后，奶蛙会继续在桌面运行。要完全退出，请使用托盘或奶蛙右键菜单。
-        </p>
+        <p className="settings-note">{strings.settings.animationNote}</p>
       </section>
 
       <footer className="settings-footer">
@@ -202,16 +284,40 @@ export default function Settings() {
           onClick={reset}
           disabled={!loaded}
         >
-          恢复默认设置
+          {strings.settings.restoreDefaults}
         </button>
         <button
           type="button"
           className="button button--primary"
           onClick={() => void hideSettingsWindow()}
         >
-          收起设置
+          {strings.settings.done}
         </button>
       </footer>
+
+      <section
+        className="settings-card settings-card--about"
+        aria-labelledby="about-title"
+      >
+        <div className="settings-card__head">
+          <h2 id="about-title">{strings.settings.about}</h2>
+        </div>
+        <dl className="settings-meta">
+          <div>
+            <dt>{strings.settings.version}</dt>
+            <dd>{version}</dd>
+          </div>
+          <div>
+            <dt>{strings.settings.data}</dt>
+            <dd>{strings.settings.dataValue}</dd>
+          </div>
+          <div>
+            <dt>{strings.settings.license}</dt>
+            <dd>MIT</dd>
+          </div>
+        </dl>
+        <p className="settings-note">{strings.settings.aboutNote}</p>
+      </section>
     </main>
   );
 }

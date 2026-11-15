@@ -1,21 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { PetAnimationState } from "../types/pet";
+import { UI_STRINGS } from "../i18n/strings";
+import type { Language, PetAnimationState } from "../types/pet";
 
 export interface PetReaction {
   id: number;
   message: string;
 }
-
-const REACTIONS = [
-  "呱？",
-  "奶量 +1",
-  "别戳啦，在充电",
-  "赛博奶蛙，在线摸鱼",
-  "检测到人类手指",
-  "今日份可爱已到账",
-  "呱呱！",
-  "让我再睡五分钟…",
-] as const;
 
 const CLICK_STATE_MS = 380;
 const HAPPY_STATE_MS = 1100;
@@ -25,8 +15,13 @@ const IDLE_MIN_MS = 7000;
 const IDLE_RANDOM_MS = 7000;
 const WALK_STATE_MS = 3200;
 const SLEEP_STATE_MS = 9000;
+const WAVE_STATE_MS = 2400;
+const SAD_STATE_MS = 3000;
 
-export function usePetState(animationsEnabled: boolean) {
+export function usePetState(
+  animationsEnabled: boolean,
+  language: Language,
+) {
   const [state, setState] = useState<PetAnimationState>("idle");
   const [reaction, setReaction] = useState<PetReaction | null>(null);
 
@@ -46,7 +41,8 @@ export function usePetState(animationsEnabled: boolean) {
     setState("click");
 
     reactionId.current += 1;
-    const message = REACTIONS[Math.floor(Math.random() * REACTIONS.length)];
+    const reactions = UI_STRINGS[language].pet.reactions;
+    const message = reactions[Math.floor(Math.random() * reactions.length)];
     setReaction({ id: reactionId.current, message });
 
     if (reactionTimer.current !== null) {
@@ -65,7 +61,7 @@ export function usePetState(animationsEnabled: boolean) {
         setState("idle");
       }, HAPPY_STATE_MS);
     }, CLICK_STATE_MS);
-  }, [clearTransition]);
+  }, [clearTransition, language]);
 
   // Turning animations off cancels any in-flight automatic/click transition.
   useEffect(() => {
@@ -84,23 +80,40 @@ export function usePetState(animationsEnabled: boolean) {
     }
 
     const timer = window.setTimeout(() => {
-      setState(Math.random() < 0.55 ? "walk" : "sleep");
+      const roll = Math.random();
+      const next =
+        roll < 0.38
+          ? "walk"
+          : roll < 0.68
+            ? "sleep"
+            : roll < 0.86
+              ? "wave"
+              : "sad";
+      setState(next);
     }, IDLE_MIN_MS + Math.random() * IDLE_RANDOM_MS);
 
     return () => window.clearTimeout(timer);
   }, [animationsEnabled, state]);
 
-  // Walk/sleep are temporary; return to idle on their own.
+  // Walk/sleep/wave/sad are temporary; return to idle on their own.
   useEffect(() => {
-    if (!animationsEnabled || (state !== "walk" && state !== "sleep")) {
+    if (
+      !animationsEnabled ||
+      !["walk", "sleep", "wave", "sad"].includes(state)
+    ) {
       return;
     }
 
-    const timer = window.setTimeout(
-      () => setState("idle"),
-      state === "walk" ? WALK_STATE_MS : SLEEP_STATE_MS,
-    );
+    const duration =
+      state === "walk"
+        ? WALK_STATE_MS
+        : state === "sleep"
+          ? SLEEP_STATE_MS
+          : state === "wave"
+            ? WAVE_STATE_MS
+            : SAD_STATE_MS;
 
+    const timer = window.setTimeout(() => setState("idle"), duration);
     return () => window.clearTimeout(timer);
   }, [animationsEnabled, state]);
 

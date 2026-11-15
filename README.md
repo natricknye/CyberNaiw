@@ -4,11 +4,15 @@
 
 [![build](https://github.com/natricknye/CyberNaiw/actions/workflows/build.yml/badge.svg)](https://github.com/natricknye/CyberNaiw/actions/workflows/build.yml)
 
-CyberNaiwa 是一个以中文互联网迷因「奶蛙」为主题的跨平台桌面宠物。它用 **64×40 的彩色 ASCII 像素网格**逐像素还原奶蛙：黄色大身体、绿色大眼睛、标志性的大笑嘴、奶油色肚皮和棕色小手小脚，再罩一层 CRT 扫描线与霓虹光。
+**简体中文** | [English](README.en.md)
+
+CyberNaiwa 是一只住在你桌面上的赛博奶蛙。它不是一张贴图，而是一块 **最高 128×80 的彩色 ASCII 像素网格**：赛博模式用 128×80，原色模式用 112×70。暖黄色梨形身体、浅奶油色大肚皮、短粗的橄榄褐手脚、浅绿眼环和居中黑瞳，还有一条极短的水平嘴线——点一下就会仰头大笑。所有东西都在本地运行，不联网、不注册、不收集数据。
 
 - 透明、无边框、始终置顶的桌宠窗口
 - 左键拖动、点击互动、右键原生菜单
-- Idle / Walk / Sleep / Happy / Click 五种状态
+- Idle / Walk / Sleep / Happy / Click / Wave / Sad 七种状态
+- 成年奶蛙 / 幼体奶蛙，赛博蓝黑 / 原色暖黄两套配色
+- 中文 / English 界面，默认中文，顶部一键切换
 - 系统托盘显示/隐藏、打开设置、退出
 - 设置本地 JSON 持久化，重启后恢复
 - 不联网、不注册、无数据库、无遥测
@@ -18,8 +22,8 @@ CyberNaiwa 是一个以中文互联网迷因「奶蛙」为主题的跨平台桌
 
 | 平台 | 安装包 | 说明 |
 | --- | --- | --- |
-| Windows 10/11 x64 | [CyberNaiwa_0.1.0_x64-setup.exe](https://github.com/natricknye/CyberNaiw/releases/download/v0.1.0/CyberNaiwa_0.1.0_x64-setup.exe) | NSIS，当前用户安装，不要求管理员 |
-| macOS 11+ Apple Silicon | [CyberNaiwa_0.1.0_aarch64.dmg](https://github.com/natricknye/CyberNaiw/releases/download/v0.1.0/CyberNaiwa_0.1.0_aarch64.dmg) | 未签名/未公证；首次打开需右键 → 打开 |
+| Windows 10/11 x64 | [CyberNaiwa_0.2.0_x64-setup.exe](https://github.com/natricknye/CyberNaiw/releases/download/v0.2.0/CyberNaiwa_0.2.0_x64-setup.exe) | NSIS，当前用户安装，不要求管理员 |
+| macOS 11+ Apple Silicon | [CyberNaiwa_0.2.0_aarch64.dmg](https://github.com/natricknye/CyberNaiw/releases/download/v0.2.0/CyberNaiwa_0.2.0_aarch64.dmg) | 未签名/未公证；首次打开需右键 → 打开 |
 
 [所有版本](https://github.com/natricknye/CyberNaiw/releases) · [构建日志](https://github.com/natricknye/CyberNaiw/actions)
 
@@ -27,9 +31,29 @@ CyberNaiwa 是一个以中文互联网迷因「奶蛙」为主题的跨平台桌
 
 ## 预览
 
-![CyberNaiwa 奶蛙 ASCII 预览](docs/preview.png)
+| 赛博 · 128×80 | 原色 · 112×70 |
+| --- | --- |
+| ![CyberNaiwa 赛博预览](docs/preview.png) | ![CyberNaiwa 原色预览](docs/preview-original.png) |
 
-角色不是图片贴图，而是 64×40 的彩色 ASCII 字符网格：`#` 黄身体、`O` 绿眼、`@` 瞳孔、`+` 奶油肚皮、`|` 棕色手脚、`_` 大嘴。字符按区域着色，再叠加 CRT 扫描线；窗口尺寸和字号都可以在设置里缩放。
+角色不是图片贴图，而是彩色 ASCII 字符网格：赛博 128×80、原色 112×70。`#` 黄身体、`O` 绿眼、`@` 瞳孔、`+` 奶油肚皮、`|` 橄榄褐手脚、`_` 嘴腔、`=` 牙齿、`*`/`!` 动作高亮；闭嘴帧保留官方源图里的极短嘴线，不额外画鼻/下巴硬线。每个字符背后铺同色实体底，角色内部不会透出桌面，角色外仍然是透明窗口；再叠加 CRT 扫描线，设置里可以缩放。
+
+| 模式 | 选项 |
+| --- | --- |
+| 成长阶段 | 成年（修长梨形）/ 幼体（短圆大头、短手脚） |
+| 配色 | 赛博（蓝黑 + 青色终端，128×80）/ 原色（暖黄 + 奶油 + 橄榄褐，112×70） |
+| 动作 | 站立、迈步、睡觉、开心、点击互动（成年大笑 / 幼体叉腰）、挥手、低头 |
+
+幼体单独预览：
+
+<img src="docs/preview-baby.png" alt="幼体奶蛙" width="360" />
+
+> 默认是「赛博」配色。想看普通/原色形态：打开设置 → 「配色」→ 点「原色」。上面右图就是原色效果。
+
+## 设置页
+
+<img src="docs/settings.png" alt="CyberNaiwa 设置页" width="420" />
+
+透明置顶、桌宠大小、成年/幼体、赛博/原色、动画开关和恢复默认都在同一个面板里；语言在顶部切换。
 
 ## 技术栈
 
@@ -37,7 +61,7 @@ CyberNaiwa 是一个以中文互联网迷因「奶蛙」为主题的跨平台桌
 | --- | --- |
 | 桌面框架 | Tauri 2 |
 | 前端 | React 19 + TypeScript + Vite |
-| 样式/角色 | CSS + 64×40 ASCII 帧 + SVG 图标 |
+| 样式/角色 | CSS + 128×80/112×70 ASCII 帧 + SVG 图标 |
 | 原生层 | Rust（托盘、窗口生命周期、退出） |
 | 设置 | `tauri-plugin-store` 本地 JSON |
 | 包管理 | pnpm（Corepack 可用） |
@@ -98,17 +122,17 @@ pnpm tauri build --bundles dmg
 - Windows：`%APPDATA%\com.cybernaiwa.desktop\settings.json`
 - macOS：`~/Library/Application Support/com.cybernaiwa.desktop/settings.json`
 
-文件里有两个键：`settings`（置顶、缩放、动画）和 `windowPosition`（物理像素坐标）。没有云端同步。
+文件里有两个键：`settings`（置顶、缩放、动画、语言、成年/幼体、赛博/原色）和 `windowPosition`（物理像素坐标）。没有云端同步。
 
 ## 角色素材
 
-默认角色 `cyber-naiwa` 的 64×40 ASCII 帧在 `src/assets/pets/cyber-naiwa/naiwa-frames.json`，字符 tone、帧间隔和渲染逻辑在 `frames.ts`。角色按本地参考图逐像素映射生成，仓库不包含任何第三方图片文件。
+默认角色 `cyber-naiwa` 的原色成年帧在 `src/assets/pets/cyber-naiwa/naiwa-frames.json`，原色幼体帧在 `naiwa-baby-frames.json`（112×70）；赛博成年/幼体帧在 `naiwa-cyber-frames.json`、`naiwa-cyber-baby-frames.json`（128×80）。每套 7 个状态、每态 2 帧，字符 tone、帧间隔和渲染逻辑在 `frames.ts`。帧由官方设计资料库中的成年 / 幼体 / 大笑 / 挥手 / 低头参考图逐像素映射生成，仓库不包含参考图片本身。
 
 想换成 PNG/WEBP/GIF 皮肤时，按 `src/assets/pets/README.md` 的说明注册 `ImagePetSkin` 即可，渲染器同时支持 ASCII 和图片序列。请不要提交没有 redistribution 权限的素材。
 
 ## 设计参考
 
-角色设定参考 [奶蛙百科](https://neta.art/app/milk-frog-wiki)：黄色梨形身体、大片奶油色肚皮、泛绿眼白和小黑瞳、深橄榄褐色长手脚，核心互动是“点一下就狂笑”。CyberNaiwa 的 ASCII 帧是本项目按这些特征做的像素化演绎。
+角色设定参考奶蛙官方设计资料库与 [奶蛙百科](https://neta.art/app/milk-frog-wiki)：暖黄色梨形身体、浅奶油色大肚皮、短粗的橄榄褐手脚、浅绿眼环和居中黑瞳、极短水平嘴线；成年版重心下沉，幼体版更圆更紧凑。点击大笑是核心互动，挥手和低头是额外动作。另参考了 [Nailong-Studio/NaiWa-Wallpaper](https://github.com/Nailong-Studio/NaiWa-Wallpaper) 的公开素材目录，只取角色动作参考，不使用与艺术作品结合的整图。
 
 ## 平台说明与已知限制
 
@@ -123,8 +147,8 @@ pnpm tauri build --bundles dmg
 
 MIT License，见 [LICENSE](LICENSE)。
 
-CyberNaiwa 是粉丝向、非商业的开源项目，灵感来自中文互联网迷因「奶蛙」。奶蛙形象源自 AI 生成与网友二创；本项目与奶龙官方及其权利方无关联。仓库内的 ASCII 角色帧均为本项目原创绘制，不包含第三方图片素材。
+CyberNaiwa 是粉丝向、非商业的开源项目，灵感来自中文互联网迷因「奶蛙」。奶蛙形象源自 AI 生成与网友二创；本项目与奶龙官方及其权利方无关联。仓库内的 ASCII 角色帧由本项目基于公开参考图转换和绘制，不包含第三方图片素材。
 
 ## 构建状态
 
-GitHub Actions 工作流在 `.github/workflows/build.yml`，在 Windows 和 macOS Runner 上分别构建 NSIS 安装包和 DMG。v0.1.0 已通过 CI 并发布到 [Releases](https://github.com/natricknye/CyberNaiw/releases/tag/v0.1.0)。签名/公证 secrets 未配置，因此产物为未签名版本。
+GitHub Actions 工作流在 `.github/workflows/build.yml`，在 Windows 和 macOS Runner 上分别构建 NSIS 安装包和 DMG。v0.2.0（赛博 128×80 / 原色 112×70）已发布到 [Releases](https://github.com/natricknye/CyberNaiw/releases/tag/v0.2.0)。签名/公证 secrets 未配置，因此产物为未签名版本。

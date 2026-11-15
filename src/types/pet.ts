@@ -4,14 +4,25 @@ export const PET_ANIMATION_STATES = [
   "sleep",
   "happy",
   "click",
+  "wave",
+  "sad",
 ] as const;
 
 export type PetAnimationState = (typeof PET_ANIMATION_STATES)[number];
+
+export type Language = "zh" | "en";
+
+export type PetAge = "adult" | "baby";
+
+export type PetPalette = "original" | "cyber";
 
 export interface PetSettings {
   alwaysOnTop: boolean;
   scale: number;
   animationsEnabled: boolean;
+  language: Language;
+  age: PetAge;
+  palette: PetPalette;
 }
 
 export interface WindowPosition {
@@ -23,6 +34,9 @@ export const DEFAULT_SETTINGS: PetSettings = {
   alwaysOnTop: true,
   scale: 1,
   animationsEnabled: true,
+  language: "zh",
+  age: "adult",
+  palette: "cyber",
 };
 
 export const MIN_PET_SCALE = 0.7;
@@ -41,4 +55,6 @@ export const PET_STATE_LABELS: Record<PetAnimationState, string> = {
   sleep: "SLEEP",
   happy: "HAPPY",
   click: "CLICK",
+  wave: "WAVE",
+  sad: "SAD",
 };

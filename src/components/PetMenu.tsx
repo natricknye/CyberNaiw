@@ -1,17 +1,21 @@
 import { isTauri } from "@tauri-apps/api/core";
 import { Menu, type MenuItemOptions } from "@tauri-apps/api/menu";
+import { UI_STRINGS } from "../i18n/strings";
 import {
   hidePetWindow,
   openSettingsWindow,
   quitApp,
 } from "../services/window";
+import type { Language } from "../types/pet";
 
-let menuPromise: Promise<Menu> | null = null;
+let cachedMenu: { language: Language; menu: Promise<Menu> } | null = null;
 
-function createPetMenu(): Promise<Menu> {
+function createPetMenu(language: Language): Promise<Menu> {
+  const strings = UI_STRINGS[language].menu;
+
   const hideItem: MenuItemOptions = {
     id: "hide",
-    text: "隐藏桌宠",
+    text: strings.hide,
     action: () => {
       void hidePetWindow().catch(console.error);
     },
@@ -19,7 +23,7 @@ function createPetMenu(): Promise<Menu> {
 
   const settingsItem: MenuItemOptions = {
     id: "settings",
-    text: "显示设置",
+    text: strings.settings,
     action: () => {
       void openSettingsWindow().catch(console.error);
     },
@@ -27,7 +31,7 @@ function createPetMenu(): Promise<Menu> {
 
   const quitItem: MenuItemOptions = {
     id: "quit",
-    text: "退出 CyberNaiwa",
+    text: strings.quit,
     action: () => {
       void quitApp().catch(console.error);
     },
@@ -47,17 +51,19 @@ function createPetMenu(): Promise<Menu> {
  * Shows the native context menu at the cursor. Using the OS menu keeps
  * keyboard navigation, shadows and platform placement consistent.
  */
-export async function showPetMenu(): Promise<void> {
+export async function showPetMenu(language: Language): Promise<void> {
   if (!isTauri()) {
     return;
   }
 
   try {
-    menuPromise ??= createPetMenu();
-    const menu = await menuPromise;
+    if (!cachedMenu || cachedMenu.language !== language) {
+      cachedMenu = { language, menu: createPetMenu(language) };
+    }
+    const menu = await cachedMenu.menu;
     await menu.popup();
   } catch (error) {
-    menuPromise = null;
+    cachedMenu = null;
     console.error("Unable to open the pet menu", error);
   }
 }

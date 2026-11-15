@@ -1,7 +1,7 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "CyberNaiwa",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "identifier": "com.cybernaiwa.desktop",
   "build": {
     "beforeDevCommand": "pnpm dev",
@@ -34,7 +34,7 @@
       },
       {
         "label": "settings",
-        "title": "CyberNaiwa 设置",
+        "title": "CyberNaiwa 璁剧疆",
         "width": 460,
         "height": 700,
         "minWidth": 420,
@@ -65,7 +65,7 @@
     "category": "Utility",
     "shortDescription": "A cyber ASCII frog that lives on your desktop",
     "longDescription": "CyberNaiwa is a local-first desktop pet: a neon ASCII frog that idles, walks, sleeps and reacts to clicks. It stores its settings in a local JSON file and never needs an account or a network connection.",
-    "copyright": "Copyright © 2026 CyberNaiwa contributors",
+    "copyright": "Copyright 漏 2026 CyberNaiwa contributors",
     "licenseFile": "../LICENSE",
     "windows": {
       "nsis": {
@@ -78,3 +78,4 @@
     }
   }
 }
+

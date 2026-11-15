@@ -1,3 +1,4 @@
+import { invoke, isTauri } from "@tauri-apps/api/core";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   DEFAULT_SETTINGS,
@@ -53,6 +54,19 @@ export function useSettings() {
       cancelled = true;
     };
   }, []);
+
+  // Keep the native tray labels in sync with the selected UI language.
+  useEffect(() => {
+    if (!isTauri()) {
+      return;
+    }
+
+    void invoke("set_tray_language", {
+      language: settings.language,
+    }).catch((trayError: unknown) => {
+      console.error("Unable to update the tray language", trayError);
+    });
+  }, [settings.language]);
 
   // Notify the pet window immediately so sliders feel live.
   useEffect(() => {

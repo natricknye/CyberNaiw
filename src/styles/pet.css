@@ -59,7 +59,7 @@
 .pet-ascii-frame {
   position: relative;
   display: inline-block;
-  transform: scale(calc(0.64 * var(--pet-scale, 1)));
+  transform: scale(calc(0.3657 * var(--pet-scale, 1)));
   transform-origin: center bottom;
   will-change: transform;
 }
@@ -129,6 +129,20 @@
   color: #c94358;
   text-shadow: 0 0 4px rgba(201, 67, 88, 0.45);
 }
+
+.pet-ascii .tone-teeth {
+  color: #fff7dc;
+  text-shadow:
+    0 0 2px rgba(255, 247, 220, 0.9),
+    0 0 8px rgba(255, 220, 150, 0.35);
+}
+
+.pet-ascii .tone-mouthline {
+  color: #4a2a08;
+  text-shadow: none;
+}
+
+
 
 .pet-ascii .tone-limb {
   color: #c98a3c;
@@ -629,4 +643,205 @@
   .vector-scanlines {
     animation: none;
   }
+}
+
+/* Solid cell backing: fills the gaps between ASCII glyphs so the character
+   reads as a solid silhouette instead of a screen-door texture. */
+.pet-ascii .tone-body {
+  background-color: rgba(184, 128, 14, 0.66);
+}
+
+.pet-ascii .tone-light {
+  background-color: rgba(226, 178, 38, 0.62);
+}
+
+.pet-ascii .tone-shade {
+  background-color: rgba(146, 91, 12, 0.68);
+}
+
+.pet-ascii .tone-belly {
+  background-color: rgba(231, 203, 142, 0.72);
+}
+
+.pet-ascii .tone-eye {
+  background-color: rgba(83, 141, 67, 0.72);
+}
+
+.pet-ascii .tone-pupil {
+  background-color: rgba(5, 12, 8, 0.82);
+}
+
+.pet-ascii .tone-mouth {
+  background-color: rgba(126, 31, 43, 0.74);
+}
+
+.pet-ascii .tone-teeth {
+  background-color: rgba(255, 244, 210, 0.88);
+}
+
+
+
+.pet-ascii .tone-limb {
+  background-color: rgba(112, 73, 25, 0.74);
+}
+
+.pet-ascii .tone-accent {
+  background-color: rgba(126, 249, 255, 0.22);
+}
+
+.pet-ascii .tone-sleep {
+  background-color: rgba(140, 255, 200, 0.2);
+}
+
+.pet-ascii .tone-empty {
+  background-color: transparent;
+}
+
+/* ---------- Growth stage + palettes ---------- */
+
+.pet-stage--baby .pet-ascii-frame {
+  transform: scale(calc(0.3 * var(--pet-scale, 1)));
+}
+
+/* The cyber palette uses a denser 128x80 frame set. */
+.pet-stage--palette-cyber .pet-ascii-frame {
+  transform: scale(calc(0.32 * var(--pet-scale, 1)));
+}
+
+.pet-stage--baby.pet-stage--palette-cyber .pet-ascii-frame {
+  transform: scale(calc(0.2625 * var(--pet-scale, 1)));
+}
+
+.pet-stage--palette-cyber::before {
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0, 174, 255, 0.12) 0%,
+    rgba(0, 174, 255, 0.03) 42%,
+    transparent 72%
+  );
+}
+
+.pet-stage--palette-cyber .pet-shadow {
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0, 190, 255, 0.24) 0%,
+    rgba(0, 190, 255, 0.06) 48%,
+    transparent 72%
+  );
+}
+
+.pet-stage--palette-cyber .pet-hud {
+  color: rgba(126, 249, 255, 0.6);
+}
+
+.pet-stage--palette-cyber .pet-hud-dot.is-online {
+  background: #7ef9ff;
+  box-shadow: 0 0 6px rgba(126, 249, 255, 0.9);
+}
+
+.pet-stage--palette-cyber .pet-ascii {
+  filter:
+    drop-shadow(0 10px 16px rgba(0, 0, 0, 0.65))
+    drop-shadow(0 0 16px rgba(0, 190, 255, 0.22));
+}
+
+.pet-stage--palette-cyber .pet-ascii .tone-body {
+  color: #7ef9ff;
+  background-color: rgba(3, 16, 27, 0.86);
+  text-shadow:
+    0 0 2px rgba(126, 249, 255, 0.95),
+    0 0 10px rgba(0, 190, 255, 0.45);
+}
+
+.pet-stage--palette-cyber .pet-ascii .tone-light {
+  color: #d8ffff;
+  background-color: rgba(8, 37, 52, 0.82);
+  text-shadow: 0 0 3px rgba(216, 255, 255, 0.8);
+}
+
+.pet-stage--palette-cyber .pet-ascii .tone-shade {
+  color: #1f87ad;
+  background-color: rgba(1, 9, 16, 0.9);
+  text-shadow: 0 0 3px rgba(31, 135, 173, 0.6);
+}
+
+.pet-stage--palette-cyber .pet-ascii .tone-belly {
+  color: #b9ffff;
+  background-color: rgba(4, 31, 43, 0.88);
+  text-shadow:
+    0 0 2px rgba(185, 255, 255, 0.8),
+    0 0 9px rgba(0, 190, 255, 0.3);
+}
+
+.pet-stage--palette-cyber .pet-ascii .tone-eye {
+  color: #5dffd0;
+  background-color: rgba(2, 49, 43, 0.86);
+  text-shadow:
+    0 0 3px rgba(93, 255, 208, 0.95),
+    0 0 10px rgba(0, 220, 190, 0.4);
+}
+
+.pet-stage--palette-cyber .pet-ascii .tone-pupil {
+  color: #001014;
+  background-color: rgba(0, 6, 10, 0.96);
+  text-shadow: none;
+}
+
+.pet-stage--palette-cyber .pet-ascii .tone-mouth {
+  color: #4de1ff;
+  background-color: rgba(0, 16, 28, 0.93);
+  text-shadow: 0 0 5px rgba(77, 225, 255, 0.55);
+}
+
+.pet-stage--palette-cyber .pet-ascii .tone-teeth {
+  color: #eaffff;
+  background-color: rgba(190, 255, 255, 0.88);
+  text-shadow:
+    0 0 3px rgba(234, 255, 255, 0.95),
+    0 0 12px rgba(126, 249, 255, 0.5);
+}
+
+.pet-stage--palette-cyber .pet-ascii .tone-mouthline {
+  color: #9ffcff;
+  text-shadow: 0 0 3px rgba(159, 252, 255, 0.55);
+}
+
+
+
+.pet-stage--palette-cyber .pet-ascii .tone-limb {
+  color: #2b9fc4;
+  background-color: rgba(0, 13, 21, 0.92);
+  text-shadow: 0 0 3px rgba(43, 159, 196, 0.7);
+}
+
+.pet-stage--palette-cyber .pet-ascii .tone-accent {
+  color: #d8ffff;
+  background-color: rgba(126, 249, 255, 0.16);
+  text-shadow:
+    0 0 4px rgba(126, 249, 255, 0.95),
+    0 0 14px rgba(126, 249, 255, 0.45);
+}
+
+.pet-stage--palette-cyber .pet-ascii .tone-sleep {
+  color: #9affd5;
+  background-color: rgba(0, 30, 24, 0.55);
+}
+
+.pet-stage--palette-cyber .pet-scanlines {
+  opacity: 0.42;
+}
+
+.pet-stage--palette-cyber .speech-bubble__text {
+  border-color: rgba(126, 249, 255, 0.55);
+  background: rgba(1, 10, 18, 0.94);
+  color: #d8ffff;
+  box-shadow:
+    0 0 18px rgba(0, 190, 255, 0.2),
+    inset 0 0 10px rgba(126, 249, 255, 0.05);
+}
+
+.pet-stage--palette-cyber .speech-bubble__text::after {
+  border-right-color: rgba(126, 249, 255, 0.55);
+  border-bottom-color: rgba(126, 249, 255, 0.55);
+  background: rgba(1, 10, 18, 0.94);
 }

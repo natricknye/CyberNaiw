@@ -1,5 +1,10 @@
 import type { PetAnimationState } from "../../types/pet";
-import { CYBER_NAIWA_FRAMES } from "./cyber-naiwa/frames";
+import {
+  CYBER_NAIWA_BABY_FRAMES,
+  CYBER_NAIWA_CYBER_BABY_FRAMES,
+  CYBER_NAIWA_CYBER_FRAMES,
+  CYBER_NAIWA_FRAMES,
+} from "./cyber-naiwa/frames";
 
 export type PetSkinKind = "ascii" | "image";
 
@@ -13,6 +18,10 @@ interface PetSkinBase {
 export interface AsciiPetSkin extends PetSkinBase {
   kind: "ascii";
   frames: Record<PetAnimationState, readonly string[]>;
+  babyFrames?: Record<PetAnimationState, readonly string[]>;
+  /** Optional denser frame set used by the cyber palette. */
+  cyberFrames?: Record<PetAnimationState, readonly string[]>;
+  cyberBabyFrames?: Record<PetAnimationState, readonly string[]>;
 }
 
 export interface ImagePetSkin extends PetSkinBase {
@@ -38,6 +47,9 @@ export const PET_SKINS: readonly PetSkin[] = [
     kind: "ascii",
     credit: "Original ASCII art for CyberNaiwa",
     frames: CYBER_NAIWA_FRAMES,
+    babyFrames: CYBER_NAIWA_BABY_FRAMES,
+    cyberFrames: CYBER_NAIWA_CYBER_FRAMES,
+    cyberBabyFrames: CYBER_NAIWA_CYBER_BABY_FRAMES,
   },
 ];
 

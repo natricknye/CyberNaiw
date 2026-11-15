@@ -6,9 +6,11 @@ import type {
   PointerEvent as ReactPointerEvent,
 } from "react";
 import { showPetMenu } from "../components/PetMenu";
+import type { Language } from "../types/pet";
 
 interface PetInteractionOptions {
   onInteract: () => void;
+  language: Language;
 }
 
 /**
@@ -16,7 +18,10 @@ interface PetInteractionOptions {
  * native drag handles DPI and multi-monitor movement correctly on Windows and
  * macOS. Right-click opens a native OS menu.
  */
-export function usePetInteraction({ onInteract }: PetInteractionOptions) {
+export function usePetInteraction({
+  onInteract,
+  language,
+}: PetInteractionOptions) {
   const handlePointerDown = useCallback(
     (event: ReactPointerEvent<HTMLElement>) => {
       if (event.button !== 0) {
@@ -42,9 +47,9 @@ export function usePetInteraction({ onInteract }: PetInteractionOptions) {
   const handleContextMenu = useCallback(
     (event: ReactMouseEvent<HTMLElement>) => {
       event.preventDefault();
-      void showPetMenu();
+      void showPetMenu(language);
     },
-    [],
+    [language],
   );
 
   return {
