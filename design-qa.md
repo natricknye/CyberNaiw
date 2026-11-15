@@ -76,6 +76,14 @@
 - 设置页去掉语言切换，App 界面固定中文；英文只保留在 `README.en.md`。底部文字被裁掉的原因是 `.settings-shell` 只有 `min-height:100%`，改为 `height:100%` + `overflow-y:auto`，实测 700px 窗口可滚到 778px 内容底部。
 - 成年正面改用用户桌面提供的 `mature-official-front-side-back.webp` 中间正面（长腿/瘦高）；成年大笑、挥手、低头仍用之前那批官方成年动作素材，动作帧的体型和站立帧可能不同。
 
+## 2026-11-16 — Phase 11：删除伤心、最终五态
+
+- 用户澄清之前说的“丑”是“伤心”界面，不只是睡觉；因此 sleep 和 sad 两个状态都移除。
+- `PetAnimationState` 只剩 idle / walk / happy / click / wave；随机 idle 只在 walk（3.2s）和 wave（2.4s）之间选，不再进入 sad。
+- 四套帧 JSON 全部重新生成，不再包含 sad；`_qa/state-preview.html` 也只渲染五态。
+- 验证：`pnpm build` 通过；真实 Tauri CDP 点击序列为 `IDLE → CLICK → HAPPY → IDLE`，页面无 SAD/伤心内容；五态幼体预览见 `_qa/art/baby-five-final.png`。
+- 0.2.1 版本号已更新，安装包在此改动后重新构建。
+
 ## 待人工确认
 
 - 托盘菜单的物理点击仍需在桌面通知区实际点一遍；窗口 show/hide/设置/退出逻辑已实现。

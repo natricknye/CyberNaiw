@@ -11,7 +11,7 @@
 - 透明、无边框、始终置顶的桌宠窗口
 - 左键拖动、点击互动、右键原生菜单
 - 点击播放奶蛙经典笑声，设置里可以静音
-- Idle / Walk / Happy / Click / Wave / Sad 六种状态
+- Idle / Walk / Happy / Click / Wave 五种状态
 - 成年奶蛙 / 幼体奶蛙，量子模式蓝黑 / 原色模式暖黄两套配色
 - 应用界面中文；英文说明保留在 `README.en.md`
 - 系统托盘显示/隐藏、打开设置、退出
@@ -42,7 +42,7 @@
 | --- | --- |
 | 成长阶段 | 成年（修长梨形）/ 幼体（短圆大头、短手脚） |
 | 配色 | 量子模式（蓝黑 + 青色终端，128×80）/ 原色模式（暖黄 + 奶油 + 橄榄褐，112×70） |
-| 动作 | 站立、迈步、开心、点击互动（成年大笑 / 幼体叉腰）、挥手、低头 |
+| 动作 | 站立、迈步、开心、点击互动（成年大笑 / 幼体叉腰）、挥手 |
 
 幼体单独预览：
 
@@ -52,7 +52,7 @@
 
 ## 设置页
 
-<img src="docs/settings.png" alt="CyberNaiwa 设置页" width="420" />
+<img src="docs/settings.png" alt="赛博奶蛙设置页" width="420" />
 
 透明置顶、桌宠大小、成年/幼体、原色模式/量子模式、动画开关、声音开关和恢复默认都在同一个面板里。
 
@@ -127,13 +127,13 @@ pnpm tauri build --bundles dmg
 
 ## 角色素材
 
-默认角色 `cyber-naiwa` 的原色模式成年帧在 `src/assets/pets/cyber-naiwa/naiwa-frames.json`，幼体帧在 `naiwa-baby-frames.json`（112×70）；量子模式成年/幼体帧在 `naiwa-cyber-frames.json`、`naiwa-cyber-baby-frames.json`（128×80）。每套 6 个状态、每态 2 帧，字符 tone、帧间隔和渲染逻辑在 `frames.ts`。帧由官方设计资料库中的成年 / 幼体 / 大笑 / 挥手 / 低头参考图逐像素映射生成，仓库不包含参考图片本身。
+默认角色 `cyber-naiwa` 的原色模式成年帧在 `src/assets/pets/cyber-naiwa/naiwa-frames.json`，幼体帧在 `naiwa-baby-frames.json`（112×70）；量子模式成年/幼体帧在 `naiwa-cyber-frames.json`、`naiwa-cyber-baby-frames.json`（128×80）。每套 5 个状态、每态 2 帧，字符 tone、帧间隔和渲染逻辑在 `frames.ts`。帧由官方设计资料库中的成年 / 幼体 / 大笑 / 挥手参考图逐像素映射生成，仓库不包含参考图片本身。
 
 想换成 PNG/WEBP/GIF 皮肤时，按 `src/assets/pets/README.md` 的说明注册 `ImagePetSkin` 即可，渲染器同时支持 ASCII 和图片序列。请不要提交没有 redistribution 权限的素材。
 
 ## 设计参考
 
-角色设定参考奶蛙官方设计资料库与 [奶蛙百科](https://neta.art/app/milk-frog-wiki)：成年是长腿瘦高版，幼体是短圆大头、短手脚；浅奶油色大肚皮、浅绿眼环和居中黑瞳、极短水平嘴线。点击互动是核心，挥手和低头是额外动作。另参考了 [Nailong-Studio/NaiWa-Wallpaper](https://github.com/Nailong-Studio/NaiWa-Wallpaper) 的公开素材目录，只取角色动作参考，不使用与艺术作品结合的整图。
+角色设定参考奶蛙官方设计资料库与 [奶蛙百科](https://neta.art/app/milk-frog-wiki)：成年是长腿瘦高版，幼体是短圆大头、短手脚；浅奶油色大肚皮、浅绿眼环和居中黑瞳、极短水平嘴线。点击互动是核心，挥手是额外动作。另参考了 [Nailong-Studio/NaiWa-Wallpaper](https://github.com/Nailong-Studio/NaiWa-Wallpaper) 的公开素材目录，只取角色动作参考，不使用与艺术作品结合的整图。
 
 ## 台词与声音来源
 
