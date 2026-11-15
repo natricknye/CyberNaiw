@@ -60,8 +60,8 @@ export interface UiStrings {
 
 const ZH: UiStrings = {
   settings: {
-    windowTitle: "这就叫奶娃桌宠",
-    title: "这就叫奶娃桌宠",
+    windowTitle: "赛博奶蛙",
+    title: "赛博奶蛙",
     intro: "一只住在你桌面上的奶蛙。",
     introSecond: "设置只存在本机，不上传，也不用登录。",
     languageLabel: "语言",
@@ -75,15 +75,15 @@ const ZH: UiStrings = {
     adult: "成年",
     baby: "幼体",
     palette: "配色",
-    paletteHint: "原色是黄绿奶油；赛博是蓝黑终端。",
-    original: "原色",
-    cyber: "赛博",
+    paletteHint: "原色模式是黄绿奶油；量子模式是蓝黑终端。",
+    original: "原色模式",
+    cyber: "量子模式",
     animation: "动画",
-    animationHint: "待机、走动、睡觉和逐帧动画。",
+    animationHint: "待机、走动和逐帧动画。",
     animationNote:
-      "关闭动画后奶蛙保持静态；点击仍会切换表情作为反馈，但不会自动走动或睡觉。",
+      "关闭动画后奶蛙保持静态；点击仍会切换表情作为反馈，但不会自动走动。",
     sound: "声音",
-    soundHint: "点击时播放奶蛙经典笑声。",
+    soundHint: "点击播放奶蛙笑声；幼体是更高频的版本。",
     about: "关于",
     version: "版本",
     data: "数据",
@@ -101,11 +101,10 @@ const ZH: UiStrings = {
     localOnly: "LOCAL ONLY",
   },
   pet: {
-    aria: "CyberNaiwa 桌面宠物",
+    aria: "赛博奶蛙桌面宠物",
     stateAria: {
       idle: "赛博奶蛙，待机",
       walk: "赛博奶蛙，走动",
-      sleep: "赛博奶蛙，睡觉",
       happy: "赛博奶蛙，开心",
       click: "赛博奶蛙，被点击",
       wave: "赛博奶蛙，挥手",
@@ -130,14 +129,14 @@ const ZH: UiStrings = {
   menu: {
     hide: "隐藏桌宠",
     settings: "显示设置",
-    quit: "退出 CyberNaiwa",
+    quit: "退出赛博奶蛙",
   },
 };
 
 const EN: UiStrings = {
   settings: {
-    windowTitle: "This is Naiwa",
-    title: "This is Naiwa",
+    windowTitle: "Cyber Naiwa",
+    title: "Cyber Naiwa",
     intro: "A Naiwa that lives on your desktop.",
     introSecond: "Settings stay on this machine — no uploads, no sign-in.",
     languageLabel: "Language",
@@ -152,15 +151,15 @@ const EN: UiStrings = {
     baby: "Baby",
     palette: "Palette",
     paletteHint:
-      "Original is yellow, green and cream. Cyber is a blue-black terminal.",
-    original: "Original",
-    cyber: "Cyber",
+      "Original mode is yellow, green and cream. Quantum mode is a blue-black terminal.",
+    original: "Original mode",
+    cyber: "Quantum mode",
     animation: "Animation",
-    animationHint: "Idle, walking, napping and frame-by-frame motion.",
+    animationHint: "Idle, walking and frame-by-frame motion.",
     animationNote:
-      "With animation off, Naiwa holds still. Clicks still change the expression, but there's no automatic walking or napping.",
+      "With animation off, Naiwa holds still. Clicks still change the expression, but there's no automatic walking.",
     sound: "Sound",
-    soundHint: "Play Naiwa's classic laugh when clicked.",
+    soundHint: "Play Naiwa's laugh when clicked; the baby uses a higher-pitched version.",
     about: "About",
     version: "Version",
     data: "Data",
@@ -182,7 +181,6 @@ const EN: UiStrings = {
     stateAria: {
       idle: "Cyber Naiwa, idle",
       walk: "Cyber Naiwa, walking",
-      sleep: "Cyber Naiwa, sleeping",
       happy: "Cyber Naiwa, happy",
       click: "Cyber Naiwa, clicked",
       wave: "Cyber Naiwa, waving",
@@ -203,7 +201,7 @@ const EN: UiStrings = {
   menu: {
     hide: "Hide pet",
     settings: "Settings",
-    quit: "Quit CyberNaiwa",
+    quit: "Quit Cyber Naiwa",
   },
 };
 

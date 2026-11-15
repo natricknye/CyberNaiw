@@ -39,7 +39,7 @@ export default function Pet() {
     onInteract: () => {
       interact();
       if (settings.soundEnabled) {
-        playNaiwaLaugh();
+        playNaiwaLaugh(settings.age);
       }
     },
     language: settings.language,
@@ -134,12 +134,15 @@ export default function Pet() {
     document.documentElement.lang = settings.language === "zh" ? "zh-CN" : "en";
   }, [settings.language]);
 
-  const bubbleMessage =
-    reaction?.message ?? (loadError ? strings.pet.settingsError : null);
+  const bubbleMessage = loadError
+    ? strings.pet.settingsError
+    : settings.soundEnabled
+      ? null
+      : (reaction?.message ?? null);
 
   return (
     <main
-      className={`pet-stage pet-stage--${settings.age} pet-stage--palette-${settings.palette}${state === "sleep" ? " pet-stage--sleeping" : ""}`}
+      className={`pet-stage pet-stage--${settings.age} pet-stage--palette-${settings.palette}`}
       style={{ "--pet-scale": settings.scale } as CSSProperties}
       aria-label={strings.pet.aria}
       {...interaction}

@@ -64,7 +64,7 @@
     "publisher": "CyberNaiwa contributors",
     "category": "Utility",
     "shortDescription": "A cyber ASCII frog that lives on your desktop",
-    "longDescription": "CyberNaiwa is a local-first desktop pet: a neon ASCII frog that idles, walks, sleeps and reacts to clicks. It stores its settings in a local JSON file and never needs an account or a network connection.",
+    "longDescription": "CyberNaiwa is a local-first desktop pet: a neon ASCII frog that idles, walks and reacts to clicks. It stores its settings in a local JSON file and never needs an account or a network connection.",
     "copyright": "Copyright 漏 2026 CyberNaiwa contributors",
     "licenseFile": "../LICENSE",
     "windows": {

@@ -41,9 +41,9 @@ fn open_settings(app: &AppHandle) {
 
 fn tray_menu(app: &AppHandle, language: &str) -> tauri::Result<Menu<tauri::Wry>> {
     let (show, hide, settings, quit) = if language == "en" {
-        ("Show pet", "Hide pet", "Settings", "Quit CyberNaiwa")
+        ("Show pet", "Hide pet", "Settings", "Quit Cyber Naiwa")
     } else {
-        ("显示桌宠", "隐藏桌宠", "显示设置", "退出 CyberNaiwa")
+        ("显示桌宠", "隐藏桌宠", "显示设置", "退出赛博奶蛙")
     };
 
     let show_item = MenuItem::with_id(app, "show", show, true, None::<&str>)?;
@@ -81,9 +81,9 @@ fn set_tray_language(app: AppHandle, language: String) -> Result<(), String> {
         .map_err(|error| error.to_string())?;
 
     let tooltip = if language == "en" {
-        "CyberNaiwa · Naiwa is online"
+        "Cyber Naiwa · online"
     } else {
-        "CyberNaiwa · 奶蛙在线"
+        "赛博奶蛙 · 在线"
     };
     tray.set_tooltip(Some(tooltip))
         .map_err(|error| error.to_string())?;
@@ -104,7 +104,7 @@ pub fn run() {
 
             TrayIconBuilder::with_id(TRAY_ID)
                 .icon(icon)
-                .tooltip("CyberNaiwa · 奶蛙在线")
+                .tooltip("赛博奶蛙 · 在线")
                 .menu(&menu)
                 .show_menu_on_left_click(false)
                 .on_menu_event(|app, event| match event.id.as_ref() {

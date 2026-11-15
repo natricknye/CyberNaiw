@@ -23,7 +23,10 @@ this repository.
 import idle1 from "./milk-frog/idle-1.png";
 import idle2 from "./milk-frog/idle-2.png";
 import walk1 from "./milk-frog/walk-1.png";
-// ...
+import happy1 from "./milk-frog/happy-1.png";
+import click1 from "./milk-frog/click-1.png";
+import wave1 from "./milk-frog/wave-1.png";
+import sad1 from "./milk-frog/sad-1.png";
 
 {
   id: "milk-frog",
@@ -33,9 +36,10 @@ import walk1 from "./milk-frog/walk-1.png";
   frames: {
     idle: [idle1, idle2],
     walk: [walk1],
-    sleep: [sleep1],
     happy: [happy1],
     click: [click1],
+    wave: [wave1],
+    sad: [sad1],
   },
   frameIntervalMs: 320,
 }
