@@ -11,8 +11,9 @@ import { MAX_PET_SCALE, MIN_PET_SCALE } from "../types/pet";
 import "../styles/settings.css";
 
 export default function Settings() {
-  const { settings, loaded, status, error, update, reset } = useSettings();
-  const [version, setVersion] = useState("0.2.1");
+  const { settings, loaded, status, error, update } = useSettings();
+  const [version, setVersion] = useState("0.2.2");
+  const [aboutOpen, setAboutOpen] = useState(false);
 
   const strings = UI_STRINGS[settings.language];
   const statusText = {
@@ -77,14 +78,21 @@ export default function Settings() {
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        void hideSettingsWindow();
+      if (event.key !== "Escape") {
+        return;
       }
+
+      if (aboutOpen) {
+        setAboutOpen(false);
+        return;
+      }
+
+      void hideSettingsWindow();
     };
 
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, []);
+  }, [aboutOpen]);
 
   const sliderValue = Math.round(settings.scale * 100);
   const sliderMin = Math.round(MIN_PET_SCALE * 100);
@@ -281,10 +289,11 @@ export default function Settings() {
         <button
           type="button"
           className="button button--ghost"
-          onClick={reset}
-          disabled={!loaded}
+          aria-expanded={aboutOpen}
+          aria-controls="about-panel"
+          onClick={() => setAboutOpen(true)}
         >
-          {strings.settings.restoreDefaults}
+          {strings.settings.about}
         </button>
         <button
           type="button"
@@ -295,29 +304,51 @@ export default function Settings() {
         </button>
       </footer>
 
-      <section
-        className="settings-card settings-card--about"
-        aria-labelledby="about-title"
-      >
-        <div className="settings-card__head">
-          <h2 id="about-title">{strings.settings.about}</h2>
+      {aboutOpen ? (
+        <div
+          className="settings-about-layer"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="about-title"
+          onClick={(event) => {
+            if (event.target === event.currentTarget) {
+              setAboutOpen(false);
+            }
+          }}
+        >
+          <section
+            id="about-panel"
+            className="settings-card settings-card--about"
+          >
+            <div className="settings-card__head">
+              <h2 id="about-title">{strings.settings.about}</h2>
+              <button
+                type="button"
+                className="settings-about-close"
+                autoFocus
+                onClick={() => setAboutOpen(false)}
+              >
+                {strings.settings.aboutClose}
+              </button>
+            </div>
+            <dl className="settings-meta">
+              <div>
+                <dt>{strings.settings.version}</dt>
+                <dd>{version}</dd>
+              </div>
+              <div>
+                <dt>{strings.settings.data}</dt>
+                <dd>{strings.settings.dataValue}</dd>
+              </div>
+              <div>
+                <dt>{strings.settings.license}</dt>
+                <dd>MIT</dd>
+              </div>
+            </dl>
+            <p className="settings-note">{strings.settings.aboutNote}</p>
+          </section>
         </div>
-        <dl className="settings-meta">
-          <div>
-            <dt>{strings.settings.version}</dt>
-            <dd>{version}</dd>
-          </div>
-          <div>
-            <dt>{strings.settings.data}</dt>
-            <dd>{strings.settings.dataValue}</dd>
-          </div>
-          <div>
-            <dt>{strings.settings.license}</dt>
-            <dd>MIT</dd>
-          </div>
-        </dl>
-        <p className="settings-note">{strings.settings.aboutNote}</p>
-      </section>
+      ) : null}
     </main>
   );
 }

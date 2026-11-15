@@ -109,6 +109,16 @@
 - 验证：`elementFromPoint` 在中心返回 `SPAN.tone-shade`，在角落返回 `MAIN.pet-stage`；CDP 点中心播一条 meme，点角落 0 次播放、无气泡、HUD 保持 IDLE。
 - 顺带修复：窗口中心离开所有显示器时，`monitorForWindow` 会退回到重叠面积最大的显示器/主显示器，启动 clamp 和默认定位仍能把窗口拉回可见区域。
 
+## 2026-11-16 — Phase 15：0.2.2 控制台、图标与幼体嘴部
+
+- 状态数保持 5：idle / walk / happy / click / wave。
+- 设置页「关于」改成按需覆盖层，平时不占主面板；删除「恢复默认设置」按钮和 hook；真实 700px 窗口 `clientHeight 700 / scrollHeight 700`，不再滚动。
+- 标签语改为「让奶娃住进每个奶家人的电脑」，README 同步。
+- 应用图标改成幼体原色 ASCII 待机帧，`tauri icon` 重新生成 Windows/macOS/Android/iOS 全套图标；32×32 仍能读出黄身、绿眼和深色底。
+- 幼体闭嘴帧的嘴线改成眼睛下方一条干净的 5 字符 `-`，清掉旧散点；112×70 / 128×80 两套都重生成。
+- 控制台最后切成量子蓝黑终端配色：深蓝黑底、青色强调、浅青文字，保留直角布局；预览截图 `_qa/art/settings-quantum-closed.png`、`settings-quantum-about.png`。
+- 版本 0.2.2，准备重新打包。
+
 ## 待人工确认
 
 - 托盘菜单的物理点击仍需在桌面通知区实际点一遍；窗口 show/hide/设置/退出逻辑已实现。

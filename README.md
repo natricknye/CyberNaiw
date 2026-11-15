@@ -1,6 +1,6 @@
 # 赛博奶蛙
 
-> CyberNaiwa · 让奶蛙住进每个人的电脑。
+> 让奶娃住进每个奶家人的电脑。
 
 [![build](https://github.com/natricknye/CyberNaiw/actions/workflows/build.yml/badge.svg)](https://github.com/natricknye/CyberNaiw/actions/workflows/build.yml)
 
@@ -23,8 +23,8 @@
 
 | 平台 | 安装包 | 说明 |
 | --- | --- | --- |
-| Windows 10/11 x64 | [CyberNaiwa_0.2.1_x64-setup.exe](https://github.com/natricknye/CyberNaiw/releases/download/v0.2.1/CyberNaiwa_0.2.1_x64-setup.exe) | NSIS，当前用户安装，不要求管理员 |
-| macOS 11+ Apple Silicon | [CyberNaiwa_0.2.1_aarch64.dmg](https://github.com/natricknye/CyberNaiw/releases/download/v0.2.1/CyberNaiwa_0.2.1_aarch64.dmg) | 未签名/未公证；首次打开需右键 → 打开 |
+| Windows 10/11 x64 | [CyberNaiwa_0.2.2_x64-setup.exe](https://github.com/natricknye/CyberNaiw/releases/download/v0.2.2/CyberNaiwa_0.2.2_x64-setup.exe) | NSIS，当前用户安装，不要求管理员 |
+| macOS 11+ Apple Silicon | [CyberNaiwa_0.2.2_aarch64.dmg](https://github.com/natricknye/CyberNaiw/releases/download/v0.2.2/CyberNaiwa_0.2.2_aarch64.dmg) | 未签名/未公证；首次打开需右键 → 打开 |
 
 [所有版本](https://github.com/natricknye/CyberNaiw/releases) · [构建日志](https://github.com/natricknye/CyberNaiw/actions)
 
@@ -54,7 +54,7 @@
 
 <img src="docs/settings.png" alt="赛博奶蛙设置页" width="420" />
 
-透明置顶、桌宠大小、成年/幼体、原色模式/量子模式、动画开关、声音开关和恢复默认都在同一个面板里。
+透明置顶、桌宠大小、成年/幼体、原色模式/量子模式、动画开关和声音开关都在同一个面板里；「关于」按需打开，不占主面板空间。控制台使用量子模式的蓝黑终端配色。
 
 ## 技术栈
 
@@ -127,7 +127,7 @@ pnpm tauri build --bundles dmg
 
 ## 角色素材
 
-默认角色 `cyber-naiwa` 的原色模式成年帧在 `src/assets/pets/cyber-naiwa/naiwa-frames.json`，幼体帧在 `naiwa-baby-frames.json`（112×70）；量子模式成年/幼体帧在 `naiwa-cyber-frames.json`、`naiwa-cyber-baby-frames.json`（128×80）。每套 5 个状态、每态 2 帧，字符 tone、帧间隔和渲染逻辑在 `frames.ts`。帧由官方设计资料库中的成年 / 幼体 / 大笑 / 挥手参考图逐像素映射生成，仓库不包含参考图片本身。
+默认角色 `cyber-naiwa` 的原色模式成年帧在 `src/assets/pets/cyber-naiwa/naiwa-frames.json`，幼体帧在 `naiwa-baby-frames.json`（112×70）；量子模式成年/幼体帧在 `naiwa-cyber-frames.json`、`naiwa-cyber-baby-frames.json`（128×80）。每套 5 个状态、每态 2 帧，字符 tone、帧间隔和渲染逻辑在 `frames.ts`。帧由官方设计资料库中的成年 / 幼体 / 大笑 / 挥手参考图逐像素映射生成，仓库不包含参考图片本身。应用图标取自幼体原色 ASCII 待机帧，不再单独绘制。
 
 想换成 PNG/WEBP/GIF 皮肤时，按 `src/assets/pets/README.md` 的说明注册 `ImagePetSkin` 即可，渲染器同时支持 ASCII 和图片序列。请不要提交没有 redistribution 权限的素材。
 
@@ -183,4 +183,4 @@ CyberNaiwa 是粉丝向、非商业的开源项目，灵感来自中文互联网
 
 ## 构建状态
 
-GitHub Actions 工作流在 `.github/workflows/build.yml`，在 Windows 和 macOS Runner 上分别构建 NSIS 安装包和 DMG。v0.2.1（量子模式 128×80 / 原色模式 112×70、五态、六段点击语音）发布到 [Releases](https://github.com/natricknye/CyberNaiw/releases/tag/v0.2.1)。签名/公证 secrets 未配置，因此产物为未签名版本。
+GitHub Actions 工作流在 `.github/workflows/build.yml`，在 Windows 和 macOS Runner 上分别构建 NSIS 安装包和 DMG。v0.2.2（量子模式 128×80 / 原色模式 112×70、五态、六段点击语音、幼体 ASCII 图标、蓝黑终端控制台）发布到 [Releases](https://github.com/natricknye/CyberNaiw/releases/tag/v0.2.2)。签名/公证 secrets 未配置，因此产物为未签名版本。
