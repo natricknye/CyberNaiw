@@ -10,6 +10,7 @@ CyberNaiwa is a cross-platform desktop pet built around 奶蛙 (Naiwa), the glee
 
 - A transparent, frameless, always-on-top pet window
 - Left-drag to move, click to interact, right-click for a native menu
+- Click to play Naiwa's classic laugh, with a mute switch in Settings
 - Seven states: Idle / Walk / Sleep / Happy / Click / Wave / Sad
 - Adult and baby Naiwa, in cyber blue-black or warm original colours
 - Chinese and English UI, Chinese by default, with a top-bar switcher
@@ -53,7 +54,7 @@ Baby preview:
 
 <img src="docs/settings.png" alt="CyberNaiwa settings" width="420" />
 
-Always-on-top, size, adult/baby, cyber/original, animation, and restore defaults live in one panel; the language switch sits at the top.
+Always-on-top, size, adult/baby, cyber/original, animation, sound, and restore defaults live in one panel; the language switch sits at the top.
 
 ## Stack
 
@@ -122,7 +123,7 @@ The official `tauri-plugin-store` writes `settings.json` to the app data directo
 - Windows: `%APPDATA%\com.cybernaiwa.desktop\settings.json`
 - macOS: `~/Library/Application Support/com.cybernaiwa.desktop/settings.json`
 
-Two keys live in that file: `settings` (always-on-top, scale, animation, language, adult/baby, cyber/original) and `windowPosition` (physical pixels). Nothing is synced anywhere.
+Two keys live in that file: `settings` (always-on-top, scale, animation, sound, language, adult/baby, cyber/original) and `windowPosition` (physical pixels). Nothing is synced anywhere.
 
 ## Character art
 
@@ -141,13 +142,23 @@ Want to try a PNG/WEBP/GIF skin? `src/assets/pets/README.md` shows how to regist
 
 ## Design notes
 
-The character follows the official Naiwa design database and the [Naiwa wiki](https://neta.art/app/milk-frog-wiki): a warm yellow pear-shaped body, a pale cream belly, short thick olive-brown hands and feet, pale green eye rings with centred black pupils, and a tiny horizontal mouth. The adult has a lower centre of gravity; the baby is rounder and more compact. Click-to-laugh is the core interaction, with waving and looking down as extra actions. The [Nailong-Studio/NaiWa-Wallpaper](https://github.com/Nailong-Studio/NaiWa-Wallpaper) public asset index was also used as an action reference, but artwork-integrated images were deliberately ignored.
+The character follows the official Naiwa design database and the [Naiwa wiki](https://neta.art/app/milk-frog-wiki): the adult is tall and long-limbed, the baby is short, round, big-headed, with tiny limbs; both have a pale cream belly, pale green eye rings with centred black pupils, and a tiny horizontal mouth. Click-to-interact is the core interaction, with waving and looking down as extra actions. The [Nailong-Studio/NaiWa-Wallpaper](https://github.com/Nailong-Studio/NaiWa-Wallpaper) public asset index was also used for character poses and audio; artwork-integrated images were deliberately ignored.
+
+## Voice and audio sources
+
+The click bubbles “安迪 / 嘎嘎滴辣虾 / 卡脚先 / 无了 / 甘巴爹 / 有用不 / 哈哈哈哈哈” are Naiwa meme sound words from the Chinese internet, not lines written for this project:
+
+- 《捧腹大笑思想与奶龙学概论》 chapter 6, “奶蛙的衍生语”: <https://xn--psszg58c9c2281ajit.lol/files/history.pdf>
+- naiwa.meme sticker archive: <https://naiwa.meme/stickers>
+- Milk Frog Keyboard's 13-sound list: <https://mwm.ai/it/apps/milk-frog-music-meme-beats/6762385358>
+
+The click laugh uses `audio/奶蛙-桌宠笑声.wav` (1.8 s) from [Nailong-Studio/NaiWa-Wallpaper](https://github.com/Nailong-Studio/NaiWa-Wallpaper). The audio and character rights belong to their original creators; this is a non-commercial fan project and the asset will be removed on request.
 
 ## License and disclaimer
 
 MIT — see [LICENSE](LICENSE).
 
-CyberNaiwa is a fan-made, non-commercial open-source project inspired by the Chinese internet meme 奶蛙 (Naiwa). The character emerged from AI-generated fan art and community remixes. This project is not affiliated with 奶龙 or its rights holders. The ASCII frames in this repo were converted and drawn by this project from public references; no third-party image assets are included.
+CyberNaiwa is a fan-made, non-commercial open-source project inspired by the Chinese internet meme 奶蛙 (Naiwa). The character emerged from AI-generated fan art and community remixes. This project is not affiliated with 奶龙 or its rights holders. The ASCII frames in this repo were converted and drawn by this project from public references; no third-party image assets are included. The click laugh audio comes from the public asset library above and remains the property of its original creators.
 
 ## Build status
 

@@ -20,6 +20,7 @@ export interface PetSettings {
   alwaysOnTop: boolean;
   scale: number;
   animationsEnabled: boolean;
+  soundEnabled: boolean;
   language: Language;
   age: PetAge;
   palette: PetPalette;
@@ -34,6 +35,7 @@ export const DEFAULT_SETTINGS: PetSettings = {
   alwaysOnTop: true,
   scale: 1,
   animationsEnabled: true,
+  soundEnabled: true,
   language: "zh",
   age: "adult",
   palette: "cyber",

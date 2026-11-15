@@ -28,6 +28,8 @@ export interface UiStrings {
     animation: string;
     animationHint: string;
     animationNote: string;
+    sound: string;
+    soundHint: string;
     about: string;
     version: string;
     data: string;
@@ -80,6 +82,8 @@ const ZH: UiStrings = {
     animationHint: "待机、走动、睡觉和逐帧动画。",
     animationNote:
       "关闭动画后奶蛙保持静态；点击仍会切换表情作为反馈，但不会自动走动或睡觉。",
+    sound: "声音",
+    soundHint: "点击时播放奶蛙经典笑声。",
     about: "关于",
     version: "版本",
     data: "数据",
@@ -108,15 +112,19 @@ const ZH: UiStrings = {
       sad: "赛博奶蛙，有点低落",
     },
     settingsError: "设置读取失败，已使用默认值",
+    // Naiwa meme sound words, not self-written. Sources:
+    // 《捧腹大笑思想与奶龙学概论》第六章「奶蛙的衍生语」
+    // https://xn--psszg58c9c2281ajit.lol/files/history.pdf
+    // naiwa.meme sticker archive: https://naiwa.meme/stickers
+    // Milk Frog Keyboard sound list: https://mwm.ai/it/apps/milk-frog-music-meme-beats/6762385358
     reactions: [
-      "呱？",
-      "奶量 +1",
-      "别戳啦，在充电",
-      "赛博奶蛙，在线摸鱼",
-      "检测到人类手指",
-      "今日份可爱已到账",
-      "呱呱！",
-      "让我再睡五分钟…",
+      "哈哈哈哈哈",
+      "安迪",
+      "嘎嘎滴辣虾",
+      "卡脚先",
+      "无了",
+      "甘巴爹",
+      "有用不",
     ],
   },
   menu: {
@@ -151,6 +159,8 @@ const EN: UiStrings = {
     animationHint: "Idle, walking, napping and frame-by-frame motion.",
     animationNote:
       "With animation off, Naiwa holds still. Clicks still change the expression, but there's no automatic walking or napping.",
+    sound: "Sound",
+    soundHint: "Play Naiwa's classic laugh when clicked.",
     about: "About",
     version: "Version",
     data: "Data",
@@ -179,15 +189,15 @@ const EN: UiStrings = {
       sad: "Cyber Naiwa, feeling low",
     },
     settingsError: "Couldn't read settings; using defaults.",
+    // These are Naiwa meme sound words; keep the Chinese originals in both locales.
     reactions: [
-      "Ribbit?",
-      "Milk +1",
-      "Charging. Please don't poke.",
-      "Cyber frog, professionally slacking.",
-      "Human finger detected.",
-      "Today's cuteness has arrived.",
-      "Ribbit ribbit!",
-      "Five more minutes…",
+      "哈哈哈哈哈",
+      "安迪",
+      "嘎嘎滴辣虾",
+      "卡脚先",
+      "无了",
+      "甘巴爹",
+      "有用不",
     ],
   },
   menu: {
