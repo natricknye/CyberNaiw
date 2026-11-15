@@ -182,7 +182,7 @@ cargo check --manifest-path src-tauri/Cargo.toml
 - 真实鼠标拖拽 release 窗口：从 (15,284) 移到 (158,500)，尺寸保持 475×525 物理像素（0.1.0 版本验证）。
 - 右键原生菜单：通过屏幕截图确认「隐藏桌宠 / 显示设置 / 退出 CyberNaiwa」；透明区域能看到后面的窗口内容。
 - 设置持久化：设为 115% 后重启，设置页仍为 115%，桌宠窗口为 438×484；随后恢复 100%，窗口回到 380×420。
-- `pnpm tauri build --bundles nsis`：0.1.0 通过，生成 `CyberNaiwa_0.1.0_x64-setup.exe`（约 1.47 MiB）；0.2.0 通过，生成 `CyberNaiwa_0.2.0_x64-setup.exe`（约 1.48 MiB）；0.2.1 通过，生成 `CyberNaiwa_0.2.1_x64-setup.exe`（约 2.87 MiB，含六段语音）。
+- `pnpm tauri build --bundles nsis`：0.1.0 通过，生成 `CyberNaiwa_0.1.0_x64-setup.exe`（约 1.47 MiB）；0.2.0 通过，生成 `CyberNaiwa_0.2.0_x64-setup.exe`（约 1.48 MiB）；0.2.1 通过，生成 `CyberNaiwa_0.2.1_x64-setup.exe`（约 2.87 MiB，含六段语音）；0.2.2 通过，生成 `CyberNaiwa_0.2.2_x64-setup.exe`（约 3.05 MiB，含主题安装器）。
 - 0.2.1 release exe 在生产 CSP 下启动成功：窗口标题「赛博奶蛙」、设置页 0.2.1、五态可见；六段音频以 hash 资源名加载，成年 1.0×、幼体 1.35× 且 `preservesPitch false`；静音后 0 次播放、六句字幕全部出现；设置页 `700 / 793 / auto`。生产包截图在 `_qa/art/release-0.2.1-pet.png`。
 - 托盘菜单由 Rust 在启动时创建；托盘的物理点击未纳入自动化测试，需要人工点一次确认。
 - 设置页/图标：`pnpm build` 通过；设置页改为中文-only，实际点击 幼体 → 原色 → 恢复默认 均正确；`settings-cn-final.png` 为完整中文截图，`settings-scrolled-bottom.png` 显示底部说明可见；shell `clientHeight 700 / scrollHeight 778 / overflow-y auto`，可滚到底。
@@ -196,6 +196,7 @@ cargo check --manifest-path src-tauri/Cargo.toml
 - 2026-11-16 字号：设置页最小 12px（标签 15px、提示 13px、正文/说明 12–13px）；桌宠 HUD 11px、字幕 13px；安装器 sidebar 标题 21px、标签 11px、底注 10px，header 标题 16px、副标题 10px。
 - 2026-11-16 幼体嘴部：112×70 待机帧第 19 行 x=44–48 为连续 5 个 `-`，原先散落的嘴线已清掉；128×80 帧同步生成，嘴部在五态预览和 32×32 图标中都可读。
 - 2026-11-16 图标：`src-tauri/icons/32x32.png` 与 `128x128.png` 检查通过，均为幼体原色 ASCII 黄身/绿眼/深色底；Tauri 全套 Windows/macOS/Android/iOS 图标由 `tauri icon` 重新生成。
+- 2026-11-16 0.2.2 生产包：设置窗口 `520×760 / 760 / 760`，提示 13px、标签 15px、说明 12px，关于覆盖层打开/关闭不改变高度；安装器首屏为深色 sidebar + 幼体 ASCII + “欢迎使用赛博奶蛙”，截图在 `_qa/art/settings-final-0.2.2.png`、`_qa/art/installer-final-0.2.2.png`。
 - macOS 本机无法验证，只能依赖 CI 构建。
 
 ## 坑与注意事项
