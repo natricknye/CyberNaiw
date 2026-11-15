@@ -130,16 +130,11 @@ export function useSettings() {
     setSettings((current) => normalizeSettings({ ...current, ...patch }));
   }, []);
 
-  const reset = useCallback(() => {
-    setSettings(DEFAULT_SETTINGS);
-  }, []);
-
   return {
     settings,
     loaded,
     status,
     error,
     update,
-    reset,
   };
 }

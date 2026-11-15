@@ -1,6 +1,6 @@
 # Cyber Naiwa
 
-> 赛博奶蛙 · A milk frog for your desktop.
+> 赛博奶蛙 · Let Naiwa move into every Naiwa-family computer.
 
 [![build](https://github.com/natricknye/CyberNaiw/actions/workflows/build.yml/badge.svg)](https://github.com/natricknye/CyberNaiw/actions/workflows/build.yml)
 
@@ -23,8 +23,8 @@ Cyber Naiwa (赛博奶蛙) is a cross-platform desktop pet built around 奶蛙 (
 
 | Platform | Installer | Notes |
 | --- | --- | --- |
-| Windows 10/11 x64 | [CyberNaiwa_0.2.1_x64-setup.exe](https://github.com/natricknye/CyberNaiw/releases/download/v0.2.1/CyberNaiwa_0.2.1_x64-setup.exe) | NSIS, installs for the current user; no admin required |
-| macOS 11+ Apple Silicon | [CyberNaiwa_0.2.1_aarch64.dmg](https://github.com/natricknye/CyberNaiw/releases/download/v0.2.1/CyberNaiwa_0.2.1_aarch64.dmg) | Unsigned and not notarized; right-click → Open the first time |
+| Windows 10/11 x64 | [CyberNaiwa_0.2.2_x64-setup.exe](https://github.com/natricknye/CyberNaiw/releases/download/v0.2.2/CyberNaiwa_0.2.2_x64-setup.exe) | NSIS, installs for the current user; no admin required |
+| macOS 11+ Apple Silicon | [CyberNaiwa_0.2.2_aarch64.dmg](https://github.com/natricknye/CyberNaiw/releases/download/v0.2.2/CyberNaiwa_0.2.2_aarch64.dmg) | Unsigned and not notarized; right-click → Open the first time |
 
 [All releases](https://github.com/natricknye/CyberNaiw/releases) · [Build logs](https://github.com/natricknye/CyberNaiw/actions)
 
@@ -54,7 +54,7 @@ Baby preview:
 
 <img src="docs/settings.png" alt="CyberNaiwa settings" width="420" />
 
-Always-on-top, size, adult/baby, Original/Quantum mode, animation, sound, and restore defaults live in one panel.
+Always-on-top, size, adult/baby, Original/Quantum mode, animation, and sound live in one panel; About opens on demand and takes no main-panel space. The console uses the Quantum blue-black terminal palette.
 
 ## Stack
 
@@ -127,7 +127,7 @@ Two keys live in that file: `settings` (always-on-top, scale, animation, sound, 
 
 ## Character art
 
-The default `cyber-naiwa` skin stores Original-mode adult/baby frames in `naiwa-frames.json` and `naiwa-baby-frames.json` (112×70), and Quantum-mode adult/baby frames in `naiwa-cyber-frames.json` and `naiwa-cyber-baby-frames.json` (128×80). Each set has five states and two frames per state. `frames.ts` maps characters to colour tones and declares frame timing. The grids were pixel-mapped from the official design database's adult, juvenile, laugh, and wave references; no reference image files themselves are shipped in the repo.
+The default `cyber-naiwa` skin stores Original-mode adult/baby frames in `naiwa-frames.json` and `naiwa-baby-frames.json` (112×70), and Quantum-mode adult/baby frames in `naiwa-cyber-frames.json` and `naiwa-cyber-baby-frames.json` (128×80). Each set has five states and two frames per state. `frames.ts` maps characters to colour tones and declares frame timing. The grids were pixel-mapped from the official design database's adult, juvenile, laugh, and wave references; no reference image files themselves are shipped in the repo. The app icon is taken from the baby's Original-mode ASCII idle frame instead of being drawn separately.
 
 Want to try a PNG/WEBP/GIF skin? `src/assets/pets/README.md` shows how to register an `ImagePetSkin`. The renderer already handles both ASCII and image sequences. Please only add art you have the right to redistribute.
 
@@ -183,4 +183,4 @@ CyberNaiwa is a fan-made, non-commercial open-source project inspired by the Chi
 
 ## Build status
 
-The GitHub Actions workflow at `.github/workflows/build.yml` builds an NSIS installer and a DMG on Windows and macOS runners. v0.2.1 (128×80 Quantum / 112×70 Original, five states, six click voice clips) is published under [Releases](https://github.com/natricknye/CyberNaiw/releases/tag/v0.2.1). Builds are unsigned until signing/notarization secrets are configured.
+The GitHub Actions workflow at `.github/workflows/build.yml` builds an NSIS installer and a DMG on Windows and macOS runners. v0.2.2 (128×80 Quantum / 112×70 Original, five states, six click voice clips, baby ASCII icon, blue-black terminal console) is published under [Releases](https://github.com/natricknye/CyberNaiw/releases/tag/v0.2.2). Builds are unsigned until signing/notarization secrets are configured.

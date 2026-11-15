@@ -35,12 +35,12 @@ export interface UiStrings {
     sound: string;
     soundHint: string;
     about: string;
+    aboutClose: string;
     version: string;
     data: string;
     dataValue: string;
     license: string;
     aboutNote: string;
-    restoreDefaults: string;
     done: string;
     loading: string;
     saving: string;
@@ -66,7 +66,7 @@ const ZH: UiStrings = {
   settings: {
     windowTitle: "赛博奶蛙",
     title: "赛博奶蛙",
-    intro: "一只住在你桌面上的奶蛙。",
+    intro: "让奶娃住进每个奶家人的电脑",
     introSecond: "设置只存在本机，不上传，也不用登录。",
     languageLabel: "语言",
     appearance: "外观",
@@ -89,13 +89,13 @@ const ZH: UiStrings = {
     sound: "声音",
     soundHint: "点击播放对应奶蛙语音；幼体是更高频的版本。",
     about: "关于",
+    aboutClose: "返回设置",
     version: "版本",
     data: "数据",
     dataValue: "本地 JSON · 无云端",
     license: "许可",
     aboutNote:
       "关闭设置窗口后，奶蛙会继续在桌面运行。要完全退出，请使用托盘或奶蛙右键菜单。",
-    restoreDefaults: "恢复默认设置",
     done: "收起设置",
     loading: "读取中",
     saving: "保存中…",
@@ -136,7 +136,7 @@ const EN: UiStrings = {
   settings: {
     windowTitle: "Cyber Naiwa",
     title: "Cyber Naiwa",
-    intro: "A Naiwa that lives on your desktop.",
+    intro: "Let Naiwa move into every Naiwa-family computer.",
     introSecond: "Settings stay on this machine — no uploads, no sign-in.",
     languageLabel: "Language",
     appearance: "Appearance",
@@ -160,13 +160,13 @@ const EN: UiStrings = {
     sound: "Sound",
     soundHint: "Play the matching Naiwa voice line on click; the baby uses a higher-pitched version.",
     about: "About",
+    aboutClose: "Back to settings",
     version: "Version",
     data: "Data",
     dataValue: "Local JSON · nothing leaves this machine",
     license: "License",
     aboutNote:
       "Closing this window leaves Naiwa on your desktop. To quit for real, use the tray or right-click Naiwa.",
-    restoreDefaults: "Restore defaults",
     done: "Done",
     loading: "Loading",
     saving: "Saving…",
