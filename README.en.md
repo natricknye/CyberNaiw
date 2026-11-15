@@ -23,8 +23,8 @@ Cyber Naiwa (赛博奶蛙) is a cross-platform desktop pet built around 奶蛙 (
 
 | Platform | Installer | Notes |
 | --- | --- | --- |
-| Windows 10/11 x64 | [CyberNaiwa_0.2.0_x64-setup.exe](https://github.com/natricknye/CyberNaiw/releases/download/v0.2.0/CyberNaiwa_0.2.0_x64-setup.exe) | NSIS, installs for the current user; no admin required |
-| macOS 11+ Apple Silicon | [CyberNaiwa_0.2.0_aarch64.dmg](https://github.com/natricknye/CyberNaiw/releases/download/v0.2.0/CyberNaiwa_0.2.0_aarch64.dmg) | Unsigned and not notarized; right-click → Open the first time |
+| Windows 10/11 x64 | [CyberNaiwa_0.2.1_x64-setup.exe](https://github.com/natricknye/CyberNaiw/releases/download/v0.2.1/CyberNaiwa_0.2.1_x64-setup.exe) | NSIS, installs for the current user; no admin required |
+| macOS 11+ Apple Silicon | [CyberNaiwa_0.2.1_aarch64.dmg](https://github.com/natricknye/CyberNaiw/releases/download/v0.2.1/CyberNaiwa_0.2.1_aarch64.dmg) | Unsigned and not notarized; right-click → Open the first time |
 
 [All releases](https://github.com/natricknye/CyberNaiw/releases) · [Build logs](https://github.com/natricknye/CyberNaiw/actions)
 
@@ -176,4 +176,4 @@ CyberNaiwa is a fan-made, non-commercial open-source project inspired by the Chi
 
 ## Build status
 
-The GitHub Actions workflow at `.github/workflows/build.yml` builds an NSIS installer and a DMG on Windows and macOS runners. v0.2.0 (128×80 Quantum / 112×70 Original) is published under [Releases](https://github.com/natricknye/CyberNaiw/releases/tag/v0.2.0). Builds are unsigned until signing/notarization secrets are configured.
+The GitHub Actions workflow at `.github/workflows/build.yml` builds an NSIS installer and a DMG on Windows and macOS runners. v0.2.1 (128×80 Quantum / 112×70 Original, five states, six click voice clips) is published under [Releases](https://github.com/natricknye/CyberNaiw/releases/tag/v0.2.1). Builds are unsigned until signing/notarization secrets are configured.
