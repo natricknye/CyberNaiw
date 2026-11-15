@@ -107,6 +107,7 @@
 - 透明区域仍可拖动窗口（pointermove 超过 5px 就 `startDragging()`），但松开不会触发点击、语音或字幕。
 - 额外修复：pointermove 在 `buttons === 0` 时清空 pressRef，window pointerup/pointercancel/blur 也清理；否则 pointerup 丢失后窗口会跟随鼠标漂移。
 - 验证：`elementFromPoint` 在中心返回 `SPAN.tone-shade`，在角落返回 `MAIN.pet-stage`；CDP 点中心播一条 meme，点角落 0 次播放、无气泡、HUD 保持 IDLE。
+- 顺带修复：窗口中心离开所有显示器时，`monitorForWindow` 会退回到重叠面积最大的显示器/主显示器，启动 clamp 和默认定位仍能把窗口拉回可见区域。
 
 ## 待人工确认
 
