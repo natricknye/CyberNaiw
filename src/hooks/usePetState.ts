@@ -1,10 +1,15 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { UI_STRINGS } from "../i18n/strings";
-import type { Language, PetAnimationState } from "../types/pet";
+import type {
+  Language,
+  NaiwaVoice,
+  PetAnimationState,
+} from "../types/pet";
 
 export interface PetReaction {
   id: number;
   message: string;
+  voice: NaiwaVoice;
 }
 
 const CLICK_STATE_MS = 380;
@@ -40,8 +45,13 @@ export function usePetState(
 
     reactionId.current += 1;
     const reactions = UI_STRINGS[language].pet.reactions;
-    const message = reactions[Math.floor(Math.random() * reactions.length)];
-    setReaction({ id: reactionId.current, message });
+    const picked = reactions[Math.floor(Math.random() * reactions.length)];
+    const nextReaction: PetReaction = {
+      id: reactionId.current,
+      message: picked.text,
+      voice: picked.voice,
+    };
+    setReaction(nextReaction);
 
     if (reactionTimer.current !== null) {
       window.clearTimeout(reactionTimer.current);
@@ -59,6 +69,8 @@ export function usePetState(
         setState("idle");
       }, HAPPY_STATE_MS);
     }, CLICK_STATE_MS);
+
+    return nextReaction;
   }, [clearTransition, language]);
 
   // Turning animations off cancels any in-flight automatic/click transition.

@@ -14,6 +14,19 @@ export type PetAge = "adult" | "baby";
 
 export type PetPalette = "original" | "cyber";
 
+export type NaiwaVoice =
+  | "andi"
+  | "gaga"
+  | "ganbade"
+  | "laugh"
+  | "ola"
+  | "gajiucai";
+
+export interface NaiwaReaction {
+  text: string;
+  voice: NaiwaVoice;
+}
+
 export interface PetSettings {
   alwaysOnTop: boolean;
   scale: number;

@@ -10,7 +10,7 @@ Cyber Naiwa (赛博奶蛙) is a cross-platform desktop pet built around 奶蛙 (
 
 - A transparent, frameless, always-on-top pet window
 - Left-drag to move, click to interact, right-click for a native menu
-- Click to play Naiwa's laugh, with a mute switch in Settings
+- Click to play the matching Naiwa voice line, with a mute switch in Settings
 - Five states: Idle / Walk / Happy / Click / Wave
 - Adult and baby Naiwa, in Quantum blue-black or warm Original colours
 - Chinese app UI; English documentation in `README.en.md`
@@ -146,19 +146,33 @@ The character follows the official Naiwa design database and the [Naiwa wiki](ht
 
 ## Voice and audio sources
 
-The click bubbles “安迪 / 嘎嘎滴辣虾 / 卡脚先 / 无了 / 甘巴爹 / 有用不 / 哈哈哈哈哈” are Naiwa meme sound words from the Chinese internet, not lines written for this project:
+Each click line has a matching audio clip; all come from Chinese Naiwa memes, not lines written for this project:
+
+| Line | File | Length |
+| --- | --- | --- |
+| 安迪 | `naiwa-andi.wav` | 1.85s |
+| 嘎嘎提拉瞎 | `naiwa-gaga.wav` | 1.17s |
+| 干巴得 | `naiwa-ganbade.wav` | 1.11s |
+| 哈哈哈哈哈 | `naiwa-laugh-long.wav` | 4.11s |
+| 哦啦 | `naiwa-ola.wav` | 0.96s |
+| 噶韭菜 | `naiwa-gajiucai.wav` | 0.89s |
+
+The six clips come from the `音效/` directory of [VIPmrgj/Dragon-frog](https://github.com/VIPmrgj/Dragon-frog). That repository declares no LICENSE. This project uses them as a non-commercial fan work and records the original file names and source in `src/assets/audio/README.md`; the rights remain with their creators, and the clips will be removed on request.
+
+Line research and the older 1.8 s MIT laugh:
 
 - 《捧腹大笑思想与奶龙学概论》 chapter 6, “奶蛙的衍生语”: <https://xn--psszg58c9c2281ajit.lol/files/history.pdf>
 - naiwa.meme sticker archive: <https://naiwa.meme/stickers>
 - Milk Frog Keyboard's 13-sound list: <https://mwm.ai/it/apps/milk-frog-music-meme-beats/6762385358>
+- [Nailong-Studio/NaiWa-Wallpaper](https://github.com/Nailong-Studio/NaiWa-Wallpaper) `audio/奶蛙-桌宠笑声.wav` (MIT, 1.8 s, kept as the unused `naiwa-laugh.wav` fallback)
 
-The click laugh uses `audio/奶蛙-桌宠笑声.wav` (1.8 s) from [Nailong-Studio/NaiWa-Wallpaper](https://github.com/Nailong-Studio/NaiWa-Wallpaper). The audio and character rights belong to their original creators; this is a non-commercial fan project and the asset will be removed on request.
+“卡球赛” is most likely a mishearing of “卡脚先” or 《喀秋莎》; no independently licensed “卡球赛” recording was found, so it is not bundled.
 
 ## License and disclaimer
 
 MIT — see [LICENSE](LICENSE).
 
-CyberNaiwa is a fan-made, non-commercial open-source project inspired by the Chinese internet meme 奶蛙 (Naiwa). The character emerged from AI-generated fan art and community remixes. This project is not affiliated with 奶龙 or its rights holders. The ASCII frames in this repo were converted and drawn by this project from public references; no third-party image assets are included. The click laugh audio comes from the public asset library above and remains the property of its original creators.
+CyberNaiwa is a fan-made, non-commercial open-source project inspired by the Chinese internet meme 奶蛙 (Naiwa). The character emerged from AI-generated fan art and community remixes. This project is not affiliated with 奶龙 or its rights holders. The ASCII frames in this repo were converted and drawn by this project from public references; no third-party image assets are included. The six click voice clips come from the public asset repository above and remain the property of their original creators; they will be removed on request.
 
 ## Build status
 

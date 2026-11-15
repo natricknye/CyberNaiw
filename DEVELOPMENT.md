@@ -88,6 +88,14 @@ CyberNaiwa/
 - Sleep 与 Sad 状态均已移除（用户反馈睡觉和伤心界面不好看）；不再生成/播放 sleep 或 sad 帧。
 - 帧间隔：idle 1200ms、walk 260ms、happy 320ms、click 180ms、wave 500ms。
 
+### 点击语音
+
+- 六句台词和六个 WAV 一一对应：安迪、嘎嘎提拉瞎、干巴得、哈哈哈哈哈、哦啦、噶韭菜。
+- `usePetState.interact()` 先随机选 `NaiwaReaction`（含 `text` 和 `voice`），`Pet.tsx` 再用同一个 `voice` 调 `playNaiwaVoice()`，避免字幕和声音不一致。
+- `sound.ts` 为每个 `voice` 缓存一个 `HTMLAudioElement`；成年 `playbackRate 1`，幼体 `1.35`，两者都设 `preservesPitch false`。
+- 声音开启时气泡不渲染文字；静音时才显示同一句台词作为字幕。
+- 音频来自 `VIPmrgj/Dragon-frog` 的 `音效/`（无 LICENSE），按粉丝二创非商业使用，来源和移除声明写在 `src/assets/audio/README.md`。旧版 1.8 秒 MIT 笑声保留为 `naiwa-laugh.wav` 备用。
+
 ### ASCII 渲染
 
 - 原色模式帧在 `naiwa-frames.json` / `naiwa-baby-frames.json`：112 列 × 70 行；量子模式帧在 `naiwa-cyber-frames.json` / `naiwa-cyber-baby-frames.json`：128 列 × 80 行。用 `.` 表示透明格。帧由官方设计资料库的成年 / 幼体 / 大笑 / 挥手参考图逐像素映射到字符 tone；仓库不包含参考图片本身。
@@ -170,9 +178,9 @@ cargo check --manifest-path src-tauri/Cargo.toml
 - 0.2.0 release exe 在生产 CSP 下启动成功；原色/赛博帧都实际渲染 336×358，点击后 HUD 切到 CLICK，气泡和 ARIA 正常。
 - 托盘菜单由 Rust 在启动时创建；托盘的物理点击未纳入自动化测试，需要人工点一次确认。
 - 设置页/图标：`pnpm build` 通过；设置页改为中文-only，实际点击 幼体 → 原色 → 恢复默认 均正确；`settings-cn-final.png` 为完整中文截图，`settings-scrolled-bottom.png` 显示底部说明可见；shell `clientHeight 700 / scrollHeight 778 / overflow-y auto`，可滚到底。
-- 声音：点击时实际调用 `http://localhost:1420/src/assets/audio/naiwa-laugh.wav`；关闭“声音”开关后再次点击不再调用，重新打开恢复。点击气泡使用 `安迪 / 嘎嘎滴辣虾 / 卡脚先 / 无了 / 甘巴爹 / 有用不 / 哈哈哈哈哈`。
+- 声音：六段 WAV 与六句台词一一对应；CDP 采集到 `naiwa-andi / naiwa-gaga / naiwa-ganbade / naiwa-laugh-long / naiwa-ola / naiwa-gajiucai`，成年 1.0×、幼体 1.35× 且 `preservesPitch false`；开启声音时气泡为空，关闭后 0 次播放且六句字幕可见。
 - 成年正面改用桌面提供的 `mature-official-front-side-back.webp` 中间正面（长腿/瘦高）；大笑/挥手/低头仍用官方成年动作素材，动作帧与站立帧的体型可能会有差异。
-- 2026-11-16 最终 CDP 验证：成年点击 `playbackRate 1`、幼体 `1.35` 且 `preservesPitch false`；声音开启时气泡为空，静音后点击显示字幕「卡脚先」；设置页 `clientHeight 700 / scrollHeight 793 / overflow-y auto`；点击状态序列 `IDLE → CLICK → HAPPY → IDLE`，页面无 SAD/伤心内容；`_qa/art/settings-rename-final.png` 与 `_qa/art/baby-five-final.png` 确认新名称、五态和幼体叉腰肘部完整。
+- 2026-11-16 最终 CDP 验证：成年点击 `playbackRate 1`、幼体 `1.35` 且 `preservesPitch false`；六段语音都实际命中，声音开启时气泡为空，静音后 0 次播放且显示六句字幕之一；设置页 `clientHeight 700 / scrollHeight 793 / overflow-y auto`；点击状态序列 `IDLE → CLICK → HAPPY → IDLE`，页面无 SAD/伤心内容；`_qa/art/settings-rename-final.png` 与 `_qa/art/baby-five-final.png` 确认新名称、五态和幼体叉腰肘部完整。
 - macOS 本机无法验证，只能依赖 CI 构建。
 
 ## 坑与注意事项
@@ -205,4 +213,5 @@ cargo check --manifest-path src-tauri/Cargo.toml
 - 2026-11-16 fix the settings scroll container (`height:100%` + `overflow-y:auto`) so the bottom note is reachable; use the user-provided tall adult front reference for adult idle/walk.
 - 2026-11-16 rename the app to 赛博奶蛙, rename the palettes to 原色模式/量子模式, remove the sleep state entirely, play the laugh at 1.0× for adults and 1.35× without pitch preservation for babies, hide the bubble while sound is on and show meme lines as subtitles when muted, and fit the baby hands-on-hips pose by both width and height so the elbows stay complete.
 - 2026-11-16 remove the sad state as well (user clarified the ugly state was 伤心), leaving five states: idle / walk / happy / click / wave; regenerate all four frame sets without sad and update ARIA/docs.
+- 2026-11-16 bind six click lines to six matching Naiwa meme WAVs (安迪/嘎嘎提拉瞎/干巴得/哈哈哈哈哈/哦啦/噶韭菜), play the selected line's audio at 1.0× for adults and 1.35× for babies, and document the no-LICENSE fan-use source plus removal policy.
 - 2026-11-16 bump to 0.2.1 and replace `docs/settings.png` with the 赛博奶蛙 settings screenshot (原色模式/量子模式, no sleep copy, version 0.2.1).

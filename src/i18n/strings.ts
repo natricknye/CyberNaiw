@@ -1,4 +1,8 @@
-import type { Language, PetAnimationState } from "../types/pet";
+import type {
+  Language,
+  NaiwaReaction,
+  PetAnimationState,
+} from "../types/pet";
 
 export const LANGUAGE_NAMES: Record<Language, string> = {
   zh: "中文",
@@ -49,7 +53,7 @@ export interface UiStrings {
     aria: string;
     stateAria: Record<PetAnimationState, string>;
     settingsError: string;
-    reactions: readonly string[];
+    reactions: readonly NaiwaReaction[];
   };
   menu: {
     hide: string;
@@ -83,7 +87,7 @@ const ZH: UiStrings = {
     animationNote:
       "关闭动画后奶蛙保持静态；点击仍会切换表情作为反馈，但不会自动走动。",
     sound: "声音",
-    soundHint: "点击播放奶蛙笑声；幼体是更高频的版本。",
+    soundHint: "点击播放对应奶蛙语音；幼体是更高频的版本。",
     about: "关于",
     version: "版本",
     data: "数据",
@@ -110,19 +114,15 @@ const ZH: UiStrings = {
       wave: "赛博奶蛙，挥手",
     },
     settingsError: "设置读取失败，已使用默认值",
-    // Naiwa meme sound words, not self-written. Sources:
-    // 《捧腹大笑思想与奶龙学概论》第六章「奶蛙的衍生语」
-    // https://xn--psszg58c9c2281ajit.lol/files/history.pdf
-    // naiwa.meme sticker archive: https://naiwa.meme/stickers
-    // Milk Frog Keyboard sound list: https://mwm.ai/it/apps/milk-frog-music-meme-beats/6762385358
+    // Naiwa meme sound words, not self-written. Each line has a matching
+    // WAV clip in src/assets/audio; sources are listed in README.md.
     reactions: [
-      "哈哈哈哈哈",
-      "安迪",
-      "嘎嘎滴辣虾",
-      "卡脚先",
-      "无了",
-      "甘巴爹",
-      "有用不",
+      { text: "安迪", voice: "andi" },
+      { text: "嘎嘎提拉瞎", voice: "gaga" },
+      { text: "干巴得", voice: "ganbade" },
+      { text: "哈哈哈哈哈", voice: "laugh" },
+      { text: "哦啦", voice: "ola" },
+      { text: "噶韭菜", voice: "gajiucai" },
     ],
   },
   menu: {
@@ -158,7 +158,7 @@ const EN: UiStrings = {
     animationNote:
       "With animation off, Naiwa holds still. Clicks still change the expression, but there's no automatic walking.",
     sound: "Sound",
-    soundHint: "Play Naiwa's laugh when clicked; the baby uses a higher-pitched version.",
+    soundHint: "Play the matching Naiwa voice line on click; the baby uses a higher-pitched version.",
     about: "About",
     version: "Version",
     data: "Data",
@@ -187,13 +187,12 @@ const EN: UiStrings = {
     settingsError: "Couldn't read settings; using defaults.",
     // These are Naiwa meme sound words; keep the Chinese originals in both locales.
     reactions: [
-      "哈哈哈哈哈",
-      "安迪",
-      "嘎嘎滴辣虾",
-      "卡脚先",
-      "无了",
-      "甘巴爹",
-      "有用不",
+      { text: "安迪", voice: "andi" },
+      { text: "嘎嘎提拉瞎", voice: "gaga" },
+      { text: "干巴得", voice: "ganbade" },
+      { text: "哈哈哈哈哈", voice: "laugh" },
+      { text: "哦啦", voice: "ola" },
+      { text: "噶韭菜", voice: "gajiucai" },
     ],
   },
   menu: {
