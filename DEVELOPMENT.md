@@ -227,4 +227,5 @@ cargo check --manifest-path src-tauri/Cargo.toml
 - 2026-11-16 set the HTML title and initial pet/settings window titles to 赛博奶蛙, fix the mojibake settings title, and remove the remaining sleep tone/CSS rules.
 - 2026-11-16 expand the baby wave crop to include the full V-sign hand, delay native dragging until the pointer moves 5px so double-clicks survive, and split click audio: adult single = laugh only, adult double = meme line, baby = meme lines only.
 - 2026-11-16 restrict click effects to non-transparent character cells (transparent margins can still drag the window), and clear stale press state on `buttons === 0` / global pointerup/blur so the window cannot drift with the mouse.
+- 2026-11-16 add a monitor fallback for `monitorForWindow`: if the window centre is outside every monitor, pick the monitor with the largest overlap (then the primary) so `clampPetToMonitor` / default placement can bring an off-screen pet back.
 - 2026-11-16 bump to 0.2.1 and replace `docs/settings.png` with the 赛博奶蛙 settings screenshot (原色模式/量子模式, no sleep copy, version 0.2.1).
