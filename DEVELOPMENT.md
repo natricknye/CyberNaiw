@@ -176,8 +176,8 @@ cargo check --manifest-path src-tauri/Cargo.toml
 - 真实鼠标拖拽 release 窗口：从 (15,284) 移到 (158,500)，尺寸保持 475×525 物理像素（0.1.0 版本验证）。
 - 右键原生菜单：通过屏幕截图确认「隐藏桌宠 / 显示设置 / 退出 CyberNaiwa」；透明区域能看到后面的窗口内容。
 - 设置持久化：设为 115% 后重启，设置页仍为 115%，桌宠窗口为 438×484；随后恢复 100%，窗口回到 380×420。
-- `pnpm tauri build --bundles nsis`：0.1.0 通过，生成 `CyberNaiwa_0.1.0_x64-setup.exe`（约 1.47 MiB）；0.2.0 通过，生成 `CyberNaiwa_0.2.0_x64-setup.exe`（约 1.48 MiB）。
-- 0.2.0 release exe 在生产 CSP 下启动成功；原色/赛博帧都实际渲染 336×358，点击后 HUD 切到 CLICK，气泡和 ARIA 正常。
+- `pnpm tauri build --bundles nsis`：0.1.0 通过，生成 `CyberNaiwa_0.1.0_x64-setup.exe`（约 1.47 MiB）；0.2.0 通过，生成 `CyberNaiwa_0.2.0_x64-setup.exe`（约 1.48 MiB）；0.2.1 通过，生成 `CyberNaiwa_0.2.1_x64-setup.exe`（约 2.87 MiB，含六段语音）。
+- 0.2.1 release exe 在生产 CSP 下启动成功：窗口标题「赛博奶蛙」、设置页 0.2.1、五态可见；六段音频以 hash 资源名加载，成年 1.0×、幼体 1.35× 且 `preservesPitch false`；静音后 0 次播放、六句字幕全部出现；设置页 `700 / 793 / auto`。生产包截图在 `_qa/art/release-0.2.1-pet.png`。
 - 托盘菜单由 Rust 在启动时创建；托盘的物理点击未纳入自动化测试，需要人工点一次确认。
 - 设置页/图标：`pnpm build` 通过；设置页改为中文-only，实际点击 幼体 → 原色 → 恢复默认 均正确；`settings-cn-final.png` 为完整中文截图，`settings-scrolled-bottom.png` 显示底部说明可见；shell `clientHeight 700 / scrollHeight 778 / overflow-y auto`，可滚到底。
 - 声音：六段 WAV 与六句台词一一对应；CDP 采集到 `naiwa-andi / naiwa-gaga / naiwa-ganbade / naiwa-laugh-long / naiwa-ola / naiwa-gajiucai`，成年 1.0×、幼体 1.35× 且 `preservesPitch false`；开启声音时气泡为空，关闭后 0 次播放且六句字幕可见。
