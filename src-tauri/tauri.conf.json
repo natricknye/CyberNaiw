@@ -15,7 +15,7 @@
     "windows": [
       {
         "label": "pet",
-        "title": "CyberNaiwa",
+        "title": "赛博奶蛙",
         "width": 380,
         "height": 420,
         "minWidth": 266,
@@ -34,7 +34,7 @@
       },
       {
         "label": "settings",
-        "title": "CyberNaiwa 璁剧疆",
+        "title": "赛博奶蛙 设置",
         "width": 460,
         "height": 700,
         "minWidth": 420,

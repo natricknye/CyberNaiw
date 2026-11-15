@@ -41,7 +41,6 @@ export type AsciiTone =
   | "mouthline"
   | "limb"
   | "accent"
-  | "sleep"
   | "empty";
 
 export function toneForChar(char: string): AsciiTone {
@@ -73,9 +72,6 @@ export function toneForChar(char: string): AsciiTone {
     case "*":
     case "!":
       return "accent";
-    case "z":
-    case "Z":
-      return "sleep";
     default:
       return "empty";
   }
