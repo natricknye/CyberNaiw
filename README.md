@@ -2,6 +2,8 @@
 
 > 让奶蛙住进每个人的电脑。
 
+[![build](https://github.com/natricknye/CyberNaiw/actions/workflows/build.yml/badge.svg)](https://github.com/natricknye/CyberNaiw/actions/workflows/build.yml)
+
 CyberNaiwa 是一个以中文互联网迷因「奶蛙」为主题的跨平台桌面宠物。它用 **64×40 的彩色 ASCII 像素网格**逐像素还原奶蛙：黄色大身体、绿色大眼睛、标志性的大笑嘴、奶油色肚皮和棕色小手小脚，再罩一层 CRT 扫描线与霓虹光。
 
 - 透明、无边框、始终置顶的桌宠窗口
@@ -11,6 +13,17 @@ CyberNaiwa 是一个以中文互联网迷因「奶蛙」为主题的跨平台桌
 - 设置本地 JSON 持久化，重启后恢复
 - 不联网、不注册、无数据库、无遥测
 - Windows 与 macOS；GitHub Actions 自动构建
+
+## 下载
+
+| 平台 | 安装包 | 说明 |
+| --- | --- | --- |
+| Windows 10/11 x64 | [CyberNaiwa_0.1.0_x64-setup.exe](https://github.com/natricknye/CyberNaiw/releases/download/v0.1.0/CyberNaiwa_0.1.0_x64-setup.exe) | NSIS，当前用户安装，不要求管理员 |
+| macOS 11+ Apple Silicon | [CyberNaiwa_0.1.0_aarch64.dmg](https://github.com/natricknye/CyberNaiw/releases/download/v0.1.0/CyberNaiwa_0.1.0_aarch64.dmg) | 未签名/未公证；首次打开需右键 → 打开 |
+
+[所有版本](https://github.com/natricknye/CyberNaiw/releases) · [构建日志](https://github.com/natricknye/CyberNaiw/actions)
+
+> 当前 macOS 包是 **arm64**，Intel Mac 版本待补。Windows/macOS 均未签名：Windows SmartScreen 可能提示，macOS 首次打开请右键选择“打开”。
 
 ## 预览
 
@@ -114,4 +127,4 @@ CyberNaiwa 是粉丝向、非商业的开源项目，灵感来自中文互联网
 
 ## 构建状态
 
-GitHub Actions 工作流在 `.github/workflows/build.yml`，在 Windows 和 macOS Runner 上分别构建 NSIS 安装包和 DMG。签名/公证 secrets 未配置时产物为未签名版本。
+GitHub Actions 工作流在 `.github/workflows/build.yml`，在 Windows 和 macOS Runner 上分别构建 NSIS 安装包和 DMG。v0.1.0 已通过 CI 并发布到 [Releases](https://github.com/natricknye/CyberNaiw/releases/tag/v0.1.0)。签名/公证 secrets 未配置，因此产物为未签名版本。
