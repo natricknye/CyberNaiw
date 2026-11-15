@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "cybernaiwa",
+  "productName": "CyberNaiwa",
   "version": "0.1.0",
-  "identifier": "com.cybernaiwa.app",
+  "identifier": "com.cybernaiwa.desktop",
   "build": {
     "beforeDevCommand": "pnpm dev",
     "devUrl": "http://localhost:1420",
@@ -10,15 +10,45 @@
     "frontendDist": "../dist"
   },
   "app": {
+    "macOSPrivateApi": true,
+    "withGlobalTauri": false,
     "windows": [
       {
-        "title": "cybernaiwa",
-        "width": 800,
-        "height": 600
+        "label": "pet",
+        "title": "CyberNaiwa",
+        "width": 380,
+        "height": 420,
+        "minWidth": 266,
+        "minHeight": 294,
+        "transparent": true,
+        "decorations": false,
+        "alwaysOnTop": true,
+        "resizable": false,
+        "skipTaskbar": true,
+        "shadow": false,
+        "focus": false,
+        "focusable": false,
+        "acceptFirstMouse": true,
+        "visible": false,
+        "theme": "Dark"
+      },
+      {
+        "label": "settings",
+        "title": "CyberNaiwa 设置",
+        "width": 460,
+        "height": 700,
+        "minWidth": 420,
+        "minHeight": 600,
+        "resizable": false,
+        "center": true,
+        "visible": false,
+        "theme": "Dark"
       }
     ],
     "security": {
-      "csp": null
+      "capabilities": ["pet", "settings"],
+      "csp": "default-src 'self'; connect-src ipc: http://ipc.localhost; img-src 'self' data: asset: http://asset.localhost; style-src 'self' 'unsafe-inline'; script-src 'self'",
+      "devCsp": null
     }
   },
   "bundle": {
@@ -30,6 +60,21 @@
       "icons/128x128@2x.png",
       "icons/icon.icns",
       "icons/icon.ico"
-    ]
+    ],
+    "publisher": "CyberNaiwa contributors",
+    "category": "Utility",
+    "shortDescription": "A cyber ASCII frog that lives on your desktop",
+    "longDescription": "CyberNaiwa is a local-first desktop pet: a neon ASCII frog that idles, walks, sleeps and reacts to clicks. It stores its settings in a local JSON file and never needs an account or a network connection.",
+    "copyright": "Copyright © 2026 CyberNaiwa contributors",
+    "licenseFile": "../LICENSE",
+    "windows": {
+      "nsis": {
+        "installMode": "currentUser",
+        "languages": ["SimpChinese", "English"]
+      }
+    },
+    "macOS": {
+      "minimumSystemVersion": "10.15"
+    }
   }
 }

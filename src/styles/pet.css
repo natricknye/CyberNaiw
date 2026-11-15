@@ -1,0 +1,632 @@
+.pet-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  overflow: hidden;
+  padding: 0 8px 22px;
+  background: transparent;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  touch-action: none;
+}
+
+.pet-stage:active {
+  cursor: grabbing;
+}
+
+.pet-stage::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 9%;
+  width: 78%;
+  height: 52%;
+  transform: translateX(-50%);
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 205, 70, 0.08) 0%,
+    rgba(255, 205, 70, 0.022) 42%,
+    transparent 72%
+  );
+  filter: blur(6px);
+  pointer-events: none;
+}
+
+.pet-visual {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  pointer-events: none;
+  animation: pet-float 4.8s ease-in-out infinite;
+}
+
+.pet-visual--sleep {
+  animation-duration: 7s;
+}
+
+.pet-stage--sleeping .pet-visual {
+  animation-duration: 7s;
+}
+
+.pet-ascii-frame {
+  position: relative;
+  display: inline-block;
+  transform: scale(calc(0.64 * var(--pet-scale, 1)));
+  transform-origin: center bottom;
+  will-change: transform;
+}
+
+.pet-ascii {
+  margin: 0;
+  padding: 0;
+  font-family:
+    "Cascadia Mono",
+    "SFMono-Regular",
+    Consolas,
+    "Liberation Mono",
+    "Noto Sans Mono",
+    monospace;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0;
+  text-align: center;
+  white-space: pre;
+  color: #ffd84d;
+  filter: drop-shadow(0 10px 16px rgba(0, 0, 0, 0.6));
+  transition: opacity 220ms ease;
+}
+
+.pet-ascii__line {
+  display: block;
+}
+
+.pet-ascii .tone-body {
+  color: #ffd84d;
+  text-shadow:
+    0 0 2px rgba(255, 216, 77, 0.85),
+    0 0 9px rgba(255, 190, 40, 0.3);
+}
+
+.pet-ascii .tone-light {
+  color: #ffe875;
+  text-shadow: 0 0 2px rgba(255, 232, 117, 0.7);
+}
+
+.pet-ascii .tone-shade {
+  color: #e0a62c;
+  text-shadow: 0 0 2px rgba(224, 166, 44, 0.65);
+}
+
+.pet-ascii .tone-belly {
+  color: #ffe9b5;
+  text-shadow:
+    0 0 2px rgba(255, 233, 181, 0.7),
+    0 0 8px rgba(255, 210, 100, 0.25);
+}
+
+.pet-ascii .tone-eye {
+  color: #8ed67a;
+  text-shadow:
+    0 0 3px rgba(142, 214, 122, 0.95),
+    0 0 10px rgba(125, 255, 178, 0.45);
+}
+
+.pet-ascii .tone-pupil {
+  color: #101a14;
+  text-shadow: none;
+}
+
+.pet-ascii .tone-mouth {
+  color: #c94358;
+  text-shadow: 0 0 4px rgba(201, 67, 88, 0.45);
+}
+
+.pet-ascii .tone-limb {
+  color: #c98a3c;
+  text-shadow:
+    0 0 2px rgba(201, 138, 60, 0.75),
+    0 0 8px rgba(180, 110, 30, 0.25);
+}
+
+.pet-ascii .tone-accent {
+  color: #7ef9ff;
+  text-shadow:
+    0 0 4px rgba(126, 249, 255, 0.9),
+    0 0 14px rgba(126, 249, 255, 0.45);
+}
+
+.pet-ascii .tone-sleep {
+  color: #b6ffdd;
+  text-shadow:
+    0 0 4px rgba(182, 255, 221, 0.9),
+    0 0 14px rgba(125, 255, 178, 0.45);
+}
+
+.pet-ascii .tone-empty {
+  color: transparent;
+  text-shadow: none;
+}
+
+.pet-visual--happy .pet-ascii {
+  filter: drop-shadow(0 10px 16px rgba(0, 0, 0, 0.6)) brightness(1.08);
+}
+
+.pet-visual--click .pet-ascii {
+  filter: drop-shadow(0 10px 16px rgba(0, 0, 0, 0.6)) brightness(1.12);
+}
+
+.pet-visual--sleep .pet-ascii {
+  opacity: 0.88;
+}
+
+.pet-scanlines {
+  position: absolute;
+  inset: 5% 8% 4%;
+  pointer-events: none;
+  opacity: 0.35;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(126, 249, 255, 0.07) 0,
+    rgba(126, 249, 255, 0.07) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  background-size: 100% 6px;
+  mask-image: radial-gradient(
+    ellipse at 50% 55%,
+    #000 0%,
+    #000 40%,
+    transparent 76%
+  );
+  -webkit-mask-image: radial-gradient(
+    ellipse at 50% 55%,
+    #000 0%,
+    #000 40%,
+    transparent 76%
+  );
+  animation: scan-drift 9s linear infinite;
+}
+
+.pet-visual--image img {
+  display: block;
+  max-width: 92%;
+  max-height: 78vh;
+  object-fit: contain;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.pet-shadow {
+  position: absolute;
+  z-index: 0;
+  left: 50%;
+  bottom: 31px;
+  width: min(58%, 210px);
+  height: 22px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 205, 70, 0.18) 0%,
+    rgba(255, 205, 70, 0.05) 48%,
+    transparent 72%
+  );
+  filter: blur(4px);
+  pointer-events: none;
+}
+
+.pet-hud {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  bottom: 9px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family:
+    "Cascadia Mono",
+    "SFMono-Regular",
+    Consolas,
+    "Liberation Mono",
+    monospace;
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: rgba(151, 255, 198, 0.5);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.pet-hud-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(125, 255, 178, 0.25);
+}
+
+.pet-hud-dot.is-online {
+  background: var(--naiwa-green);
+  box-shadow: 0 0 6px rgba(125, 255, 178, 0.9);
+  animation: hud-pulse 2.4s ease-in-out infinite;
+}
+
+.speech-bubble {
+  position: absolute;
+  z-index: 5;
+  top: 7px;
+  left: 50%;
+  width: calc(100% - 28px);
+  display: flex;
+  justify-content: center;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.speech-bubble__text {
+  position: relative;
+  max-width: 100%;
+  padding: 5px 9px;
+  border: 1px solid rgba(125, 255, 178, 0.45);
+  border-radius: 6px;
+  background: rgba(3, 17, 11, 0.92);
+  box-shadow:
+    0 0 16px rgba(64, 255, 153, 0.14),
+    inset 0 0 10px rgba(125, 255, 178, 0.04);
+  color: var(--naiwa-text);
+  font-size: 11px;
+  line-height: 1.35;
+  letter-spacing: 0.02em;
+  text-align: center;
+  white-space: nowrap;
+  animation: bubble-in 180ms ease-out both;
+}
+
+.speech-bubble__text::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -5px;
+  width: 8px;
+  height: 8px;
+  transform: translateX(-50%) rotate(45deg);
+  border-right: 1px solid rgba(125, 255, 178, 0.45);
+  border-bottom: 1px solid rgba(125, 255, 178, 0.45);
+  background: rgba(3, 17, 11, 0.92);
+}
+
+@keyframes pet-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes scan-drift {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 0 12px;
+  }
+}
+
+@keyframes hud-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+
+@keyframes bubble-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pet-visual,
+  .pet-scanlines,
+  .pet-hud-dot.is-online,
+  .speech-bubble__text {
+    animation: none;
+  }
+}
+
+/* ---------- High-resolution SVG skin ---------- */
+
+.vector-pet-wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.vector-pet {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+  filter:
+    drop-shadow(0 14px 22px rgba(0, 0, 0, 0.5))
+    drop-shadow(0 0 22px rgba(255, 200, 60, 0.14));
+}
+
+.vector-pet__body-group {
+  transform-box: fill-box;
+  transform-origin: 50% 78%;
+}
+
+.vector-pet__foot,
+.vector-pet__arm {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.vector-pet__arm {
+  transform-origin: 50% 8%;
+}
+
+.vector-pet--idle .vector-pet__body-group {
+  animation: vector-breathe 4.8s ease-in-out infinite;
+}
+
+.vector-pet--walk .vector-pet__body-group {
+  animation: vector-walk-bob 0.5s ease-in-out infinite;
+}
+
+.vector-pet--walk .vector-pet__foot--left {
+  animation: vector-step-left 0.5s ease-in-out infinite;
+}
+
+.vector-pet--walk .vector-pet__foot--right {
+  animation: vector-step-right 0.5s ease-in-out infinite;
+}
+
+.vector-pet--walk .vector-pet__arm--left {
+  animation: vector-arm-left 0.5s ease-in-out infinite;
+}
+
+.vector-pet--walk .vector-pet__arm--right {
+  animation: vector-arm-right 0.5s ease-in-out infinite;
+}
+
+.vector-pet--sleep .vector-pet__body-group {
+  animation: vector-sleep-breathe 5.5s ease-in-out infinite;
+}
+
+.vector-pet--happy .vector-pet__body-group {
+  animation: vector-happy-bounce 0.68s ease-in-out infinite;
+}
+
+.vector-pet--click .vector-pet__body-group {
+  animation: vector-click-pop 0.38s ease-out both;
+}
+
+.vector-pet.is-static * {
+  animation-play-state: paused !important;
+}
+
+.vector-sparkle {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: vector-sparkle 1.2s ease-in-out infinite;
+}
+
+.vector-sparkle--second {
+  animation-delay: 0.22s;
+}
+
+.vector-sparkle--third {
+  animation-delay: 0.44s;
+}
+
+.vector-sleep-mark {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: vector-z 2.6s ease-in-out infinite;
+}
+
+.vector-sleep-mark--second {
+  animation-delay: 0.65s;
+}
+
+.vector-pet--click .vector-click-marks {
+  animation: vector-click-marks 0.38s ease-out both;
+}
+
+.vector-scanlines {
+  position: absolute;
+  inset: 5% 9% 5%;
+  pointer-events: none;
+  opacity: 0.5;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(126, 249, 255, 0.07) 0,
+    rgba(126, 249, 255, 0.07) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  background-size: 100% 6px;
+  mask-image: radial-gradient(
+    ellipse at 50% 55%,
+    #000 0%,
+    #000 38%,
+    transparent 74%
+  );
+  -webkit-mask-image: radial-gradient(
+    ellipse at 50% 55%,
+    #000 0%,
+    #000 38%,
+    transparent 74%
+  );
+  animation: scan-drift 9s linear infinite;
+}
+
+@keyframes vector-breathe {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-2px) scale(1.006);
+  }
+}
+
+@keyframes vector-walk-bob {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-1deg);
+  }
+  50% {
+    transform: translateY(-5px) rotate(1deg);
+  }
+}
+
+@keyframes vector-step-left {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes vector-step-right {
+  0% {
+    transform: translateY(-6px);
+  }
+  50%,
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes vector-arm-left {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(-4deg);
+  }
+}
+
+@keyframes vector-arm-right {
+  0% {
+    transform: rotate(-4deg);
+  }
+  50%,
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes vector-sleep-breathe {
+  0%,
+  100% {
+    transform: translateY(3px) rotate(-0.8deg);
+  }
+  50% {
+    transform: translateY(5px) rotate(-1.4deg);
+  }
+}
+
+@keyframes vector-happy-bounce {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  45% {
+    transform: translateY(-8px) scale(1.012);
+  }
+}
+
+@keyframes vector-click-pop {
+  0% {
+    transform: scale(1);
+  }
+  35% {
+    transform: scale(1.045);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes vector-sparkle {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(0.8) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.12) rotate(10deg);
+  }
+}
+
+@keyframes vector-z {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  25% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+}
+
+@keyframes vector-click-marks {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  40% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vector-pet__body-group,
+  .vector-pet__arm,
+  .vector-pet__foot,
+  .vector-sparkle,
+  .vector-sleep-mark,
+  .vector-click-marks,
+  .vector-scanlines {
+    animation: none;
+  }
+}

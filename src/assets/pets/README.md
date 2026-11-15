@@ -1,0 +1,53 @@
+# Pet assets
+
+All character artwork lives here. The app never downloads artwork at runtime.
+
+## Default skin
+
+`cyber-naiwa` is the default ASCII skin. Its 64×40 frames are in
+`cyber-naiwa/naiwa-frames.json`; `cyber-naiwa/frames.ts` imports the JSON,
+maps characters to colour tones and declares frame timing. The grid uses
+printable ASCII only and was pixel-mapped from a local reference. Reference
+images are not shipped in this repository.
+
+## Adding an image skin
+
+1. Create a folder, for example `src/assets/pets/milk-frog/`.
+2. Add one transparent PNG / WEBP / SVG per state, or a frame sequence:
+   `idle-1.png`, `idle-2.png`, `walk-1.png`, ...
+3. Import the images in `index.ts` and register a new `ImagePetSkin`:
+
+```ts
+import idle1 from "./milk-frog/idle-1.png";
+import idle2 from "./milk-frog/idle-2.png";
+import walk1 from "./milk-frog/walk-1.png";
+// ...
+
+{
+  id: "milk-frog",
+  name: "Milk Frog",
+  kind: "image",
+  credit: "Artist name / licence",
+  frames: {
+    idle: [idle1, idle2],
+    walk: [walk1],
+    sleep: [sleep1],
+    happy: [happy1],
+    click: [click1],
+  },
+  frameIntervalMs: 320,
+}
+```
+
+4. Change `DEFAULT_PET_SKIN_ID`, or add a skin picker later. The renderer
+   already supports both skin kinds.
+
+## Asset rules
+
+- Keep transparent backgrounds; the window is transparent.
+- A good source size is 512 × 512 px or larger. The window is 320 × 300 logical
+  pixels at 100%, and the art is scaled with `object-fit: contain`.
+- Only add assets you have the right to redistribute. Include the artist and
+  licence in the skin's `credit` field.
+- Animated GIFs work, but the app's `animationsEnabled` setting cannot pause a
+  GIF. Prefer frame sequences so the setting stays consistent.

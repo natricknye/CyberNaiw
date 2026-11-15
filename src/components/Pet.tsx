@@ -1,0 +1,141 @@
+import { useEffect, useState } from "react";
+import type { CSSProperties } from "react";
+import { usePetInteraction } from "../hooks/usePetInteraction";
+import { usePetState } from "../hooks/usePetState";
+import {
+  listenSettingsChanged,
+  loadSettings,
+  loadWindowPosition,
+  saveWindowPosition,
+} from "../services/settings";
+import {
+  applyPetWindowLiveSettings,
+  applyPetWindowOnStartup,
+  showPetWindow,
+  watchPetWindowPosition,
+} from "../services/window";
+import {
+  DEFAULT_SETTINGS,
+  PET_STATE_LABELS,
+  type PetSettings,
+} from "../types/pet";
+import PetAnimation from "./PetAnimation";
+import SpeechBubble from "./SpeechBubble";
+import "../styles/pet.css";
+
+export default function Pet() {
+  const [settings, setSettings] = useState<PetSettings>(DEFAULT_SETTINGS);
+  const [ready, setReady] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
+
+  const { state, reaction, interact } = usePetState(
+    ready && settings.animationsEnabled,
+  );
+  const interaction = usePetInteraction({ onInteract: interact });
+
+  useEffect(() => {
+    let cancelled = false;
+    const unlisteners: Array<() => void> = [];
+
+    const initialise = async () => {
+      try {
+        const [loadedSettings, savedPosition] = await Promise.all([
+          loadSettings(),
+          loadWindowPosition(),
+        ]);
+
+        if (cancelled) {
+          return;
+        }
+
+        setSettings(loadedSettings);
+        await applyPetWindowOnStartup(loadedSettings, savedPosition);
+
+        if (cancelled) {
+          return;
+        }
+
+        setReady(true);
+        await showPetWindow();
+
+        if (cancelled) {
+          return;
+        }
+
+        const unlistenPosition = await watchPetWindowPosition((position) => {
+          void saveWindowPosition(position).catch((positionError: unknown) => {
+            console.error("Unable to save the pet position", positionError);
+          });
+        });
+
+        if (cancelled) {
+          unlistenPosition();
+          return;
+        }
+        unlisteners.push(unlistenPosition);
+
+        const unlistenSettings = await listenSettingsChanged(
+          (nextSettings) => {
+            setSettings(nextSettings);
+            void applyPetWindowLiveSettings(nextSettings).catch(
+              (windowError: unknown) => {
+                console.error(
+                  "Unable to apply live window settings",
+                  windowError,
+                );
+              },
+            );
+          },
+        );
+
+        if (cancelled) {
+          unlistenSettings();
+          return;
+        }
+        unlisteners.push(unlistenSettings);
+      } catch (error) {
+        console.error("CyberNaiwa failed to initialise", error);
+
+        if (cancelled) {
+          return;
+        }
+
+        setLoadError(error instanceof Error ? error.message : String(error));
+        setReady(true);
+        await showPetWindow().catch(showError => {
+          console.error("Unable to show the pet window", showError);
+        });
+      }
+    };
+
+    void initialise();
+
+    return () => {
+      cancelled = true;
+      for (const unlisten of unlisteners) {
+        unlisten();
+      }
+    };
+  }, []);
+
+  const bubbleMessage =
+    reaction?.message ??
+    (loadError ? "设置读取失败，已使用默认值" : null);
+
+  return (
+    <main
+      className={`pet-stage${state === "sleep" ? " pet-stage--sleeping" : ""}`}
+      style={{ "--pet-scale": settings.scale } as CSSProperties}
+      aria-label="CyberNaiwa 桌面宠物"
+      {...interaction}
+    >
+      <SpeechBubble message={bubbleMessage} nonce={reaction?.id} />
+      <div className="pet-shadow" aria-hidden="true" />
+      <PetAnimation state={state} animated={settings.animationsEnabled} />
+      <div className="pet-hud" aria-hidden="true">
+        <span className={`pet-hud-dot${ready ? " is-online" : ""}`} />
+        NAIWA//{PET_STATE_LABELS[state]}
+      </div>
+    </main>
+  );
+}

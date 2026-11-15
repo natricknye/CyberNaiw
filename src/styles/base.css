@@ -1,0 +1,99 @@
+:root {
+  color-scheme: dark;
+  font-family:
+    "Segoe UI",
+    "PingFang SC",
+    "Hiragino Sans GB",
+    "Microsoft YaHei",
+    "Noto Sans SC",
+    system-ui,
+    sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  --naiwa-green: #7dffb2;
+  --naiwa-green-strong: #c4ffdd;
+  --naiwa-green-dim: #2b8f63;
+  --naiwa-cyan: #7ef9ff;
+  --naiwa-bg: #050d09;
+  --naiwa-panel: #0a1a12;
+  --naiwa-text: #dcffe9;
+  --naiwa-muted: #7da892;
+  --naiwa-border: rgba(125, 255, 178, 0.14);
+  --naiwa-danger: #ff8c9a;
+  --naiwa-warning: #ffc57a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+html {
+  background: transparent;
+}
+
+body {
+  min-width: 0;
+  min-height: 0;
+  color: var(--naiwa-text);
+}
+
+html[data-window="pet"],
+html[data-window="pet"] body {
+  overflow: hidden;
+  background: transparent;
+}
+
+html[data-window="settings"],
+html[data-window="settings"] body {
+  overflow: hidden;
+  background: var(--naiwa-bg);
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  color: inherit;
+}
+
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid rgba(125, 255, 178, 0.85);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: rgba(125, 255, 178, 0.28);
+  color: #eafff2;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(125, 255, 178, 0.18);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(125, 255, 178, 0.32);
+}

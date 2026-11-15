@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-label="CyberNaiwa">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#071710"/>
+      <stop offset="1" stop-color="#020604"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="36%" r="62%">
+      <stop offset="0" stop-color="#ffd84d" stop-opacity=".18"/>
+      <stop offset="1" stop-color="#ffd84d" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1024" height="1024" rx="220" fill="url(#bg)"/>
+  <rect x="40" y="40" width="944" height="944" rx="190" fill="url(#glow)"/>
+  <rect x="66" y="66" width="892" height="892" rx="174" fill="none" stroke="#2b8f63" stroke-width="6" opacity=".55"/>
+
+  <circle cx="334" cy="300" r="104" fill="#7dffb2" stroke="#04100a" stroke-width="18"/>
+  <circle cx="690" cy="300" r="104" fill="#7dffb2" stroke="#04100a" stroke-width="18"/>
+  <circle cx="334" cy="300" r="38" fill="#08140e"/>
+  <circle cx="690" cy="300" r="38" fill="#08140e"/>
+  <circle cx="318" cy="284" r="12" fill="#dcffe9" opacity=".9"/>
+  <circle cx="674" cy="284" r="12" fill="#dcffe9" opacity=".9"/>
+
+  <path d="M214 470 Q214 360 360 360 H664 Q810 360 810 470 V660 Q810 840 580 840 H444 Q214 840 214 660 Z" fill="#ffd84d" stroke="#e0a92a" stroke-width="14"/>
+  <path d="M348 600 Q512 820 676 600 Q512 720 348 600 Z" fill="#1a0f08"/>
+  <path d="M548 728 L590 754 L548 780" fill="none" stroke="#7dffb2" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" opacity=".8"/>
+  <rect x="604" y="772" width="46" height="8" rx="4" fill="#7dffb2" opacity=".8"/>
+</svg>

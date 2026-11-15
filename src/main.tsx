@@ -1,9 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App";
+import App, { resolveWindowKind } from "./App";
+import "./styles/base.css";
+
+const windowKind = resolveWindowKind();
+document.documentElement.dataset.window = windowKind;
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <App />
+    <App kind={windowKind} />
   </React.StrictMode>,
 );
