@@ -48,8 +48,9 @@ CyberNaiwa/
 ├── src-tauri/
 │   ├── src/lib.rs                   # 托盘、托盘语言、显示/隐藏、设置窗口、quit_app
 │   ├── capabilities/{pet,settings}.json
+│   ├── nsis/theme.nsh               # 安装器深色 MUI 颜色和欢迎/完成文案
 │   ├── tauri.conf.json
-│   └── icons/
+│   └── icons/                       # 应用图标、installer icon、NSIS header/sidebar BMP
 ├── .github/workflows/build.yml
 ├── README.md
 ├── LICENSE
@@ -169,7 +170,7 @@ cargo check --manifest-path src-tauri/Cargo.toml
 
 - `pnpm build`：通过（TypeScript + Vite），112×70 原色帧、128×80 赛博帧与 `teeth` tone 均通过类型检查。
 - `cargo check --manifest-path src-tauri/Cargo.toml`：通过（0.2.2）。
-- 前端页面用 Edge headless + 固定 iframe 做了 380×420 角色预览、460×700 设置页预览；新预览图在 `docs/preview.png`。
+- 前端页面用 Edge headless + 固定 iframe 做了 380×420 角色预览、520×760 设置页预览；新预览图在 `docs/preview.png`。
 - 真实 `tauri dev` + CDP：
   - 点击把 HUD 从 IDLE 切到 CLICK，ARIA 变为「赛博奶蛙，被点击」，气泡出现。
   - 设置页点 English 后，设置页、宠物 ARIA、气泡、托盘调用全部切英文；点中文恢复。
@@ -191,7 +192,8 @@ cargo check --manifest-path src-tauri/Cargo.toml
 - 2026-11-16 幼体挥手修复：裁切框改为 `X=310/W=285` 后，112×70 帧边界为 x=5–92，128×80 为 x=6–105，V 字手完整；`_qa/art/baby-five-wavefix.png` 与 `baby-five-wavefix-cyber.png` 两套配色均确认。
 - 2026-11-16 点击语音规则：CDP 验证成年单击只播 `naiwa-laugh-long`、成年双击只播一条安迪类 WAV、幼体单击/双击都不播大笑且只触发一次；静音成年单击字幕「哈哈哈哈哈」、双击字幕为安迪类、幼体字幕为安迪类；真实系统鼠标双击也只播一条安迪类语音。移动 5px 的拖拽测试不触发点击。
 - 2026-11-16 点击命中限制：`elementFromPoint` 在窗口中心返回 `SPAN.tone-shade`，在角落返回 `MAIN.pet-stage`；CDP 在中心点击播一条 meme，在角落点击 0 次播放、无气泡、HUD 保持 IDLE。透明区域仍可拖动窗口。
-- 2026-11-16 0.2.2 设置页：真实 Tauri 窗口 `clientHeight 700 / scrollHeight 700`，主面板不滚动；「关于」覆盖层打开/关闭后 `scrollHeight` 仍为 700，版本显示 0.2.2；底部按钮只有「关于 / 收起设置」，无恢复默认。
+- 2026-11-16 0.2.2 设置页：窗口改为 520×760，主面板内容约 718px，放大字号后仍不滚动；「关于」覆盖层打开/关闭后不改变主面板高度，版本显示 0.2.2；底部按钮只有「关于 / 收起设置」，无恢复默认。
+- 2026-11-16 字号：设置页最小 12px（标签 15px、提示 13px、正文/说明 12–13px）；桌宠 HUD 11px、字幕 13px；安装器 sidebar 标题 21px、标签 11px、底注 10px，header 标题 16px、副标题 10px。
 - 2026-11-16 幼体嘴部：112×70 待机帧第 19 行 x=44–48 为连续 5 个 `-`，原先散落的嘴线已清掉；128×80 帧同步生成，嘴部在五态预览和 32×32 图标中都可读。
 - 2026-11-16 图标：`src-tauri/icons/32x32.png` 与 `128x128.png` 检查通过，均为幼体原色 ASCII 黄身/绿眼/深色底；Tauri 全套 Windows/macOS/Android/iOS 图标由 `tauri icon` 重新生成。
 - macOS 本机无法验证，只能依赖 CI 构建。
@@ -204,7 +206,8 @@ cargo check --manifest-path src-tauri/Cargo.toml
 - `currentMonitor` 是模块函数，不是 `Window` 实例方法；跨窗口定位用 `monitorFromPoint` 以窗口中心查询。
 - 透明窗口 + 非 focusable 的组合在 Windows 上要实际点一下确认；macOS 首次点击依赖 acceptFirstMouse。
 - CSP：生产 `csp` 收紧，`devCsp: null` 以便 Vite/React Refresh 正常工作；改 Vite 插件或加内联脚本时要重新检查生产 CSP。
-- 设置窗口高度 700；主面板（含 footer）在 700px 内不滚动。「关于」是绝对定位覆盖层，不参与主布局；打开时背景 dim + blur，Escape 先关关于再关设置。
+- 设置窗口 520×760；主面板（含 footer）在 760px 内不滚动。「关于」是绝对定位覆盖层，不参与主布局；打开时背景 dim + blur，Escape 先关关于再关设置。
+- NSIS 安装器：`installerIcon` + `headerImage` + `sidebarImage` + `installerHooks`（`nsis/theme.nsh`）。深色 `MUI_BGCOLOR 0B1116`、浅青 `MUI_TEXTCOLOR D7F8FF`，sidebar/header 使用幼体 ASCII 图与量子配色；语言固定 SimpChinese，去掉白色许可页。
 - 高密度 ASCII 不能用极小 font-size（WebView2/Chromium 会 clamp），必须用固定 14px + transform 缩放；`--pet-scale` 同时由设置滑杆驱动。
 - 在 125% Windows 缩放下截取 Tauri 窗口，PowerShell 必须先 `SetProcessDpiAwarenessContext(-4)`，否则 `GetWindowRect` 只给虚拟化尺寸，截图会被裁掉。
 - 不要提交 `_qa/`（参考图/中间预览）、`node_modules`、`dist`、`src-tauri/target`。
@@ -234,4 +237,6 @@ cargo check --manifest-path src-tauri/Cargo.toml
 - 2026-11-16 move About into an on-demand overlay, remove restore defaults, fit the 700px settings panel without scrolling, switch the console to the Quantum blue-black terminal palette, and use “让奶娃住进每个奶家人的电脑” as the tagline.
 - 2026-11-16 generate the app icon from the baby Original-mode ASCII idle frame instead of the hand-drawn SVG, and strengthen the baby mouth with one clean five-character line (old scattered marks removed).
 - 2026-11-16 bump to 0.2.2; README download links and settings preview point at the new release.
+- 2026-11-16 raise every UI font in the settings console, pet HUD/bubble and NSIS installer art (minimum 12px in the console) to keep all text readable.
+- 2026-11-16 theme the NSIS installer with the baby ASCII sidebar/header BMPs, installer icon, dark MUI colours, Chinese-only pages and a custom welcome/finish copy.
 - 2026-11-16 bump to 0.2.1 and replace `docs/settings.png` with the 赛博奶蛙 settings screenshot (原色模式/量子模式, no sleep copy, version 0.2.1).

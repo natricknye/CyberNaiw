@@ -35,10 +35,10 @@
       {
         "label": "settings",
         "title": "赛博奶蛙 设置",
-        "width": 460,
-        "height": 700,
-        "minWidth": 420,
-        "minHeight": 600,
+        "width": 520,
+        "height": 760,
+        "minWidth": 480,
+        "minHeight": 700,
         "resizable": false,
         "center": true,
         "visible": false,
@@ -66,11 +66,15 @@
     "shortDescription": "赛博奶蛙 · 让奶娃住进每个奶家人的电脑",
     "longDescription": "赛博奶蛙是本地运行的桌面宠物：成年/幼体奶蛙、原色模式/量子模式、五态动画和奶蛙语音。设置保存在本地 JSON，不需要账号或网络。",
     "copyright": "Copyright © 2026 CyberNaiwa contributors",
-    "licenseFile": "../LICENSE",
     "windows": {
       "nsis": {
         "installMode": "currentUser",
-        "languages": ["SimpChinese", "English"]
+        "languages": ["SimpChinese"],
+        "displayLanguageSelector": false,
+        "installerIcon": "icons/icon.ico",
+        "headerImage": "icons/nsis-header.bmp",
+        "sidebarImage": "icons/nsis-sidebar.bmp",
+        "installerHooks": "nsis/theme.nsh"
       }
     },
     "macOS": {
