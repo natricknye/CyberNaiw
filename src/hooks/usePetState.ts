@@ -14,7 +14,6 @@ const REACTION_MS = 2400;
 const IDLE_MIN_MS = 7000;
 const IDLE_RANDOM_MS = 7000;
 const WALK_STATE_MS = 3200;
-const SLEEP_STATE_MS = 9000;
 const WAVE_STATE_MS = 2400;
 const SAD_STATE_MS = 3000;
 
@@ -73,7 +72,7 @@ export function usePetState(
     setState("idle");
   }, [animationsEnabled, clearTransition]);
 
-  // Gentle idle behaviour: occasionally walk or nap.
+  // Gentle idle behaviour: occasionally walk, wave or look down.
   useEffect(() => {
     if (!animationsEnabled || state !== "idle") {
       return;
@@ -82,24 +81,22 @@ export function usePetState(
     const timer = window.setTimeout(() => {
       const roll = Math.random();
       const next =
-        roll < 0.38
+        roll < 0.45
           ? "walk"
-          : roll < 0.68
-            ? "sleep"
-            : roll < 0.86
-              ? "wave"
-              : "sad";
+          : roll < 0.75
+            ? "wave"
+            : "sad";
       setState(next);
     }, IDLE_MIN_MS + Math.random() * IDLE_RANDOM_MS);
 
     return () => window.clearTimeout(timer);
   }, [animationsEnabled, state]);
 
-  // Walk/sleep/wave/sad are temporary; return to idle on their own.
+  // Walk/wave/sad are temporary; return to idle on their own.
   useEffect(() => {
     if (
       !animationsEnabled ||
-      !["walk", "sleep", "wave", "sad"].includes(state)
+      !["walk", "wave", "sad"].includes(state)
     ) {
       return;
     }
@@ -107,11 +104,9 @@ export function usePetState(
     const duration =
       state === "walk"
         ? WALK_STATE_MS
-        : state === "sleep"
-          ? SLEEP_STATE_MS
-          : state === "wave"
-            ? WAVE_STATE_MS
-            : SAD_STATE_MS;
+        : state === "wave"
+          ? WAVE_STATE_MS
+          : SAD_STATE_MS;
 
     const timer = window.setTimeout(() => setState("idle"), duration);
     return () => window.clearTimeout(timer);

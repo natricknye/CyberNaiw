@@ -1,18 +1,18 @@
-# CyberNaiwa
+# 赛博奶蛙
 
-> 让奶蛙住进每个人的电脑。
+> CyberNaiwa · 让奶蛙住进每个人的电脑。
 
 [![build](https://github.com/natricknye/CyberNaiw/actions/workflows/build.yml/badge.svg)](https://github.com/natricknye/CyberNaiw/actions/workflows/build.yml)
 
 **简体中文** | [English](README.en.md)
 
-CyberNaiwa 是一只住在你桌面上的赛博奶蛙。它不是一张贴图，而是一块 **最高 128×80 的彩色 ASCII 像素网格**：赛博模式用 128×80，原色模式用 112×70。暖黄色梨形身体、浅奶油色大肚皮、短粗的橄榄褐手脚、浅绿眼环和居中黑瞳，还有一条极短的水平嘴线——点一下就会仰头大笑。所有东西都在本地运行，不联网、不注册、不收集数据。
+赛博奶蛙是一只住在你桌面上的奶蛙。它不是一张贴图，而是一块 **最高 128×80 的彩色 ASCII 像素网格**：量子模式用 128×80，原色模式用 112×70。成年是长腿瘦高版，幼体是短圆大头、短手脚；暖黄色身体、浅奶油色大肚皮、浅绿眼环和居中黑瞳，还有一条极短的水平嘴线——点一下就会笑。所有东西都在本地运行，不联网、不注册、不收集数据。
 
 - 透明、无边框、始终置顶的桌宠窗口
 - 左键拖动、点击互动、右键原生菜单
 - 点击播放奶蛙经典笑声，设置里可以静音
-- Idle / Walk / Sleep / Happy / Click / Wave / Sad 七种状态
-- 成年奶蛙 / 幼体奶蛙，赛博蓝黑 / 原色暖黄两套配色
+- Idle / Walk / Happy / Click / Wave / Sad 六种状态
+- 成年奶蛙 / 幼体奶蛙，量子模式蓝黑 / 原色模式暖黄两套配色
 - 应用界面中文；英文说明保留在 `README.en.md`
 - 系统托盘显示/隐藏、打开设置、退出
 - 设置本地 JSON 持久化，重启后恢复
@@ -32,29 +32,29 @@ CyberNaiwa 是一只住在你桌面上的赛博奶蛙。它不是一张贴图，
 
 ## 预览
 
-| 赛博 · 128×80 | 原色 · 112×70 |
+| 量子模式 · 128×80 | 原色模式 · 112×70 |
 | --- | --- |
-| ![CyberNaiwa 赛博预览](docs/preview.png) | ![CyberNaiwa 原色预览](docs/preview-original.png) |
+| ![赛博奶蛙 量子模式预览](docs/preview.png) | ![赛博奶蛙 原色模式预览](docs/preview-original.png) |
 
-角色不是图片贴图，而是彩色 ASCII 字符网格：赛博 128×80、原色 112×70。`#` 黄身体、`O` 绿眼、`@` 瞳孔、`+` 奶油肚皮、`|` 橄榄褐手脚、`_` 嘴腔、`=` 牙齿、`*`/`!` 动作高亮；闭嘴帧保留官方源图里的极短嘴线，不额外画鼻/下巴硬线。每个字符背后铺同色实体底，角色内部不会透出桌面，角色外仍然是透明窗口；再叠加 CRT 扫描线，设置里可以缩放。
+角色不是图片贴图，而是彩色 ASCII 字符网格：量子模式 128×80、原色模式 112×70。`#` 黄身体、`O` 绿眼、`@` 瞳孔、`+` 奶油肚皮、`|` 橄榄褐手脚、`_` 嘴腔、`=` 牙齿、`*`/`!` 动作高亮；闭嘴帧保留官方源图里的极短嘴线，不额外画鼻/下巴硬线。每个字符背后铺同色实体底，角色内部不会透出桌面，角色外仍然是透明窗口；再叠加 CRT 扫描线，设置里可以缩放。
 
 | 模式 | 选项 |
 | --- | --- |
 | 成长阶段 | 成年（修长梨形）/ 幼体（短圆大头、短手脚） |
-| 配色 | 赛博（蓝黑 + 青色终端，128×80）/ 原色（暖黄 + 奶油 + 橄榄褐，112×70） |
-| 动作 | 站立、迈步、睡觉、开心、点击互动（成年大笑 / 幼体叉腰）、挥手、低头 |
+| 配色 | 量子模式（蓝黑 + 青色终端，128×80）/ 原色模式（暖黄 + 奶油 + 橄榄褐，112×70） |
+| 动作 | 站立、迈步、开心、点击互动（成年大笑 / 幼体叉腰）、挥手、低头 |
 
 幼体单独预览：
 
 <img src="docs/preview-baby.png" alt="幼体奶蛙" width="360" />
 
-> 默认是「赛博」配色。想看普通/原色形态：打开设置 → 「配色」→ 点「原色」。上面右图就是原色效果。
+> 默认是「量子模式」。想看原色形态：打开设置 → 「配色」→ 点「原色模式」。上面右图就是原色模式效果。
 
 ## 设置页
 
 <img src="docs/settings.png" alt="CyberNaiwa 设置页" width="420" />
 
-透明置顶、桌宠大小、成年/幼体、赛博/原色、动画开关、声音开关和恢复默认都在同一个面板里。
+透明置顶、桌宠大小、成年/幼体、原色模式/量子模式、动画开关、声音开关和恢复默认都在同一个面板里。
 
 ## 技术栈
 
@@ -123,11 +123,11 @@ pnpm tauri build --bundles dmg
 - Windows：`%APPDATA%\com.cybernaiwa.desktop\settings.json`
 - macOS：`~/Library/Application Support/com.cybernaiwa.desktop/settings.json`
 
-文件里有两个键：`settings`（置顶、缩放、动画、语言、成年/幼体、赛博/原色）和 `windowPosition`（物理像素坐标）。没有云端同步。
+文件里有两个键：`settings`（置顶、缩放、动画、声音、成年/幼体、原色模式/量子模式）和 `windowPosition`（物理像素坐标）。没有云端同步。
 
 ## 角色素材
 
-默认角色 `cyber-naiwa` 的原色成年帧在 `src/assets/pets/cyber-naiwa/naiwa-frames.json`，原色幼体帧在 `naiwa-baby-frames.json`（112×70）；赛博成年/幼体帧在 `naiwa-cyber-frames.json`、`naiwa-cyber-baby-frames.json`（128×80）。每套 7 个状态、每态 2 帧，字符 tone、帧间隔和渲染逻辑在 `frames.ts`。帧由官方设计资料库中的成年 / 幼体 / 大笑 / 挥手 / 低头参考图逐像素映射生成，仓库不包含参考图片本身。
+默认角色 `cyber-naiwa` 的原色模式成年帧在 `src/assets/pets/cyber-naiwa/naiwa-frames.json`，幼体帧在 `naiwa-baby-frames.json`（112×70）；量子模式成年/幼体帧在 `naiwa-cyber-frames.json`、`naiwa-cyber-baby-frames.json`（128×80）。每套 6 个状态、每态 2 帧，字符 tone、帧间隔和渲染逻辑在 `frames.ts`。帧由官方设计资料库中的成年 / 幼体 / 大笑 / 挥手 / 低头参考图逐像素映射生成，仓库不包含参考图片本身。
 
 想换成 PNG/WEBP/GIF 皮肤时，按 `src/assets/pets/README.md` 的说明注册 `ImagePetSkin` 即可，渲染器同时支持 ASCII 和图片序列。请不要提交没有 redistribution 权限的素材。
 
@@ -152,7 +152,7 @@ pnpm tauri build --bundles dmg
 - 桌宠窗口对鼠标是整块接收的，透明边缘暂时不能点击穿透；这是 v1 的已知限制。
 - 关闭设置窗口只是隐藏，退出应用请使用托盘或右键菜单。
 - 点击桌宠会同时触发反馈并开始原生拖动；拖动中会显露出“被抓住”的点击表情。
-- 动画关闭后保留点击表情反馈，但不自动走动/睡觉，也不逐帧播放。
+- 动画关闭后保留点击表情反馈，但不自动走动，也不逐帧播放。
 
 ## 开源与免责声明
 
@@ -162,4 +162,4 @@ CyberNaiwa 是粉丝向、非商业的开源项目，灵感来自中文互联网
 
 ## 构建状态
 
-GitHub Actions 工作流在 `.github/workflows/build.yml`，在 Windows 和 macOS Runner 上分别构建 NSIS 安装包和 DMG。v0.2.0（赛博 128×80 / 原色 112×70）已发布到 [Releases](https://github.com/natricknye/CyberNaiw/releases/tag/v0.2.0)。签名/公证 secrets 未配置，因此产物为未签名版本。
+GitHub Actions 工作流在 `.github/workflows/build.yml`，在 Windows 和 macOS Runner 上分别构建 NSIS 安装包和 DMG。v0.2.0（量子模式 128×80 / 原色模式 112×70）已发布到 [Releases](https://github.com/natricknye/CyberNaiw/releases/tag/v0.2.0)。签名/公证 secrets 未配置，因此产物为未签名版本。

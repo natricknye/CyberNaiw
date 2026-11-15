@@ -1,7 +1,6 @@
 export const PET_ANIMATION_STATES = [
   "idle",
   "walk",
-  "sleep",
   "happy",
   "click",
   "wave",
@@ -54,7 +53,6 @@ export const PET_WINDOW_BASE_HEIGHT = 420;
 export const PET_STATE_LABELS: Record<PetAnimationState, string> = {
   idle: "IDLE",
   walk: "WALK",
-  sleep: "SLEEP",
   happy: "HAPPY",
   click: "CLICK",
   wave: "WAVE",

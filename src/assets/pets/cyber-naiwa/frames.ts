@@ -84,7 +84,6 @@ export function toneForChar(char: string): AsciiTone {
 export const FRAME_INTERVAL_MS: Record<PetAnimationState, number> = {
   idle: 1200,
   walk: 260,
-  sleep: 1300,
   happy: 320,
   click: 180,
   wave: 500,
