@@ -10,7 +10,17 @@ import type { Language } from "../types/pet";
 
 interface PetInteractionOptions {
   onInteract: () => void;
+  /** Right-click on the character. When set, the native pet menu is disabled. */
+  onSecondary?: () => void;
+  /** Middle-click on the pet. Keeps settings reachable when right-click laughs. */
+  onOpenSettings?: () => void;
   language: Language;
+}
+
+interface PointLike {
+  clientX: number;
+  clientY: number;
+  target: EventTarget | null;
 }
 
 const DRAG_THRESHOLD_PX = 5;
@@ -18,7 +28,7 @@ const imageAlphaCache = new Map<string, CanvasRenderingContext2D>();
 
 function isOpaqueImagePoint(
   image: HTMLImageElement,
-  event: ReactPointerEvent<HTMLElement>,
+  point: PointLike,
 ): boolean {
   const rect = image.getBoundingClientRect();
   if (rect.width <= 0 || rect.height <= 0 || image.naturalWidth === 0) {
@@ -26,10 +36,10 @@ function isOpaqueImagePoint(
   }
 
   const x = Math.floor(
-    ((event.clientX - rect.left) / rect.width) * image.naturalWidth,
+    ((point.clientX - rect.left) / rect.width) * image.naturalWidth,
   );
   const y = Math.floor(
-    ((event.clientY - rect.top) / rect.height) * image.naturalHeight,
+    ((point.clientY - rect.top) / rect.height) * image.naturalHeight,
   );
   if (x < 0 || y < 0 || x >= image.naturalWidth || y >= image.naturalHeight) {
     return false;
@@ -54,13 +64,35 @@ function isOpaqueImagePoint(
 }
 
 /**
+ * Only non-transparent character cells/images count as the pet.
+ * Transparent margins fall through to the stage and can still drag the window.
+ */
+function isCharacterPoint(point: PointLike): boolean {
+  const target = point.target;
+  if (!(target instanceof Element)) {
+    return false;
+  }
+
+  if (target.closest('.pet-ascii [class^="tone-"]:not(.tone-empty)')) {
+    return true;
+  }
+
+  const image = target.closest(".pet-visual--image img");
+  return image instanceof HTMLImageElement && isOpaqueImagePoint(image, point);
+}
+
+/**
  * A left press becomes a click on release. The native window drag only starts
  * after the pointer moves a few pixels, so a click (and especially a
- * double-click) is not swallowed by the OS drag loop. Right-click opens the
- * native menu.
+ * double-click) is not swallowed by the OS drag loop.
+ *
+ * Adult pets use right-click for the laugh, so `onSecondary` replaces the
+ * native context menu. Baby pets keep the menu by omitting `onSecondary`.
  */
 export function usePetInteraction({
   onInteract,
+  onSecondary,
+  onOpenSettings,
   language,
 }: PetInteractionOptions) {
   const pressRef = useRef<{
@@ -87,25 +119,14 @@ export function usePetInteraction({
 
   const handlePointerDown = useCallback(
     (event: ReactPointerEvent<HTMLElement>) => {
-      if (event.button !== 0) {
+      if (event.button === 1) {
+        event.preventDefault();
+        onOpenSettings?.();
         return;
       }
 
-      const target = event.target;
-      let character: Element | null = null;
-      if (target instanceof Element) {
-        character = target.closest(
-          '.pet-ascii [class^="tone-"]:not(.tone-empty)',
-        );
-        if (!character) {
-          const image = target.closest(".pet-visual--image img");
-          if (
-            image instanceof HTMLImageElement &&
-            isOpaqueImagePoint(image, event)
-          ) {
-            character = image;
-          }
-        }
+      if (event.button !== 0) {
+        return;
       }
 
       event.preventDefault();
@@ -113,10 +134,10 @@ export function usePetInteraction({
         x: event.clientX,
         y: event.clientY,
         dragged: false,
-        onCharacter: Boolean(character),
+        onCharacter: isCharacterPoint(event),
       };
     },
-    [],
+    [onOpenSettings],
   );
 
   const handlePointerMove = useCallback(
@@ -181,9 +202,19 @@ export function usePetInteraction({
   const handleContextMenu = useCallback(
     (event: ReactMouseEvent<HTMLElement>) => {
       event.preventDefault();
+
+      // Ctrl/⌘ + right-click is the escape hatch for the native menu
+      // (settings / hide / quit) after plain right-click becomes the laugh.
+      if (onSecondary && !event.ctrlKey && !event.metaKey) {
+        if (isCharacterPoint(event)) {
+          onSecondary();
+        }
+        return;
+      }
+
       void showPetMenu(language);
     },
-    [language],
+    [language, onSecondary],
   );
 
   return {

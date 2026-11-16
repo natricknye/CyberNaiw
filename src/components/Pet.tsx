@@ -13,6 +13,7 @@ import { playNaiwaVoice } from "../services/sound";
 import {
   applyPetWindowLiveSettings,
   applyPetWindowOnStartup,
+  openSettingsWindow,
   showPetWindow,
   watchPetWindowPosition,
 } from "../services/window";
@@ -100,6 +101,11 @@ export default function Pet() {
 
   const interaction = usePetInteraction({
     onInteract: handleInteract,
+    onOpenSettings: () => {
+      void openSettingsWindow().catch((settingsError: unknown) => {
+        console.error("Unable to open the settings window", settingsError);
+      });
+    },
     language: settings.language,
   });
 
