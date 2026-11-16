@@ -23,6 +23,11 @@ const BABY_HAPPY_STATE_MS = 1100;
 const MEME_REACTION_MS = 2400;
 const LAUGH_REACTION_MS = 4200;
 
+// Full animation phases, used by Pet.tsx to lock a flow until both the
+// animation and its voice line finish.
+export const ADULT_LAUGH_FLOW_MS = CLICK_STATE_MS + HAPPY_STATE_MS;
+export const BABY_REACTION_FLOW_MS = CLICK_STATE_MS + BABY_HAPPY_STATE_MS;
+
 /**
  * Adult left-click walks this stack. The first click after launch is the
  * horse stance, then the rest of the action library. `idle` is the reset step.
@@ -153,15 +158,16 @@ export function usePetState(
     setState(next);
 
     if (next === "idle") {
-      return next;
+      return { state: next, duration: 0 };
     }
 
+    const duration = ACTION_DURATION_MS[next] ?? 2000;
     transitionTimer.current = window.setTimeout(() => {
       transitionTimer.current = null;
       setState("idle");
-    }, ACTION_DURATION_MS[next] ?? 2000);
+    }, duration);
 
-    return next;
+    return { state: next, duration };
   }, [age, clearTransition]);
 
   // Changing age switches to a different action stack. Start both at standing.

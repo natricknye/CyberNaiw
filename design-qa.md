@@ -242,6 +242,15 @@
 - 用户反馈 ASCII 马扎步膝盖被削。经典 `adult-wave.png` 完整；ASCII wave 帧贴着 112×70/128×80 网格边缘。给四套 JSON 的 wave 帧统一加 2 格透明边距并居中缩小，audit 图 `_qa/art/ascii-wave-padded.png`；其他动作帧不动。
 - `pnpm build` 通过。
 
+## 2026-11-16 — Phase 30：动作流程锁（按用户澄清）
+
+- 用户澄清：不是要“连点打断”，而是要“点进一个动作流程后，必须等动作和语音完全结束，才能进入下一个流程”。之前 Phase 29 的打断/防抖移除按此纠正。
+- `Pet.tsx` 增加 `flowLock`：成年左键锁 `max(actionDuration, voiceDuration) + 50ms`，右键大笑锁 `max(4110, 4.11s语音) + 50ms`，幼体锁 `max(1480, 语音/1.35) + 50ms`；锁内左键/右键一律忽略。
+- `playNaiwaVoice()` 返回本次语音实际时长（优先 `audio.duration`，回退 WAV 时长表；baby 除以 1.35）。`usePetState.advanceAction()` 返回 `{ state, duration }`，供流程锁使用。
+- 实测：站立第一次点击进入 `wave`，150ms 连点 5 次仍保持 `wave`；3 秒后下一次点击才进入 `walk`。右键大笑后 800ms 左键仍保持 `happy`；4.3 秒流程结束后下一次左键才推进（`run`）。
+- 设置齿轮、托盘、中键/Ctrl+右键不受流程锁影响，仍可打开设置/菜单。
+- `pnpm build` 通过。
+
 ## 待人工确认
 
 - 托盘菜单的物理点击仍需在桌面通知区实际点一遍；窗口 show/hide/设置/退出逻辑已实现。

@@ -175,7 +175,7 @@ The six clips come from the `音效/` directory of [VIPmrgj/Dragon-frog](https:/
 Interaction:
 
 - **Adult start**: stands idle. Every 9–16 seconds it may briefly shift into the horse stance, then stand again.
-- **Adult left-click**: advances one action: stand → horse stance → walk → run → look around → think → clap → crouch → stand, and plays a random 安迪 / 嘎嘎提拉瞎 / 干巴得 / 哦啦 / 噶韭菜 line. Clicking again before the action or voice ends immediately interrupts the previous one and moves on.
+- **Adult left-click**: advances one action: stand → horse stance → walk → run → look around → think → clap → crouch → stand, and plays a random 安迪 / 嘎嘎提拉瞎 / 干巴得 / 哦啦 / 噶韭菜 line. Once an action flow starts, clicks are ignored until both the animation and its voice line finish; the next click then advances.
 - **Adult right-click**: plays the laugh and the full 4.11 s laugh animation; it no longer opens the menu. **The laugh is right-click only** — the left-click stack never contains `happy`/`click` and never summons the laugh-like eating pose either.
 - **Top-right gear**: the gear only appears while the mouse is hovering over the pet window; it opens Settings and hides again when the pointer leaves.
 - **Adult middle-click**: press the scroll wheel to open Settings (trackpads without a middle button can use the gear or tray).

@@ -1,7 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import { usePetInteraction } from "../hooks/usePetInteraction";
-import { usePetState } from "../hooks/usePetState";
+import {
+  ADULT_LAUGH_FLOW_MS,
+  BABY_REACTION_FLOW_MS,
+  usePetState,
+} from "../hooks/usePetState";
 import { UI_STRINGS } from "../i18n/strings";
 import {
   listenSettingsChanged,
@@ -26,8 +30,6 @@ import PetAnimation from "./PetAnimation";
 import SpeechBubble from "./SpeechBubble";
 import "../styles/pet.css";
 
-const BABY_DOUBLE_CLICK_MS = 300;
-
 export default function Pet() {
   const [settings, setSettings] = useState<PetSettings>(DEFAULT_SETTINGS);
   const [ready, setReady] = useState(false);
@@ -40,51 +42,72 @@ export default function Pet() {
     settings.age,
   );
 
-  const lastBabyClickAt = useRef(0);
+  const flowLock = useRef(false);
+  const flowTimer = useRef<number | null>(null);
+
+  const lockFlow = useCallback((durationMs: number) => {
+    flowLock.current = true;
+    if (flowTimer.current !== null) {
+      window.clearTimeout(flowTimer.current);
+    }
+    flowTimer.current = window.setTimeout(() => {
+      flowTimer.current = null;
+      flowLock.current = false;
+    }, Math.max(0, durationMs) + 50);
+  }, []);
 
   const handleInteract = useCallback(() => {
-    // Baby keeps its own action stack: click = one meme line, no laugh.
-    if (settings.age === "baby") {
-      const now = Date.now();
-      if (now - lastBabyClickAt.current < BABY_DOUBLE_CLICK_MS) {
-        return;
-      }
-      lastBabyClickAt.current = now;
-
-      const nextReaction = interact("meme");
-      if (settings.soundEnabled) {
-        playNaiwaVoice(nextReaction.voice, "baby");
-      }
+    // A click belongs to the current flow only when that flow has completely
+    // ended (animation + voice). Otherwise it is ignored.
+    if (flowLock.current) {
       return;
     }
 
-    // Adult: every click interrupts the current action/voice and advances.
-    advanceAction();
-    const nextReaction = speak("meme");
-    if (settings.soundEnabled) {
-      playNaiwaVoice(nextReaction.voice, "adult");
+    // Baby keeps its own action stack: click = one meme line, no laugh.
+    if (settings.age === "baby") {
+      const nextReaction = interact("meme");
+      const voiceMs = settings.soundEnabled
+        ? playNaiwaVoice(nextReaction.voice, "baby")
+        : 0;
+      lockFlow(Math.max(BABY_REACTION_FLOW_MS, voiceMs));
+      return;
     }
+
+    // Adult: advance one action and hold the flow until it and its line end.
+    const next = advanceAction();
+    const nextReaction = speak("meme");
+    const voiceMs = settings.soundEnabled
+      ? playNaiwaVoice(nextReaction.voice, "adult")
+      : 0;
+    lockFlow(Math.max(next?.duration ?? 0, voiceMs));
   }, [
     advanceAction,
     interact,
+    lockFlow,
     settings.age,
     settings.soundEnabled,
     speak,
   ]);
 
   const handleLaugh = useCallback(() => {
-    if (settings.age !== "adult") {
+    if (flowLock.current || settings.age !== "adult") {
       return;
     }
 
     const nextReaction = interact("laugh");
-    if (settings.soundEnabled) {
-      playNaiwaVoice(nextReaction.voice, "adult");
-    }
-  }, [interact, settings.age, settings.soundEnabled]);
+    const voiceMs = settings.soundEnabled
+      ? playNaiwaVoice(nextReaction.voice, "adult")
+      : 0;
+    lockFlow(Math.max(ADULT_LAUGH_FLOW_MS, voiceMs));
+  }, [interact, lockFlow, settings.age, settings.soundEnabled]);
 
   useEffect(() => {
-    lastBabyClickAt.current = 0;
+    flowLock.current = false;
+    if (flowTimer.current !== null) {
+      window.clearTimeout(flowTimer.current);
+      flowTimer.current = null;
+    }
+    stopNaiwaVoice();
   }, [settings.age]);
 
   useEffect(() => {
@@ -92,6 +115,14 @@ export default function Pet() {
       stopNaiwaVoice();
     }
   }, [settings.soundEnabled]);
+
+  useEffect(() => {
+    return () => {
+      if (flowTimer.current !== null) {
+        window.clearTimeout(flowTimer.current);
+      }
+    };
+  }, []);
 
   const handleOpenSettings = useCallback(() => {
     void openSettingsWindow().catch((settingsError: unknown) => {
