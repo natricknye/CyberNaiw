@@ -6,13 +6,12 @@ import {
   CYBER_NAIWA_FRAMES,
 } from "./cyber-naiwa/frames";
 import adultIdle from "./classic/adult-idle.png";
-import adultHappy from "./classic/adult-happy.png";
 import adultWave from "./classic/adult-wave.png";
 import babyIdle from "./classic/baby-idle.png";
 import babyHappy from "./classic/baby-happy.png";
 import babyWave from "./classic/baby-wave.png";
 
-const CLASSIC_LAUGH_MODULES = import.meta.glob("./classic/laugh/*.png", {
+const CLASSIC_LAUGH_MODULES = import.meta.glob("./classic/laugh-hires/*.webp", {
   eager: true,
   import: "default",
 }) as Record<string, string>;
@@ -20,8 +19,7 @@ const CLASSIC_LAUGH_MODULES = import.meta.glob("./classic/laugh/*.png", {
 const CLASSIC_LAUGH_FRAMES = Object.keys(CLASSIC_LAUGH_MODULES)
   .sort()
   .map((key) => CLASSIC_LAUGH_MODULES[key]);
-const CLASSIC_HAPPY_FRAMES =
-  CLASSIC_LAUGH_FRAMES.length > 0 ? CLASSIC_LAUGH_FRAMES : [adultHappy];
+const CLASSIC_HAPPY_FRAMES = CLASSIC_LAUGH_FRAMES;
 
 export type PetSkinKind = "ascii" | "image";
 

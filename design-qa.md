@@ -149,11 +149,28 @@
 
 - 原来的「配色」升级为「形态」：原色赛博 / 量子赛博继续使用 ASCII，新增奶家经典直接显示原画，不再转 ASCII。
 - 从官方设计参考图抠出 6 张透明原画：成年 idle/wave、幼体 idle/happy/wave；只移除与边缘连通的白底/软阴影，并只保留最大连通角色，避免带上邻图手臂和橙色碎片。
-- 成年 happy/click 使用 Codex Voice Input 的 25 帧 MIT 原画（`classic/laugh/000–024.png`），90ms/帧；幼体三态各一张静态原画。图片皮肤注册为 `naiwa-classic`，`palette === "classic"` 时由 `PetAnimation` 切换到图片渲染。
+- 成年 happy/click 使用 Codex Voice Input 的 25 帧 MIT 原画（原始 180×180 帧保存在 `classic/laugh/`，产品用 `classic/laugh-cropped/000–024.png`），90ms/帧；幼体三态各一张静态原画。图片皮肤注册为 `naiwa-classic`，`palette === "classic"` 时由 `PetAnimation` 切换到图片渲染。
 - 图片点击按 alpha 命中：点击坐标换算到原图尺寸，读取 canvas 像素，alpha > 16 才算本体；透明像素不触发点击/语音/字幕，但透明区域仍可拖动窗口。
 - 设置页改成三个直角分段按钮；`palette` 持久化接受 `original/cyber/classic`。520×760 下仍为 760/760，不滚动。
-- 验证：冷启动恢复 `palette-classic` 后渲染 `adult-idle.png` 且无 ASCII；点击身体 2.7 秒采样到 `laugh/000` → `024` → `adult-idle`，HUD `CLICK → HAPPY → IDLE`；点击 alpha=0 的左上角 HUD 保持 `IDLE`；原色赛博/量子赛博来回切换均恢复 ASCII；`pnpm build` 通过。
+- 验证：冷启动恢复 `palette-classic` 后渲染 `adult-idle.png` 且无 ASCII；点击身体 2.7 秒采样到 `laugh-cropped/000` → `024` → `adult-idle`，HUD `CLICK → HAPPY → IDLE`；点击 alpha=0 的左上角 HUD 保持 `IDLE`；原色赛博/量子赛博来回切换均恢复 ASCII；`pnpm build` 通过。
 - 截图：`_qa/art/settings-classic.png`、`_qa/art/classic-pet.png`；`docs/settings.png` 与 `docs/preview-classic.png` 已同步。
+
+## 2026-11-16 — Phase 20：经典动作尺寸与脚部完整性
+
+- 用户反馈：奶家经典成年大笑时身体变小，做动作时脚像被削掉。
+- 原因一：图片皮肤只设 `max-height: 78vh`，180×180 的大笑帧不会被放大，仍按 180px 显示；成年待机 276×465 会缩到 296px 高，两者身体高度差近一半。
+- 原因二：25 帧大笑原画的透明边距很大，180×180 里公共不透明范围只有 100×140，实际角色只占 140px 高。
+- 修复：图片统一改成 `height: 78vh; width: auto`，小图也按窗口高度放大；25 帧按公共 alpha 范围加 4px padding 裁成 108×148 的 `laugh-cropped/`，角色占 140/148，显示后约 280px，和成年待机一致。原始帧保留在 `classic/laugh/` 以便复查。
+- 六个经典状态实测（343×379 窗口）：成年待机 176×296 / 大笑 216×296 / 挥手 212×296；幼体待机 212×296 / 开心 217×296 / 挥手 244×296。所有可见像素都在窗口内，脚底距底边 30–38px，无横向或底部裁切。
+- 目视检查：`_qa/art/classic-all-states.png`；单张 `_qa/art/classic-adult-laugh-cropped.png`。`pnpm build` 通过。
+
+## 2026-11-16 — Phase 21：成年大笑高分辨率帧
+
+- 用户反馈：成年大笑的分辨率可以再高一点。
+- 源仓库 `liaosongjie/Codex-Voice-Input` 只有 180×180 的 25 帧，没有更高分辨率原图；高分辨率静态参考图不能替代连续动作。
+- 处理：从 108×148 紧裁帧用 Lanczos 放大 4× 并做轻量 UnsharpMask，输出 432×592 透明 WebP（`classic/laugh-hires/`），25 帧共约 834 KiB，90ms/帧。原始 180×180 帧和 108×148 紧裁帧都保留，便于复查或重新生成。
+- 当前 343×379 窗口中，432×592 帧显示为 216×296，浏览器走降采样；在 100% / 150% 窗口缩放下也不再直接拉伸 108px 小图。
+- 验证：真实点击后 `img.naturalWidth×naturalHeight = 432×592`，`src` 为 `laugh-hires/006.webp`，显示尺寸 216×296；身体像素完整、脚底距底边 32px；`pnpm build` 通过。
 
 ## 待人工确认
 

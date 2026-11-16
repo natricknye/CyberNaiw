@@ -204,8 +204,9 @@
 
 .pet-visual--image img {
   display: block;
+  height: 78vh;
+  width: auto;
   max-width: 92%;
-  max-height: 78vh;
   object-fit: contain;
   pointer-events: auto;
   cursor: grab;
@@ -213,6 +214,8 @@
   user-select: none;
   -webkit-user-drag: none;
 }
+
+
 
 .pet-visual--image img:active {
   cursor: grabbing;

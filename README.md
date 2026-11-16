@@ -138,7 +138,7 @@ pnpm tauri build --bundles dmg
 
 默认 ASCII 角色 `cyber-naiwa` 的原色赛博成年帧在 `src/assets/pets/cyber-naiwa/naiwa-frames.json`，幼体帧在 `naiwa-baby-frames.json`（112×70）；量子赛博成年/幼体帧在 `naiwa-cyber-frames.json`、`naiwa-cyber-baby-frames.json`（128×80）。每套 5 个状态；成年 happy/click 各 25 帧，其余状态每态 2 帧；幼体每态 2 帧。字符 tone、帧间隔和渲染逻辑在 `frames.ts`。成年大笑的 25 帧来自 [liaosongjie/Codex-Voice-Input](https://github.com/liaosongjie/Codex-Voice-Input) 的 MIT 动画帧（固定取景后转成 ASCII）；其余帧由官方设计资料库中的成年 / 幼体 / 大笑 / 挥手参考图逐像素映射生成，ASCII 帧的参考图片本身不入库。应用图标取自幼体原色赛博 ASCII 待机帧，不再单独绘制。
 
-奶家经典皮肤 `naiwa-classic` 在 `src/assets/pets/classic/`：成年待机/挥手和幼体三态是官方设计参考图的透明抠图；成年 happy/click 使用 `classic/laugh/000–024.png`，即 Codex Voice Input 的 25 帧 MIT 原画，90ms/帧。抠图脚本是 `_qa/make-classic-cutouts.ps1`（`_qa/` 不入库）。这部分是粉丝二创非商业使用，来源与授权说明见 `_qa/reference/official/laugh/SOURCES.md`。
+奶家经典皮肤 `naiwa-classic` 在 `src/assets/pets/classic/`：成年待机/挥手和幼体三态是官方设计参考图的透明抠图；成年 happy/click 使用 `classic/laugh-hires/000–024.webp`，即 Codex Voice Input 的 25 帧 MIT 原画裁掉透明边距后，再 4× Lanczos 放大并轻量锐化到 432×592，90ms/帧；原始 180×180 帧保留在 `classic/laugh/`，紧裁中间帧在 `classic/laugh-cropped/`。图片按窗口高度缩放，六个状态的身体高度一致、脚完整落在窗口内。抠图/放大脚本是 `_qa/make-classic-cutouts.ps1`、`_qa/crop-classic-laugh.ps1` 和 `_qa/upscale-classic-laugh.py`（`_qa/` 不入库）。这部分是粉丝二创非商业使用，来源与授权说明见 `_qa/reference/official/laugh/SOURCES.md`。
 
 想换成 PNG/WEBP/GIF 皮肤时，按 `src/assets/pets/README.md` 的说明注册 `ImagePetSkin` 即可，渲染器同时支持 ASCII 和图片序列。请不要提交没有 redistribution 权限的素材。
 
@@ -190,7 +190,7 @@ pnpm tauri build --bundles dmg
 
 MIT License，见 [LICENSE](LICENSE)。
 
-CyberNaiwa 是粉丝向、非商业的开源项目，灵感来自中文互联网迷因「奶蛙」。奶龙是可爱的原版、有版权；奶蛙是猎奇向的 AI/网友二创，本项目只做奶蛙，与奶龙官方及其权利方无关联。仓库内的 ASCII 角色帧由本项目基于公开参考图转换和绘制；成年大笑 25 帧来自 Codex Voice Input 的 MIT 动画帧；不包含第三方图片素材。六段点击语音来自上述公开素材仓库，权利归各自原作者/二创作者，若权利人要求会移除。
+CyberNaiwa 是粉丝向、非商业的开源项目，灵感来自中文互联网迷因「奶蛙」。奶龙是可爱的原版、有版权；奶蛙是猎奇向的 AI/网友二创，本项目只做奶蛙，与奶龙官方及其权利方无关联。仓库内的 ASCII 角色帧由本项目基于公开参考图转换和绘制；奶家经典的原画抠图来自公开的设计参考图，成年大笑 25 帧来自 Codex Voice Input 的 MIT 动画帧；这些图片素材的权利归各自原作者/二创作者，按粉丝二创非商业使用，若权利人要求会移除。六段点击语音同样来自上述公开素材仓库。
 
 ## 构建状态
 
