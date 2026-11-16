@@ -125,7 +125,8 @@ CyberNaiwa/
 - 原色赛博帧在 `naiwa-frames.json` / `naiwa-baby-frames.json`：112 列 × 70 行；量子赛博帧在 `naiwa-cyber-frames.json` / `naiwa-cyber-baby-frames.json`：128 列 × 80 行。用 `.` 表示透明格。帧由官方设计资料库的成年 / 幼体 / 大笑 / 挥手参考图逐像素映射到字符 tone；仓库不包含参考图片本身。
 - 幼体挥手源图裁切框从 `X=365/W=270` 改为 `X=310/W=285`：原框正好从 V 字手中间切过，导致手指缺失；新框完整包住中间幼体的抬手，112×70 与 128×80 两套网格都已重新采样。
 - `PetAnimation` 根据 `settings.palette` 选择帧组：`original` 走 `frames` / `babyFrames`，`cyber` 走 `cyberFrames` / `cyberBabyFrames`，`classic` 直接切到图片皮肤 `naiwa-classic`。ASCII JSON 仍只有 5 个基础动作的帧；`index.ts` 把 run/look/think/clap/eat/crouch 映射到最接近的现有姿态（run=walk、look/think=idle、clap=wave、eat=idle、crouch=wave），并让 HUD、语音、时长保持独立。幼体不使用新动作；左键动作栈永远不引用 happy/click。
-- 奶家经典图片皮肤：成年 idle 用 `adult-idle.png`，wave/扎马步用 `adult-wave.png`，happy/click 用 `laugh-hd/000–024.webp`（524×720，90ms/帧，来自 1080×1474 原片 6.5–8.75s 抽 25 帧，去白底/地面阴影，3% padding，Lanczos 缩到 720 高，不锐化）；walk/run/look/think/clap/eat/crouch 用 `classic/actions/<state>/` 的逐帧 PNG。动作帧统一补齐到 180×210 画布、底部对齐到 y=204（6px 底边距），所以脚和膝盖不会被裁。幼体 idle/walk、happy/click、wave 各用一张原画。`laugh/` 保留 180×180 的 MIT 原始帧，`laugh-cropped/` 是紧裁中间帧，`laugh-hires/` 是 648×888 的 6× 回退放大版；当前产品路径是 `laugh-hd`。
+- 奶家经典图片皮肤：成年 idle 用 `adult-idle-aligned.png`（原 `adult-idle.png` ×1.09 亮度、×0.80 饱和度，向动作帧的明度/饱和度靠拢，原图保留），wave/扎马步用 `adult-wave.png`，happy/click 用 `laugh-hd/000–024.webp`（524×720，90ms/帧，来自 1080×1474 原片 6.5–8.75s 抽 25 帧，去白底/地面阴影，3% padding，Lanczos 缩到 720 高，不锐化）；walk/run/look/think/clap/eat/crouch 用 `classic/actions/<state>/` 的逐帧 PNG。动作帧统一补齐到 180×210 画布、底部对齐到 y=204（6px 底边距），所以脚和膝盖不会被裁。幼体 idle/walk、happy/click、wave 各用一张原画。`laugh/` 保留 180×180 的 MIT 原始帧，`laugh-cropped/` 是紧裁中间帧，`laugh-hires/` 是 648×888 的 6× 回退放大版；当前产品路径是 `laugh-hd`。
+- HUD 渲染规则：`Pet.tsx` 只在 `settings.palette !== "classic"` 时渲染 `NAIWA//STATE`；原色赛博用暖黄 `rgba(255,216,77,0.62)` + 黄点，量子赛博沿用蓝色 `rgba(126,249,255,0.6)` + 青点，奶家经典不渲染 HUD。设置页不再有「桌宠标签」开关，`hudEnabled` 从 `PetSettings` 移除。
 - 图片尺寸用 `height: 78vh; width: auto`，不是 `max-height`：原图小于窗口时也会放大。图片底部对齐 stage 内容底边，保留 22px 底部 padding；成年待机和动作的角色高约 280px，47 张动作帧的 alpha 最外像素距画布边缘至少 6px，映射到窗口后脚底距底边约 30px。
 - 奶家经典每个动作的帧间隔由 `frameIntervalMsByState` 控制；happy/click 仍用全局 `frameIntervalMs: 90`。
 - 图片皮肤的点击命中按 alpha 判断：`usePetInteraction` 把点击坐标换算到 `naturalWidth × naturalHeight`，首次读取时把当前图片画进 canvas 并按 `currentSrc` 缓存，alpha > 16 才算命中。透明像素不触发点击/语音/字幕，但拖动仍由整个 `.pet-stage` 接管。
@@ -141,7 +142,7 @@ CyberNaiwa/
 ## 设置持久化
 
 - 使用官方 `tauri-plugin-store`，文件 `settings.json`，`autoSave: false`，显式 `save()`。
-- 键 `settings`：`{ alwaysOnTop, scale, animationsEnabled, soundEnabled, hudEnabled, language, age, palette }`。`hudEnabled` 控制桌宠下方 `NAIWA//IDLE` 是否显示，旧设置缺省为 `true`。
+- 键 `settings`：`{ alwaysOnTop, scale, animationsEnabled, soundEnabled, language, age, palette }`。HUD 不再持久化：`palette !== "classic"` 时显示 `NAIWA//IDLE`，原色用暖黄、量子用蓝色；奶家经典不渲染 HUD。旧设置里的 `hudEnabled` 直接忽略。
 - 键 `windowPosition`：`{ x, y }`（物理像素）。
 - 读取时做类型校验和范围夹取：`scale` 限制在 0.7–1.5，`language` 只接受 `zh/en`，`age` 只接受 `adult/baby`，`palette` 只接受 `original/cyber/classic`，非法值回退默认 `cyber`。
 - App 界面固定中文（设置页不再提供语言切换）；README 保留 `README.en.md`。托盘语言固定调用 `zh`，设置窗口标题为中文。
@@ -271,4 +272,5 @@ cargo check --manifest-path src-tauri/Cargo.toml
 - 2026-11-16 add 47 Nailong-Studio action frames (MIT) to `classic/actions`, padded to a 180×210 bottom-aligned canvas; add per-state image intervals/new HUD labels; ASCII forms reuse the closest existing poses for the new actions so the shared stack does not require low-quality 112×70 conversions.
 - 2026-11-16 replace the classic laugh with 25 high-resolution frames extracted from the 1080×1474 `naiwa-laugh.mp4` at 6.50–8.75 s: remove the white background/floor shadow, pad 3%, Lanczos-downscale to 524×720, save transparent WebP at 90 ms/frame; keep `laugh-hires` as the MIT 180×180 upscale fallback.
 - 2026-11-16 add an always-visible top-right gear button for Settings (middle-click still works and is explained as pressing the scroll wheel), and fix the ASCII action aliases so clap/eat never reuse the laugh frames; the left-click stack now only uses wave/idle/walk poses and right-click remains the sole laugh trigger.
+- 2026-11-16 brighten the classic standing artwork (`adult-idle-aligned.png`, ×1.09 brightness / ×0.80 colour) to match the action frames, remove the persisted HUD toggle and the settings row, and derive HUD visibility/colour from the palette: Original warm yellow, Quantum blue, Classic hidden.
 - 2026-11-16 bump to 0.2.1 and replace `docs/settings.png` with the 赛博奶蛙 settings screenshot (原色模式/量子模式, no sleep copy, version 0.2.1).

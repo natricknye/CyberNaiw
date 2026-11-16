@@ -334,6 +334,21 @@
   animation: hud-pulse 2.4s ease-in-out infinite;
 }
 
+/* ASCII forms keep the status line; the classic artwork hides it. Original
+   uses its warm body yellow and quantum keeps the existing cyan. */
+.pet-stage--palette-original .pet-hud {
+  color: rgba(255, 216, 77, 0.62);
+}
+
+.pet-stage--palette-original .pet-hud-dot {
+  background: rgba(255, 216, 77, 0.28);
+}
+
+.pet-stage--palette-original .pet-hud-dot.is-online {
+  background: #ffd84d;
+  box-shadow: 0 0 6px rgba(255, 216, 77, 0.9);
+}
+
 .speech-bubble {
   position: absolute;
   z-index: 5;

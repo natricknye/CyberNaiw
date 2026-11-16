@@ -5,7 +5,7 @@ import {
   CYBER_NAIWA_CYBER_FRAMES,
   CYBER_NAIWA_FRAMES,
 } from "./cyber-naiwa/frames";
-import adultIdle from "./classic/adult-idle.png";
+import adultIdle from "./classic/adult-idle-aligned.png";
 import adultWave from "./classic/adult-wave.png";
 import babyIdle from "./classic/baby-idle.png";
 import babyHappy from "./classic/baby-happy.png";

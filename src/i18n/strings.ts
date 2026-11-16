@@ -32,8 +32,6 @@ export interface UiStrings {
     animation: string;
     animationHint: string;
     animationNote: string;
-    hud: string;
-    hudHint: string;
     sound: string;
     soundHint: string;
     about: string;
@@ -88,8 +86,6 @@ const ZH: UiStrings = {
     animationHint: "待机、走动和逐帧动画。",
     animationNote:
       "关闭动画后奶蛙保持静态；点击仍会切换表情作为反馈，但不会自动走动。",
-    hud: "桌宠标签",
-    hudHint: "在桌宠下方显示 NAIWA//IDLE 等状态字样。",
     sound: "声音",
     soundHint: "点击播放对应奶蛙语音；幼体是更高频的版本。",
     about: "关于",
@@ -167,8 +163,6 @@ const EN: UiStrings = {
     animationHint: "Idle, walking and frame-by-frame motion.",
     animationNote:
       "With animation off, Naiwa holds still. Clicks still change the expression, but there's no automatic walking.",
-    hud: "Status label",
-    hudHint: "Show the NAIWA//IDLE status line below the pet.",
     sound: "Sound",
     soundHint: "Play the matching Naiwa voice line on click; the baby uses a higher-pitched version.",
     about: "About",

@@ -203,6 +203,14 @@
 - 齿轮按钮 `.pet-settings-button` 存在，程序化点击后设置窗 `visibility: visible`；按钮在鼠标悬停时变亮。
 - `pnpm build` 通过。
 
+## 2026-11-16 — Phase 25：经典站立提亮与 HUD 规则
+
+- 用户反馈：奶家经典站立原画比其他形态/动作帧更深；其他颜色不动，只把站立稍微提亮。
+- 原站立帧 mean luminance 154.9 / saturation 163.7；动作 walk 170.8 / 129.3、run 172.9 / 130.6。用 PIL 对原图做 ×1.09 亮度、×0.80 色彩，生成 `adult-idle-aligned.png`，实测 170.9 / 137.4，接近动作帧；原 `adult-idle.png` 保留。
+- 删除设置页「桌宠标签」开关和 `hudEnabled` 持久化字段；旧设置里的 `hudEnabled` 直接忽略。
+- HUD 规则改为按形态派生：原色赛博显示暖黄 `rgba(255,216,77,0.62)` + 黄点；量子赛博保持蓝色 `rgba(126,249,255,0.6)` + 青点；奶家经典不渲染 HUD。
+- 验证：设置页标签只剩 始终置顶 / 桌宠大小 / 成长阶段 / 形态 / 动画 / 声音，520×760 下 `clientHeight 760 / scrollHeight 760`；原色 HUD 计算色为暖黄，量子为青色，经典 `hud: false`；`docs/settings.png` 和 `docs/preview-classic.png` 已更新；`pnpm build` 通过。
+
 ## 待人工确认
 
 - 托盘菜单的物理点击仍需在桌面通知区实际点一遍；窗口 show/hide/设置/退出逻辑已实现。

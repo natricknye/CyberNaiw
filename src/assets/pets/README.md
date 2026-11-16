@@ -31,6 +31,10 @@ upscale fallback built from the 180×180 MIT frames (`classic/laugh/`), and
 `classic/laugh-cropped/` keeps the tight 108×148 crop. The video source has no
 explicit redistribution licence in `SOURCES.md`; the project owner approved its
 fan-use inclusion, and it can be swapped back to `laugh-hires` if needed.
+`adult-idle-aligned.png` is the product standing frame: the original cut-out is
+multiplied by 1.09 brightness and 0.80 colour, bringing its mean
+luminance/saturation close to the Nailong action frames. `adult-idle.png` keeps
+the unmodified cut-out.
 
 Adult walk/run/look/think/clap/eat/crouch live in `classic/actions/<state>/`.
 They come from the Nailong-Studio `pet/` MIT frame sequences, padded to a
