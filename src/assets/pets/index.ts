@@ -40,15 +40,16 @@ for (const key of Object.keys(CLASSIC_ACTION_MODULES).sort()) {
 }
 
 // The adult action stack is shared by all three art forms. ASCII has no
-// separate action drawings yet, so it reuses the closest existing pose:
-// run = fast walk, look/think = idle, clap/eat = laugh, crouch = horse stance.
+// separate action drawings yet, so it reuses the closest existing pose.
+// Never point a left-click action at happy/click: those frames are the laugh,
+// and the laugh must only be reachable through right-click.
 const ADULT_ASCII_FRAMES: FrameMap = {
   ...CYBER_NAIWA_FRAMES,
   run: CYBER_NAIWA_FRAMES.walk,
   look: CYBER_NAIWA_FRAMES.idle,
   think: CYBER_NAIWA_FRAMES.idle,
-  clap: CYBER_NAIWA_FRAMES.happy,
-  eat: CYBER_NAIWA_FRAMES.happy,
+  clap: CYBER_NAIWA_FRAMES.wave,
+  eat: CYBER_NAIWA_FRAMES.idle,
   crouch: CYBER_NAIWA_FRAMES.wave,
 };
 
@@ -57,8 +58,8 @@ const ADULT_ASCII_CYBER_FRAMES: FrameMap = {
   run: CYBER_NAIWA_CYBER_FRAMES.walk,
   look: CYBER_NAIWA_CYBER_FRAMES.idle,
   think: CYBER_NAIWA_CYBER_FRAMES.idle,
-  clap: CYBER_NAIWA_CYBER_FRAMES.happy,
-  eat: CYBER_NAIWA_CYBER_FRAMES.happy,
+  clap: CYBER_NAIWA_CYBER_FRAMES.wave,
+  eat: CYBER_NAIWA_CYBER_FRAMES.idle,
   crouch: CYBER_NAIWA_CYBER_FRAMES.wave,
 };
 

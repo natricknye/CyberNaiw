@@ -193,6 +193,16 @@
 - 产品帧统一留 3% padding，Lanczos 缩到 524×720，透明 WebP quality 95，无 UnsharpMask，25 帧共约 975 KiB；`laugh-hires` 648×888 保留为 MIT 180×180 回退版。
 - 验证：真实右键后 `naturalWidth×naturalHeight = 524×720`，`src` 为 `laugh-hd/008.webp`，显示 215×296；可见像素 x=86–256 / y=82–349（343×379 窗口），脚底距底边 30px，无裁切。截图 `_qa/art/classic-laugh-hd.png`。`pnpm build` 通过。
 
+## 2026-11-16 — Phase 24：齿轮设置入口与“左键不出大笑”
+
+- 用户问“中键是什么意思”，并明确“大笑不存在于左键能召唤出的一个动作”。
+- 中键 = 按下鼠标滚轮；为触控板/不熟悉中键的用户增加右上角常驻半透明齿轮按钮，点击打开设置；中键、Ctrl/⌘ + 右键、托盘入口继续保留。
+- 左键动作栈审计发现：ASCII 端 clap/eat 原先复用 `happy`（25 帧大笑），导致左键走到鼓掌/进食时看起来像大笑。已改为 clap=wave、eat=idle；左键栈不包含 happy/click，只有右键 `interact("laugh")` 会进入大笑。
+- 冷启动验证 ASCII 左键序列：`wave → walk → run → look → think → clap → eat → crouch → idle → wave`，采样中没有 `click` / `happy`。
+- 模块级验证：`frames.clap === frames.wave`、`frames.eat === frames.idle`、`frames.clap !== frames.happy`、`frames.eat !== frames.happy`；cyber 帧组同样成立。
+- 齿轮按钮 `.pet-settings-button` 存在，程序化点击后设置窗 `visibility: visible`；按钮在鼠标悬停时变亮。
+- `pnpm build` 通过。
+
 ## 待人工确认
 
 - 托盘菜单的物理点击仍需在桌面通知区实际点一遍；窗口 show/hide/设置/退出逻辑已实现。

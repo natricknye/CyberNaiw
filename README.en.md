@@ -176,13 +176,14 @@ Interaction:
 
 - **Adult start**: stands idle. Every 9–16 seconds it may briefly shift into the horse stance, then stand again.
 - **Adult left-click**: advances one action: stand → horse stance → walk → run → look around → think → clap → eat → crouch → stand, and plays a random 安迪 / 嘎嘎提拉瞎 / 干巴得 / 哦啦 / 噶韭菜 line.
-- **Adult right-click**: plays the laugh and the full laugh animation; it no longer opens the menu.
-- **Adult middle-click**: opens Settings.
+- **Adult right-click**: plays the laugh and the full laugh animation; it no longer opens the menu. **The laugh is right-click only** — the left-click stack never contains `happy`/`click` and never summons the laugh.
+- **Top-right gear**: a small always-visible gear button opens Settings; it brightens on hover.
+- **Adult middle-click**: press the scroll wheel to open Settings (trackpads without a middle button can use the gear or tray).
 - **Adult Ctrl/⌘ + right-click**: opens the native menu (Settings / Hide / Quit).
 - **Tray**: still shows/hides the pet, opens Settings, and quits.
 - **Baby**: keeps a separate stack with no laugh clip; left-click plays one meme line and the happy reaction, right-click still opens the native menu.
 - With sound off, the same line is shown as a subtitle instead.
-- Every other adult action is click-only and never plays automatically.
+- Every other adult action is click-only and never plays automatically. In Original/Quantum ASCII, clap reuses the horse-stance frames and eat reuses the idle frames — never the laugh frames.
 
 Line research and the older 1.8 s MIT laugh:
 

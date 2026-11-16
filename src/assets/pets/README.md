@@ -14,8 +14,9 @@ reference images are not shipped in this repository.
 
 The JSON still covers the five original poses. `index.ts` aliases the newer
 adult states to the closest existing pose: run→walk, look/think→idle,
-clap/eat→happy, crouch→wave. The HUD label, frame interval and action duration
-still come from the real state, and the baby never uses these aliases.
+clap→wave, eat→idle, crouch→wave. The laugh (`happy`/`click`) is deliberately
+never used by a left-click action. The HUD label, frame interval and action
+duration still come from the real state, and the baby never uses these aliases.
 
 ## Classic skin
 

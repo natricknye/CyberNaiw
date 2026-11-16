@@ -5,7 +5,7 @@
 CyberNaiwa 是一个 Tauri 2 + React + TypeScript 桌面宠物。应用有两个 webview 窗口：
 
 - `pet`：透明、无边框、置顶、不可聚焦、默认隐藏，启动后由前端应用设置与位置再显示。
-- `settings`：普通系统窗口，默认隐藏，通过托盘、中键点击奶蛙、或 Ctrl/⌘ + 右键菜单打开；关闭时只隐藏。
+- `settings`：普通系统窗口，默认隐藏，通过托盘、右上角齿轮、中键（按下滚轮）或 Ctrl/⌘ + 右键菜单打开；关闭时只隐藏。
 
 Rust 只负责系统级部分：托盘图标/菜单、窗口显示隐藏、退出。业务状态、动画、设置 UI 都在前端。
 
@@ -100,12 +100,12 @@ CyberNaiwa/
 - `usePetInteraction`：pointerdown 只记录起点；移动 ≥5px 才调用 `startDragging()`，避免原生拖拽吞掉点击；pointerup 且未拖动才算一次点击。
 - 命中判定：ASCII 必须命中 `.pet-ascii [class^="tone-"]:not(.tone-empty)`，图片必须按 alpha 命中（>16）；透明格/透明像素仍是拖动区，但不触发动作、语音或字幕。
 - **成年左键**：`advanceAction()` 沿 `ADULT_ACTION_STACK` 前进：`idle → wave（扎马步）→ walk → run → look → think → clap → eat → crouch → idle`。每档有独立持续时间，动作结束回 idle，但索引保留，所以连续点击能走完整套。左键同时 `speak("meme")` 选一条安迪类台词；260ms 防抖，避免双击跳两档。
-- **成年右键**：`interact("laugh")`，`click` 380ms → `happy` 1870ms → `idle`；不再打开原生菜单。Ctrl/⌘ + 右键打开原生菜单；中键打开设置；托盘入口保留。
+- **成年右键**：`interact("laugh")`，`click` 380ms → `happy` 1870ms → `idle`；不再打开原生菜单。**大笑只属于右键**，左键动作栈不含 `happy`/`click`。Ctrl/⌘ + 右键打开原生菜单；中键（按下滚轮）打开设置；右上角常驻半透明齿轮按钮也打开设置；托盘入口保留。
 - **幼体左键**：`interact("meme")`，`click` 380ms → `happy` 1100ms → `idle`；没有大笑语音，右键仍是原生菜单。幼体的动作栈与成年完全分开。
 - **空闲自动行为**：成年 idle 9–16 秒后只自动进入 `wave`（扎马步）2.4 秒，再回 idle；walk/run/look/think/clap/eat/crouch 不会自动播放。幼体保持 7–14 秒随机 walk/wave 的独立行为。
 - 动画关闭时强制回到 idle，并取消进行中的状态定时器；点击仍能切换动作/触发大笑，但只显示静态首帧。
 - `PetAnimation` 只在当前状态内轮播帧，切状态立即重置到第 0 帧；缺少某状态的帧时回退到 `idle`，不会渲染空帧。
-- 成年：Idle / Walk 使用站立正面（第二帧闭眼）；Click / Happy 使用 Codex Voice Input 的 25 帧大笑（手放肚子 → 仰头 → 抱头 → 回落）；Wave 使用官方挥手/扎马步。新动作的经典原画来自 Nailong-Studio 的 `pet/` 逐帧；ASCII 端暂时复用最接近的现有姿态。
+- 成年：Idle / Walk 使用站立正面（第二帧闭眼）；Click / Happy 使用 Codex Voice Input 的 25 帧大笑（手放肚子 → 仰头 → 抱头 → 回落），只由右键触发；Wave 使用官方挥手/扎马步。新动作的经典原画来自 Nailong-Studio 的 `pet/` 逐帧；ASCII 端暂时复用最接近的现有姿态：run=walk、look/think=idle、clap=wave、eat=idle、crouch=wave，**绝不把 clap/eat 指到 happy/click 大笑帧**。
 - 幼体：Idle / Walk 使用幼体正面；Happy / Click 使用幼体素材右一叉腰；Wave 使用幼体素材中间抬手。幼体不使用成年大笑、挥手或新动作素材。
 - Sleep 与 Sad 状态均已移除（用户反馈睡觉和伤心界面不好看）；不再生成/播放 sleep 或 sad 帧。
 - ASCII 帧间隔：成年 idle 1200ms、walk 260ms、happy/click 90ms、wave 500ms、run 130ms、look 300ms、think 350ms、clap 160ms、eat 260ms、crouch 500ms；幼体 idle 1200ms、walk 260ms、happy 320ms、click 180ms、wave 500ms。
@@ -124,7 +124,7 @@ CyberNaiwa/
 
 - 原色赛博帧在 `naiwa-frames.json` / `naiwa-baby-frames.json`：112 列 × 70 行；量子赛博帧在 `naiwa-cyber-frames.json` / `naiwa-cyber-baby-frames.json`：128 列 × 80 行。用 `.` 表示透明格。帧由官方设计资料库的成年 / 幼体 / 大笑 / 挥手参考图逐像素映射到字符 tone；仓库不包含参考图片本身。
 - 幼体挥手源图裁切框从 `X=365/W=270` 改为 `X=310/W=285`：原框正好从 V 字手中间切过，导致手指缺失；新框完整包住中间幼体的抬手，112×70 与 128×80 两套网格都已重新采样。
-- `PetAnimation` 根据 `settings.palette` 选择帧组：`original` 走 `frames` / `babyFrames`，`cyber` 走 `cyberFrames` / `cyberBabyFrames`，`classic` 直接切到图片皮肤 `naiwa-classic`。ASCII JSON 仍只有 5 个基础动作的帧；`index.ts` 把 run/look/think/clap/eat/crouch 映射到最接近的现有姿态，并让 HUD、语音、时长保持独立。幼体不使用新动作。
+- `PetAnimation` 根据 `settings.palette` 选择帧组：`original` 走 `frames` / `babyFrames`，`cyber` 走 `cyberFrames` / `cyberBabyFrames`，`classic` 直接切到图片皮肤 `naiwa-classic`。ASCII JSON 仍只有 5 个基础动作的帧；`index.ts` 把 run/look/think/clap/eat/crouch 映射到最接近的现有姿态（run=walk、look/think=idle、clap=wave、eat=idle、crouch=wave），并让 HUD、语音、时长保持独立。幼体不使用新动作；左键动作栈永远不引用 happy/click。
 - 奶家经典图片皮肤：成年 idle 用 `adult-idle.png`，wave/扎马步用 `adult-wave.png`，happy/click 用 `laugh-hd/000–024.webp`（524×720，90ms/帧，来自 1080×1474 原片 6.5–8.75s 抽 25 帧，去白底/地面阴影，3% padding，Lanczos 缩到 720 高，不锐化）；walk/run/look/think/clap/eat/crouch 用 `classic/actions/<state>/` 的逐帧 PNG。动作帧统一补齐到 180×210 画布、底部对齐到 y=204（6px 底边距），所以脚和膝盖不会被裁。幼体 idle/walk、happy/click、wave 各用一张原画。`laugh/` 保留 180×180 的 MIT 原始帧，`laugh-cropped/` 是紧裁中间帧，`laugh-hires/` 是 648×888 的 6× 回退放大版；当前产品路径是 `laugh-hd`。
 - 图片尺寸用 `height: 78vh; width: auto`，不是 `max-height`：原图小于窗口时也会放大。图片底部对齐 stage 内容底边，保留 22px 底部 padding；成年待机和动作的角色高约 280px，47 张动作帧的 alpha 最外像素距画布边缘至少 6px，映射到窗口后脚底距底边约 30px。
 - 奶家经典每个动作的帧间隔由 `frameIntervalMsByState` 控制；happy/click 仍用全局 `frameIntervalMs: 90`。
@@ -270,4 +270,5 @@ cargo check --manifest-path src-tauri/Cargo.toml
 - 2026-11-16 add the adult action stack (stand → horse stance → walk → run → look → think → clap → eat → crouch), driven by adult left-click with a 260ms debounce; right-click now plays the laugh, middle-click opens settings, and Ctrl/⌘ + right-click keeps the native menu. Adult idle only auto-switches to the horse stance; all other actions are click-only, and the baby keeps its own stack.
 - 2026-11-16 add 47 Nailong-Studio action frames (MIT) to `classic/actions`, padded to a 180×210 bottom-aligned canvas; add per-state image intervals/new HUD labels; ASCII forms reuse the closest existing poses for the new actions so the shared stack does not require low-quality 112×70 conversions.
 - 2026-11-16 replace the classic laugh with 25 high-resolution frames extracted from the 1080×1474 `naiwa-laugh.mp4` at 6.50–8.75 s: remove the white background/floor shadow, pad 3%, Lanczos-downscale to 524×720, save transparent WebP at 90 ms/frame; keep `laugh-hires` as the MIT 180×180 upscale fallback.
+- 2026-11-16 add an always-visible top-right gear button for Settings (middle-click still works and is explained as pressing the scroll wheel), and fix the ASCII action aliases so clap/eat never reuse the laugh frames; the left-click stack now only uses wave/idle/walk poses and right-click remains the sole laugh trigger.
 - 2026-11-16 bump to 0.2.1 and replace `docs/settings.png` with the 赛博奶蛙 settings screenshot (原色模式/量子模式, no sleep copy, version 0.2.1).
