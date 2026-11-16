@@ -139,7 +139,7 @@ pnpm tauri build --bundles dmg
 
 默认 ASCII 角色 `cyber-naiwa` 的原色赛博成年帧在 `src/assets/pets/cyber-naiwa/naiwa-frames.json`，幼体帧在 `naiwa-baby-frames.json`（112×70）；量子赛博成年/幼体帧在 `naiwa-cyber-frames.json`、`naiwa-cyber-baby-frames.json`（128×80）。现有帧覆盖 idle / walk / happy / click / wave；成年 happy/click 各 25 帧，其余状态每态 2 帧；幼体每态 2 帧。新增的 run / look / think / clap / eat / crouch 在 `src/assets/pets/index.ts` 复用最接近的现有 ASCII 姿态，但保留独立 HUD 标签、帧间隔和动作时长。字符 tone、帧间隔和渲染逻辑在 `frames.ts`。成年大笑的 25 帧来自 [liaosongjie/Codex-Voice-Input](https://github.com/liaosongjie/Codex-Voice-Input) 的 MIT 动画帧（固定取景后转成 ASCII）；其余帧由官方设计资料库中的成年 / 幼体 / 大笑 / 挥手参考图逐像素映射生成，ASCII 帧的参考图片本身不入库。应用图标取自幼体原色赛博 ASCII 待机帧，不再单独绘制。
 
-奶家经典皮肤 `naiwa-classic` 在 `src/assets/pets/classic/`：成年待机默认使用**正面** `adult-idle-aligned.png`（官方正面站立，×1.14 亮度、×0.78 色彩，向动作帧的明度/饱和度对齐），脚和腿完整落在窗口内。Nailong 的 `classic/idle/00–05.png` 是 3/4 侧身待机备选，画面会斜着站，所以不作为默认站立。成年挥手和幼体三态是官方设计参考图的透明抠图；幼体三态已重新放宽裁切，手、脚、膝盖都有 14px 内边距；成年 happy/click 使用 `classic/laugh-hd/000–024.webp`，从 1080×1474 的 `naiwa-laugh.mp4` 6.5–8.75 秒抽 25 帧，去掉白底、地面阴影和胯下白块，统一留 3% 边距后 Lanczos 缩到 524×720，不做锐化，90ms/帧。`classic/laugh/` 保留原始 180×180 MIT 帧，`classic/laugh-hires/` 保留 648×888 的 6× 放大回退版；视频源的再分发许可记录不完整，已按项目所有者确认作为粉丝二创使用，必要时可切回 `laugh-hires`。走、跑、张望、思考、鼓掌、蹲伏使用 `classic/actions/<action>/` 的逐帧原画，来自 Nailong-Studio 的 MIT 素材，统一补齐到 180×210 画布、底部留 6px，所以脚和膝盖不会被窗口裁掉；`进食` 帧保留在素材里，但因为张嘴仰头太像大笑，暂不接入左键动作栈。图片按窗口高度缩放，成年待机和动作的身体高度约 280px。抠图/放大/补帧脚本是 `_qa/make-classic-cutouts.ps1`、`_qa/make-baby-cutouts.py`、`_qa/crop-classic-laugh.ps1`、`_qa/upscale-classic-laugh.py`、`_qa/build-hd-laugh.py`、`_qa/build-classic-actions.py` 和 `_qa/build-classic-idle.py`（`_qa/` 不入库）。这部分是粉丝二创非商业使用，来源与授权说明见 `_qa/reference/official/laugh/SOURCES.md`。
+奶家经典皮肤 `naiwa-classic` 在 `src/assets/pets/classic/`：成年待机默认使用**正面** `adult-idle-aligned.png`（官方正面站立，×1.14 亮度、×0.78 色彩，向动作帧的明度/饱和度对齐），脚和腿完整落在窗口内。Nailong 的 `classic/idle/00–05.png` 是 3/4 侧身待机备选，画面会斜着站，所以不作为默认站立。成年挥手和幼体三态是官方设计参考图的透明抠图；幼体三态已重新放宽裁切，手、脚、膝盖都有 14px 内边距；成年 happy/click 使用 `classic/laugh-hd/000–024.webp`，从 1080×1474 的 `naiwa-laugh.mp4` 6.5–8.75 秒抽 25 帧，去掉白底、地面阴影和胯下白块，统一留 3% 边距后 Lanczos 缩到 524×720，不做锐化，164ms/帧，和 4.11 秒大笑音频对齐。`classic/laugh/` 保留原始 180×180 MIT 帧，`classic/laugh-hires/` 保留 648×888 的 6× 放大回退版；视频源的再分发许可记录不完整，已按项目所有者确认作为粉丝二创使用，必要时可切回 `laugh-hires`。走、跑、张望、思考、鼓掌、蹲伏使用 `classic/actions/<action>/` 的逐帧原画，来自 Nailong-Studio 的 MIT 素材，统一补齐到 180×210 画布、底部留 6px，所以脚和膝盖不会被窗口裁掉；`进食` 帧保留在素材里，但因为张嘴仰头太像大笑，暂不接入左键动作栈。图片按窗口高度缩放，成年待机和动作的身体高度约 280px。抠图/放大/补帧脚本是 `_qa/make-classic-cutouts.ps1`、`_qa/make-baby-cutouts.py`、`_qa/crop-classic-laugh.ps1`、`_qa/upscale-classic-laugh.py`、`_qa/build-hd-laugh.py`、`_qa/build-classic-actions.py` 和 `_qa/build-classic-idle.py`（`_qa/` 不入库）。这部分是粉丝二创非商业使用，来源与授权说明见 `_qa/reference/official/laugh/SOURCES.md`。
 
 想换成 PNG/WEBP/GIF 皮肤时，按 `src/assets/pets/README.md` 的说明注册 `ImagePetSkin` 即可，渲染器同时支持 ASCII 和图片序列。请不要提交没有 redistribution 权限的素材。
 
@@ -165,7 +165,7 @@ pnpm tauri build --bundles dmg
 交互规则：
 
 - **成年初始**：站立待机；空闲 9–16 秒会偶尔自动切到扎马步，然后回到站立。
-- **成年左键**：按动作栈前进一档：站立 → 扎马步 → 走 → 跑 → 张望 → 思考 → 鼓掌 → 蹲伏 → 站立，并随机播一条安迪 / 嘎嘎提拉瞎 / 干巴得 / 哦啦 / 噶韭菜。
+- **成年左键**：按动作栈前进一档：站立 → 扎马步 → 走 → 跑 → 张望 → 思考 → 鼓掌 → 蹲伏 → 站立，并随机播一条安迪 / 嘎嘎提拉瞎 / 干巴得 / 哦啦 / 噶韭菜。动作或语音还没结束时再点，会立即打断上一个动作/语音并继续下一档。
 - **成年右键**：播「哈哈哈哈哈」并完整播放大笑，不再弹出菜单。**大笑只属于右键**，左键动作栈不含 `happy`/`click`，也不会召唤出像大笑的“进食”张嘴仰头姿势。
 - **右上角齿轮**：只有鼠标悬停在桌宠窗口上时，右上角才显示半透明齿轮；点它打开设置。移开鼠标后齿轮隐藏。
 - **成年中键**：按下鼠标滚轮打开设置（笔记本触控板没有中键时用齿轮或托盘）。

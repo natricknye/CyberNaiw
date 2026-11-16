@@ -234,6 +234,14 @@
 - 正面站立再提亮：从原始未调色版本按 ×1.14 亮度、×0.78 色彩重新生成 `adult-idle-aligned.png`，实测 mean lum 176.6 / sat 134.4（之前 170.9 / 137.4）；`docs/preview-classic.png` 已更新。
 - 设置齿轮仍为悬停显示；经典 HUD 隐藏。`pnpm build` 通过。
 
+## 2026-11-16 — Phase 29：并发点击、4.11s 大笑与 ASCII 马扎步
+
+- 用户反馈动作/语音没结束时再点无效。移除了成年左键的 260ms 防抖；`advanceAction()` 每次点击都清掉上一档定时器并立即推进。150ms 间隔连点实测状态持续前进，不再等动作结束。
+- 语音并发：`sound.ts` 增加 `activePlayer` 和 `stopNaiwaVoice()`；`playNaiwaVoice()` 先 pause 当前播放器再播新语音。实测右键大笑 500ms 后左键，日志为 `pause laugh → play laugh → pause laugh → pause gaga → play gaga`，新语音正常打断旧语音。
+- 成年大笑音频 `naiwa-laugh-long.wav` 实测 4.11s；ASCII happy/click 帧间隔改为 164ms（25×164≈4.10s），`HAPPY_STATE_MS` 改为 3730ms，click 380 + happy 3730 = 4.11s；奶家经典图片帧全局间隔也改为 164ms。实测右键后 0.8s/2.5s/3.5s 仍是 `happy`（帧 004/014/021），4.4s 回 `idle`。
+- 用户反馈 ASCII 马扎步膝盖被削。经典 `adult-wave.png` 完整；ASCII wave 帧贴着 112×70/128×80 网格边缘。给四套 JSON 的 wave 帧统一加 2 格透明边距并居中缩小，audit 图 `_qa/art/ascii-wave-padded.png`；其他动作帧不动。
+- `pnpm build` 通过。
+
 ## 待人工确认
 
 - 托盘菜单的物理点击仍需在桌面通知区实际点一遍；窗口 show/hide/设置/退出逻辑已实现。

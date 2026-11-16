@@ -29,8 +29,9 @@ default because the character stands diagonally. Wave and baby idle/happy/wave
 remain single cut-out PNGs; the three baby images were re-cropped from the
 official juvenile sheet with a 14 px inner margin so hands, feet, and knees are
 not sliced. The
-adult happy/click sequence is `classic/laugh-hd/000`–`024.webp` at 90 ms per
-frame: 25 frames from the 1080×1474 `naiwa-laugh.mp4` at 6.5–8.75 s, with the
+adult happy/click sequence is `classic/laugh-hd/000`–`024.webp` at 164 ms per
+frame (25 × 164 ms ≈ 4.10 s, matching the 4.11 s laugh audio): 25 frames from
+the 1080×1474 `naiwa-laugh.mp4` at 6.5–8.75 s, with the
 white background, floor shadow, and white crotch gap removed, 3% padding and
 Lanczos downscale to 524×720, no sharpening. `classic/laugh-hires/` keeps the
 648×888 6× MIT upscale fallback and `classic/laugh-cropped/` keeps the tight

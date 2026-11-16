@@ -73,14 +73,14 @@ export function toneForChar(char: string): AsciiTone {
   }
 }
 
-// Adult laugh: 25 frames at 90 ms = the source GIF's 2.25 s loop.
+// Adult laugh: 25 frames at 164 ms ≈ 4.10 s, matching the 4.11 s laugh audio.
 // New adult actions use the closest existing ASCII pose but keep their own
 // cadence, so run reads faster than walk and crouch/stance is slower.
 export const FRAME_INTERVAL_MS: Record<PetAnimationState, number> = {
   idle: 1200,
   walk: 260,
-  happy: 90,
-  click: 90,
+  happy: 164,
+  click: 164,
   wave: 500,
   run: 130,
   look: 300,

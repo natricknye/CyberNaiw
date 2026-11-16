@@ -16,10 +16,12 @@ export interface PetReaction {
 export type PetReactionKind = "laugh" | "meme";
 
 const CLICK_STATE_MS = 380;
-// Click (380 ms) + happy (1870 ms) are one continuous 2.25 s laugh cycle.
-const HAPPY_STATE_MS = 1870;
+// The adult laugh audio is 4.11 s. Click (380 ms) + happy (3730 ms) keeps the
+// 25-frame animation and the sound ending together.
+const HAPPY_STATE_MS = 3730;
 const BABY_HAPPY_STATE_MS = 1100;
-const REACTION_MS = 2400;
+const MEME_REACTION_MS = 2400;
+const LAUGH_REACTION_MS = 4200;
 
 /**
  * Adult left-click walks this stack. The first click after launch is the
@@ -100,10 +102,12 @@ export function usePetState(
       setReaction(nextReaction);
 
       clearReaction();
+      const reactionDuration =
+        kind === "laugh" ? LAUGH_REACTION_MS : MEME_REACTION_MS;
       reactionTimer.current = window.setTimeout(() => {
         reactionTimer.current = null;
         setReaction(null);
-      }, REACTION_MS);
+      }, reactionDuration);
 
       return nextReaction;
     },

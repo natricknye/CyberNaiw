@@ -16,6 +16,7 @@ const VOICE_URLS: Record<NaiwaVoice, string> = {
 };
 
 const players = new Map<NaiwaVoice, HTMLAudioElement>();
+let activePlayer: HTMLAudioElement | null = null;
 
 function getPlayer(voice: NaiwaVoice): HTMLAudioElement {
   let player = players.get(voice);
@@ -28,12 +29,37 @@ function getPlayer(voice: NaiwaVoice): HTMLAudioElement {
   return player;
 }
 
+export function stopNaiwaVoice(): void {
+  if (!activePlayer) {
+    return;
+  }
+
+  activePlayer.pause();
+  try {
+    activePlayer.currentTime = 0;
+  } catch {
+    // Ignore a player that has not loaded metadata yet.
+  }
+  activePlayer = null;
+}
+
 export function playNaiwaVoice(voice: NaiwaVoice, age: PetAge): void {
   if (typeof Audio === "undefined") {
     return;
   }
 
   const player = getPlayer(voice);
+  // A new click must interrupt the previous line instead of stacking audio.
+  if (activePlayer && activePlayer !== player) {
+    activePlayer.pause();
+    try {
+      activePlayer.currentTime = 0;
+    } catch {
+      // Ignore a player that has not loaded metadata yet.
+    }
+  }
+  activePlayer = player;
+  player.pause();
   if (player.readyState > 0) {
     player.currentTime = 0;
   }

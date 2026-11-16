@@ -9,7 +9,7 @@ import {
   loadWindowPosition,
   saveWindowPosition,
 } from "../services/settings";
-import { playNaiwaVoice } from "../services/sound";
+import { playNaiwaVoice, stopNaiwaVoice } from "../services/sound";
 import {
   applyPetWindowLiveSettings,
   applyPetWindowOnStartup,
@@ -27,7 +27,6 @@ import SpeechBubble from "./SpeechBubble";
 import "../styles/pet.css";
 
 const BABY_DOUBLE_CLICK_MS = 300;
-const ADULT_ACTION_DEBOUNCE_MS = 260;
 
 export default function Pet() {
   const [settings, setSettings] = useState<PetSettings>(DEFAULT_SETTINGS);
@@ -41,7 +40,6 @@ export default function Pet() {
     settings.age,
   );
 
-  const lastActionAt = useRef(0);
   const lastBabyClickAt = useRef(0);
 
   const handleInteract = useCallback(() => {
@@ -60,13 +58,7 @@ export default function Pet() {
       return;
     }
 
-    // Adult: left-click advances the action stack and plays a meme line.
-    const now = Date.now();
-    if (now - lastActionAt.current < ADULT_ACTION_DEBOUNCE_MS) {
-      return;
-    }
-    lastActionAt.current = now;
-
+    // Adult: every click interrupts the current action/voice and advances.
     advanceAction();
     const nextReaction = speak("meme");
     if (settings.soundEnabled) {
@@ -92,9 +84,14 @@ export default function Pet() {
   }, [interact, settings.age, settings.soundEnabled]);
 
   useEffect(() => {
-    lastActionAt.current = 0;
     lastBabyClickAt.current = 0;
   }, [settings.age]);
+
+  useEffect(() => {
+    if (!settings.soundEnabled) {
+      stopNaiwaVoice();
+    }
+  }, [settings.soundEnabled]);
 
   const handleOpenSettings = useCallback(() => {
     void openSettingsWindow().catch((settingsError: unknown) => {

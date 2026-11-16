@@ -136,7 +136,7 @@ export const PET_SKINS: readonly PetSkin[] = [
       click: [babyHappy],
       wave: [babyWave],
     },
-    frameIntervalMs: 90,
+    frameIntervalMs: 164,
     frameIntervalMsByState: {
       walk: 140,
       run: 90,
