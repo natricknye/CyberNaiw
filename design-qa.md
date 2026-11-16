@@ -226,6 +226,14 @@
 - 恢复正面官方站立 `adult-idle-aligned.png` 为默认经典 idle（×1.09 亮度、×0.80 色彩，腿部/脚部完整）；Nailong 的 `classic/idle/00–05.png` 保留为 3/4 侧身备选，不再作为默认。
 - `docs/preview-classic.png` 改回正面站立，HUD 仍隐藏；`pnpm build` 通过。
 
+## 2026-11-16 — Phase 28：手/脚/膝盖完整性与站立再提亮
+
+- 用户要求彻底检查手、脚、膝盖被削掉的问题。79 个经典图片资产逐一跑 alpha bbox：`baby-happy` 最小边距 0px、`baby-idle` 1px；成人动作帧 6px；laugh 18px；成人正面 idle 14px。
+- 幼体三张从官方 `official-juvenile.png` 重新放宽裁切（idle X=50/W=310、wave X=290/W=320、happy X=560/W=330，Y=220/H=540），并保留 14px 内边距；输出 239×315 / 259×314 / 251×314，手、脚、膝盖完整。审计图 `_qa/art/baby-limb-audit.png`。
+- ASCII 四套 JSON 的网格边界也检查：成人最小 1–2 格，幼体 happy/click 有 0 格贴边，但 pre/transform 完整可见、未被窗口裁切，所以不改 ASCII 画稿。
+- 正面站立再提亮：从原始未调色版本按 ×1.14 亮度、×0.78 色彩重新生成 `adult-idle-aligned.png`，实测 mean lum 176.6 / sat 134.4（之前 170.9 / 137.4）；`docs/preview-classic.png` 已更新。
+- 设置齿轮仍为悬停显示；经典 HUD 隐藏。`pnpm build` 通过。
+
 ## 待人工确认
 
 - 托盘菜单的物理点击仍需在桌面通知区实际点一遍；窗口 show/hide/设置/退出逻辑已实现。

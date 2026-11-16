@@ -22,11 +22,13 @@ duration still come from the real state, and the baby never uses these aliases.
 
 `naiwa-classic` is an `ImagePetSkin` using the cut-out original artwork in
 `classic/`: adult idle defaults to the front-facing
-`adult-idle-aligned.png` (the original tall front pose with ×1.09 brightness /
-×0.80 colour to match the action frames). `classic/idle/00`–`05.png` keeps the
+`adult-idle-aligned.png` (the original tall front pose with ×1.14 brightness /
+×0.78 colour to match the action frames). `classic/idle/00`–`05.png` keeps the
 Nailong 3/4 side-facing idle frames as an alternative, but they are not the
 default because the character stands diagonally. Wave and baby idle/happy/wave
-remain single cut-out PNGs. The
+remain single cut-out PNGs; the three baby images were re-cropped from the
+official juvenile sheet with a 14 px inner margin so hands, feet, and knees are
+not sliced. The
 adult happy/click sequence is `classic/laugh-hd/000`–`024.webp` at 90 ms per
 frame: 25 frames from the 1080×1474 `naiwa-laugh.mp4` at 6.5–8.75 s, with the
 white background, floor shadow, and white crotch gap removed, 3% padding and
