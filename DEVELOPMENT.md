@@ -99,17 +99,17 @@ CyberNaiwa/
 - `usePetState` 持有唯一状态，避免动画互相冲突。
 - `usePetInteraction`：pointerdown 只记录起点；移动 ≥5px 才调用 `startDragging()`，避免原生拖拽吞掉点击；pointerup 且未拖动才算一次点击。
 - 命中判定：ASCII 必须命中 `.pet-ascii [class^="tone-"]:not(.tone-empty)`，图片必须按 alpha 命中（>16）；透明格/透明像素仍是拖动区，但不触发动作、语音或字幕。
-- **成年左键**：`advanceAction()` 沿 `ADULT_ACTION_STACK` 前进：`idle → wave（扎马步）→ walk → run → look → think → clap → crouch → idle`。每档有独立持续时间，动作结束回 idle，但索引保留，所以流程结束后连续点击能走完整套。左键同时 `speak("meme")` 选一条安迪类台词；`Pet.tsx` 用 `flowLock` 锁住整个流程，锁定时常为 `max(actionDuration, voiceDuration) + 50ms`，期间左键/右键一律忽略；只有动作和语音都结束后，下一次点击才进入下一档。`playNaiwaVoice()` 返回本次语音时长，baby 按 1.35× 折算；`eat` 帧保留在素材里，但因其张嘴仰头太像大笑，不接入左键动作栈。
+- **成年左键**：`advanceAction()` 沿 `ADULT_ACTION_STACK` 前进：`idle → wave（扎马步）→ beckon（招手）→ walk → run → look → think → clap → crouch → idle`。每档有独立持续时间，动作结束回 idle，但索引保留，所以流程结束后连续点击能走完整套。左键同时 `speak("meme")` 选一条安迪类台词；`Pet.tsx` 用 `flowLock` 锁住整个流程，锁定时常为 `max(actionDuration, voiceDuration) + 50ms`，期间左键/右键一律忽略；只有动作和语音都结束后，下一次点击才进入下一档。`playNaiwaVoice()` 返回本次语音时长，baby 按 1.35× 折算；`eat` 帧保留在素材里，但因其张嘴仰头太像大笑，不接入左键动作栈。
 - **成年右键**：`interact("laugh")`，`click` 380ms → `happy` 3730ms → `idle`，合计 4.11 秒，和 `naiwa-laugh-long.wav` 对齐；不再打开原生菜单。**大笑只属于右键**，左键动作栈不含 `happy`/`click`。Ctrl/⌘ + 右键打开原生菜单；中键（按下滚轮）打开设置；鼠标悬停在桌宠上时右上角才显示齿轮按钮；托盘入口保留。
 - **幼体左键**：`interact("meme")`，`click` 380ms → `happy` 1100ms → `idle`；没有大笑语音，右键仍是原生菜单。幼体同样使用 `flowLock`（动作 1480ms 与语音时长取最大值），流程中不响应下一次点击；幼体的动作栈与成年完全分开。
-- **空闲自动行为**：成年 idle 9–16 秒后只自动进入 `wave`（扎马步）2.4 秒，再回 idle；walk/run/look/think/clap/crouch 不会自动播放。幼体保持 7–14 秒随机 walk/wave 的独立行为。
+- **空闲自动行为**：成年 idle 9–16 秒后只自动进入 `wave`（扎马步）2.4 秒，再回 idle；beckon/walk/run/look/think/clap/crouch 不会自动播放。幼体保持 7–14 秒随机 walk/wave 的独立行为。
 - 动画关闭时强制回到 idle，并取消进行中的状态定时器；点击仍能切换动作/触发大笑，但只显示静态首帧。
 - `PetAnimation` 只在当前状态内轮播帧，切状态立即重置到第 0 帧；缺少某状态的帧时回退到 `idle`，不会渲染空帧。
-- 成年：Idle / Walk 使用站立正面（第二帧闭眼）；Click / Happy 使用 Codex Voice Input 的 25 帧大笑（手放肚子 → 仰头 → 抱头 → 回落），只由右键触发；Wave 使用官方挥手/扎马步。新动作的经典原画来自 Nailong-Studio 的 `pet/` 逐帧；ASCII 端暂时复用最接近的现有姿态：run=walk、look/think=idle、clap=wave、eat=idle、crouch=wave，**绝不把 clap/eat 指到 happy/click 大笑帧**。
+- 成年：经典 Idle 使用 `classic/idle-chubby/00–02.png` 三帧圆胖待机（`待机-06/01/03`，首帧最正面，1200ms/帧）；Walk 使用同一画风的 Nailong 走路帧；Click / Happy 使用 Codex Voice Input 的 25 帧大笑（手放肚子 → 仰头 → 抱头 → 回落），只由右键触发；Wave（扎马步）使用 `adult-wave.png`，Beckon（招手）使用 `classic/actions/beckon/00–02.png`。新动作的经典原画来自 Nailong-Studio 的 `pet/` 逐帧；ASCII 端 `beckon` 有独立 3 帧，其余新增动作复用最接近的现有姿态：run=walk、look/think=idle、clap=wave、eat=idle、crouch=wave，**绝不把 clap/eat 指到 happy/click 大笑帧**。
 - 幼体：Idle / Walk 使用幼体正面；Happy / Click 使用幼体素材右一叉腰；Wave 使用幼体素材中间抬手。幼体不使用成年大笑、挥手或新动作素材。
 - Sleep 与 Sad 状态均已移除（用户反馈睡觉和伤心界面不好看）；不再生成/播放 sleep 或 sad 帧。
-- ASCII 帧间隔：成年 idle 1200ms、walk 260ms、happy/click 164ms、wave 500ms、run 130ms、look 300ms、think 350ms、clap 160ms、eat 260ms、crouch 500ms；幼体 idle 1200ms、walk 260ms、happy 320ms、click 180ms、wave 500ms。
-- 奶家经典图片帧有独立间隔：walk 140ms、run 90ms、look 220ms、think 260ms、clap 110ms、eat 180ms、crouch 160ms、happy/click 164ms；单帧 idle/wave 不轮播。25×164ms ≈ 4.10s，和 4.11s 音频对齐。
+- ASCII 帧间隔：成年 idle 1200ms、walk 260ms、happy/click 164ms、wave 500ms、beckon 350ms、run 130ms、look 300ms、think 350ms、clap 160ms、eat 260ms、crouch 500ms；幼体 idle 1200ms、walk 260ms、happy 320ms、click 180ms、wave 500ms、beckon 350ms。
+- 奶家经典图片帧有独立间隔：idle 1200ms、beckon 220ms、walk 140ms、run 90ms、look 220ms、think 260ms、clap 110ms、eat 180ms、crouch 160ms、happy/click 164ms；wave 单帧不轮播，idle 3 帧循环。25×164ms ≈ 4.10s，和 4.11s 音频对齐。
 
 ### 点击语音
 
@@ -122,11 +122,11 @@ CyberNaiwa/
 
 ### ASCII 渲染
 
-- 原色赛博帧在 `naiwa-frames.json` / `naiwa-baby-frames.json`：112 列 × 70 行；量子赛博帧在 `naiwa-cyber-frames.json` / `naiwa-cyber-baby-frames.json`：128 列 × 80 行。用 `.` 表示透明格。帧由官方设计资料库的成年 / 幼体 / 大笑 / 挥手参考图逐像素映射到字符 tone；仓库不包含参考图片本身。
+- 原色赛博帧在 `naiwa-frames.json` / `naiwa-baby-frames.json`：112 列 × 70 行；量子赛博帧在 `naiwa-cyber-frames.json` / `naiwa-cyber-baby-frames.json`：128 列 × 80 行。用 `.` 表示透明格。帧由官方设计资料库的成年 / 幼体 / 大笑 / 挥手参考图逐像素映射到字符 tone；仓库不包含参考图片本身。成年 `beckon` 3 帧来自 Nailong-Studio 的 `招手` MIT 素材（和 walk/run 同库），不是官方设计资料库。
 - 幼体挥手源图裁切框从 `X=365/W=270` 改为 `X=310/W=285`：原框正好从 V 字手中间切过，导致手指缺失；新框完整包住中间幼体的抬手，112×70 与 128×80 两套网格都已重新采样。
-- `PetAnimation` 根据 `settings.palette` 选择帧组：`original` 走 `frames` / `babyFrames`，`cyber` 走 `cyberFrames` / `cyberBabyFrames`，`classic` 直接切到图片皮肤 `naiwa-classic`。ASCII JSON 仍只有 5 个基础动作的帧；`index.ts` 把 run/look/think/clap/eat/crouch 映射到最接近的现有姿态（run=walk、look/think=idle、clap=wave、eat=idle、crouch=wave），并让 HUD、语音、时长保持独立。幼体不使用新动作；左键动作栈永远不引用 happy/click。
+- `PetAnimation` 根据 `settings.palette` 选择帧组：`original` 走 `frames` / `babyFrames`，`cyber` 走 `cyberFrames` / `cyberBabyFrames`，`classic` 直接切到图片皮肤 `naiwa-classic`。ASCII JSON 现在有 6 个基础动作的帧（idle/walk/happy/click/wave/beckon）；`index.ts` 把 run/look/think/clap/eat/crouch 映射到最接近的现有姿态（run=walk、look/think=idle、clap=wave、eat=idle、crouch=wave），`beckon` 使用自己的 3 帧，并让 HUD、语音、时长保持独立。幼体不使用新动作；左键动作栈永远不引用 happy/click。
 - 成年 ASCII `wave` 不再从旧的裁切帧补边距，而是从经典 `adult-wave.png` 固定取景重采样：`FixedSide 430`、`CenterX 148`、`CenterY 206`，原色 112×70、量子 128×80 各一套；膝下小腿的 `|` 色调回金色 `%`，脚掌保留棕色 `|`，所以左膝到脚掌是连续轮廓。脚本是 `_qa/convert-naiwa.ps1` 和 `_qa/patch-ascii-wave-knee.py`。
-- 奶家经典图片皮肤：成年 idle 默认用**正面** `adult-idle-aligned.png`（官方正面站立，×1.14 亮度、×0.78 色彩对齐动作帧）；`classic/idle/00–05.png` 是 Nailong 的 3/4 侧身待机备选，会斜着站，不作为默认。wave/扎马步用 `adult-wave.png`，happy/click 用 `laugh-hd/000–024.webp`（524×720，164ms/帧，25×164≈4.10s，对齐 4.11s 音频；来自 1080×1474 原片 6.5–8.75s 抽 25 帧，去白底/地面阴影/胯下白块，3% padding，Lanczos 缩到 720 高，不锐化）；walk/run/look/think/clap/crouch 用 `classic/actions/<state>/` 的逐帧 PNG，`eat` 保留但不接入左键栈。动作帧统一补齐到 180×210 画布、底部对齐到 y=204（6px 底边距），所以脚和膝盖不会被裁。幼体 idle/walk、happy/click、wave 各用一张原画。`laugh/` 保留 180×180 的 MIT 原始帧，`laugh-cropped/` 是紧裁中间帧，`laugh-hires/` 是 648×888 的 6× 回退放大版；当前产品路径是 `laugh-hd`。
+- 奶家经典图片皮肤：成年 idle 默认用 `classic/idle-chubby/00–02.png`（3 帧，来自 Nailong `待机-06/01/03`，180×210、底部 y=204、1200ms/帧，首帧最正面，和走路/跑步同一圆胖画风）；`adult-idle-aligned.png` 保留为高瘦正面备选，`classic/idle/00–05.png` 仍是 3/4 侧身备选。wave/扎马步用 `adult-wave.png`，beckon/招手用 `classic/actions/beckon/00–02.png`（来自 `招手-01/02/04`，220ms/帧），happy/click 用 `laugh-hd/000–024.webp`（524×720，164ms/帧，25×164≈4.10s，对齐 4.11s 音频；来自 1080×1474 原片 6.5–8.75s 抽 25 帧，去白底/地面阴影/胯下白块，3% padding，Lanczos 缩到 720 高，不锐化）；walk/run/look/think/clap/beckon/crouch 用 `classic/actions/<state>/` 的逐帧 PNG，`eat` 保留但不接入左键栈。动作帧统一补齐到 180×210 画布、底部对齐到 y=204（6px 底边距），所以脚和膝盖不会被裁。幼体 idle/walk、happy/click、wave 各用一张原画。`laugh/` 保留 180×180 的 MIT 原始帧，`laugh-cropped/` 是紧裁中间帧，`laugh-hires/` 是 648×888 的 6× 回退放大版；当前产品路径是 `laugh-hd`。
 - HUD 渲染规则：`Pet.tsx` 只在 `settings.palette !== "classic"` 时渲染 `NAIWA//STATE`；原色赛博用暖黄 `rgba(255,216,77,0.62)` + 黄点，量子赛博沿用蓝色 `rgba(126,249,255,0.6)` + 青点，奶家经典不渲染 HUD。设置页不再有「桌宠标签」开关，`hudEnabled` 从 `PetSettings` 移除。
 - 图片尺寸用 `height: 78vh; width: auto`，不是 `max-height`：原图小于窗口时也会放大。图片底部对齐 stage 内容底边，保留 22px 底部 padding；成年待机和动作的角色高约 280px，47 张动作帧的 alpha 最外像素距画布边缘至少 6px，映射到窗口后脚底距底边约 30px。
 - 奶家经典每个动作的帧间隔由 `frameIntervalMsByState` 控制；happy/click 使用 164ms，和 4.11s 大笑音频对齐。
@@ -280,4 +280,5 @@ cargo check --manifest-path src-tauri/Cargo.toml
 - 2026-11-16 remove the adult left-click debounce and slow the adult laugh to 164 ms/frame; extend happy to 3730 ms so click + happy = 4.11 s, matching the laugh WAV; pad the ASCII wave frames by a 2-cell transparent border so the horse-stance knees/feet are not sliced.
 - 2026-11-16 replace per-click interruption with a full-flow lock (user clarified): each adult/baby action holds a `flowLock` for `max(action duration, voice duration) + 50 ms`; clicks during the flow are ignored and the next click only advances after both animation and voice end. `playNaiwaVoice` now returns the actual duration, and `advanceAction` returns the action duration.
 - 2026-11-16 regenerate the adult ASCII `wave` from `classic/adult-wave.png` with a fixed 430 px crop centred at (148,206) for both the 112×70 and 128×80 sets, replacing the 2-cell padding; promote the shadowed shin cells from `|` to `%` and keep `|` on the feet so the left knee/shin read as one continuous leg. Verified both palettes in-app (`_qa/art/ascii-wave-knee-patched-app-dark.png`, `_qa/art/ascii-cyber-wave-knee-patched-app-dark.png`).
+- 2026-11-16 replace the classic idle with the three-frame `idle-chubby` set from the Nailong `待机-06/01/03` art (front-facing first frame, 180×210, 6 px bottom, 1200 ms) and add the adult `beckon` action (three `招手-01/02/04` frames, 220 ms classic / 350 ms ASCII, 1800 ms flow) right after `wave`; generate dedicated 112×70/128×80 beckon grids, restore misread `_` limb pixels to `|`, and keep the action out of the baby stack.
 - 2026-11-16 bump to 0.2.1 and replace `docs/settings.png` with the 赛博奶蛙 settings screenshot (原色模式/量子模式, no sleep copy, version 0.2.1).

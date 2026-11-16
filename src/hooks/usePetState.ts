@@ -35,6 +35,7 @@ export const BABY_REACTION_FLOW_MS = CLICK_STATE_MS + BABY_HAPPY_STATE_MS;
 export const ADULT_ACTION_STACK = [
   "idle",
   "wave",
+  "beckon",
   "walk",
   "run",
   "look",
@@ -45,6 +46,7 @@ export const ADULT_ACTION_STACK = [
 
 const ACTION_DURATION_MS: Partial<Record<PetAnimationState, number>> = {
   wave: 2400,
+  beckon: 1800,
   walk: 2200,
   run: 1500,
   look: 1900,

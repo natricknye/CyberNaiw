@@ -74,14 +74,15 @@ export function toneForChar(char: string): AsciiTone {
 }
 
 // Adult laugh: 25 frames at 164 ms ≈ 4.10 s, matching the 4.11 s laugh audio.
-// New adult actions use the closest existing ASCII pose but keep their own
-// cadence, so run reads faster than walk and crouch/stance is slower.
+// Most new adult actions reuse the closest existing ASCII pose but keep their
+// own cadence; `beckon` has a dedicated three-frame wave.
 export const FRAME_INTERVAL_MS: Record<PetAnimationState, number> = {
   idle: 1200,
   walk: 260,
   happy: 164,
   click: 164,
   wave: 500,
+  beckon: 350,
   run: 130,
   look: 300,
   think: 350,
@@ -97,6 +98,7 @@ export const BABY_FRAME_INTERVAL_MS: Record<PetAnimationState, number> = {
   happy: 320,
   click: 180,
   wave: 500,
+  beckon: 350,
   run: 260,
   look: 500,
   think: 500,

@@ -12,25 +12,29 @@ characters to colour tones and declares frame timing. The grids use printable
 ASCII only and were pixel-mapped from official reference images; those ASCII
 reference images are not shipped in this repository.
 
-The JSON still covers the five original poses. `index.ts` aliases the newer
-adult states to the closest existing pose: run→walk, look/think→idle,
+The JSON now covers six base poses: idle/walk/happy/click/wave/beckon. `beckon`
+has its own three-frame 112×70/128×80 conversion; `index.ts` aliases the other
+newer adult states to the closest existing pose: run→walk, look/think→idle,
 clap→wave, eat→idle, crouch→wave. The laugh (`happy`/`click`) is deliberately
 never used by a left-click action. The HUD label, frame interval and action
 duration still come from the real state, and the baby never uses these aliases.
 Adult `wave` is regenerated from `classic/adult-wave.png` with a fixed 430 px
 crop centred at (148,206), not by padding the old cut frames. The shadowed
 shins use `%` (shade gold) and only the feet keep the brown `|` tone, so the
-left knee and shin read as one continuous leg at 112×70 and 128×80.
+left knee and shin read as one continuous leg at 112×70 and 128×80. Adult
+`beckon` is converted from the Nailong `招手-01/02/04` art with a fixed 230 px
+crop centred at (63,99); warm hand/foot pixels misread as the mouth tone are
+restored to `|`.
 
 ## Classic skin
 
 `naiwa-classic` is an `ImagePetSkin` using the cut-out original artwork in
-`classic/`: adult idle defaults to the front-facing
-`adult-idle-aligned.png` (the original tall front pose with ×1.14 brightness /
-×0.78 colour to match the action frames). `classic/idle/00`–`05.png` keeps the
-Nailong 3/4 side-facing idle frames as an alternative, but they are not the
-default because the character stands diagonally. Wave and baby idle/happy/wave
-remain single cut-out PNGs; the three baby images were re-cropped from the
+`classic/`: adult idle defaults to `classic/idle-chubby/00`–`02.png` (three
+frames from the Nailong `待机-06/01/03` art, 180×210 with a 6 px bottom margin,
+1200 ms per frame; frame 00 is the most front-facing and matches the walk/run
+art style). `adult-idle-aligned.png` remains the tall front fallback, and
+`classic/idle/00`–`05.png` keeps the 3/4 side-facing alternative. Wave and baby
+idle/happy/wave remain single cut-out PNGs; the three baby images were re-cropped from the
 official juvenile sheet with a 14 px inner margin so hands, feet, and knees are
 not sliced. The
 adult happy/click sequence is `classic/laugh-hd/000`–`024.webp` at 164 ms per
@@ -39,14 +43,15 @@ the 1080×1474 `naiwa-laugh.mp4` at 6.5–8.75 s, with the
 white background, floor shadow, and white crotch gap removed, 3% padding and
 Lanczos downscale to 524×720, no sharpening. `classic/laugh-hires/` keeps the
 648×888 6× MIT upscale fallback and `classic/laugh-cropped/` keeps the tight
-108×148 crop. `adult-idle-aligned.png` is now only a fallback/reference: the old
-tall cut-out with ×1.09 brightness and ×0.80 colour; `adult-idle.png` keeps the
+108×148 crop. `adult-idle-aligned.png` is now only a fallback/reference: the
+tall cut-out with ×1.14 brightness and ×0.78 colour; `adult-idle.png` keeps the
 unmodified cut-out.
 
-Adult walk/run/look/think/clap/crouch live in `classic/actions/<state>/`.
+Adult walk/run/look/think/clap/beckon/crouch live in `classic/actions/<state>/`.
 They come from the Nailong-Studio `pet/` MIT frame sequences, padded to a
 180×210 canvas and bottom-aligned to y=204 (6 px bottom margin), so feet and
-knees stay visible. The `eat` frames stay in the library but are not wired to
+knees stay visible. Beckon uses the three `招手-01/02/04` frames at 220 ms per
+frame. The `eat` frames stay in the library but are not wired to
 the left-click stack: the open-mouth head-back pose reads as a laugh. Use
 `frameIntervalMsByState` for per-action cadence; the global `frameIntervalMs`
 remains the laugh interval. Image skins may declare a separate `babyFrames`

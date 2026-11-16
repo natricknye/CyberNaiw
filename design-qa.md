@@ -259,6 +259,14 @@
 - 实机截图：`_qa/art/ascii-wave-knee-patched-app-dark.png`、`_qa/art/ascii-cyber-wave-knee-patched-app-dark.png`；两套都确认左膝、左脚完整，HUD 仍为 STANCE。
 - `pnpm build` 通过。
 
+## 2026-11-16 — Phase 32：圆胖站立与新增招手动作
+
+- 用户要求多找成年动作，并让站立奶蛙更像动作原画里的圆胖奶蛙。检查 `_qa/reference/actions` 发现一组未接入的 `待机-01/03/06` 全身帧和 `招手-01/02/04` 3 帧，和 walk/run 是同一套 Nailong 圆胖 3D 画风。
+- 经典 idle 改为 `classic/idle-chubby/00–02.png`：从 `待机-06/01/03` 生成 3 帧，180×210、底部 y=204（6px 底边距），1200ms/帧；首帧用最正面的 `待机-06`。`adult-idle-aligned.png` 保留为高瘦正面回退，`classic/idle/00–05.png` 仍是 3/4 备选。之前“3/4 待机不能当默认”的结论只针对 `classic/idle` 那组；这组 `待机` 首帧是正面，且和动作帧同画风。
+- 新增成年 `beckon`（招手）状态：经典帧 `classic/actions/beckon/00–02.png` 来自 `招手-01/02/04`，220ms/帧；动作时长 1800ms；动作栈插在 `wave` 后：`idle → wave → beckon → walk → ...`；HUD `BECKON`，ARIA 中英同步。ASCII 两套用 `FixedSide 230`、中心 `(63,99)` 生成 3 帧 112×70/128×80，350ms/帧；转 ASCII 时脚/手误判的 `_` 已改回 `|`。幼体不使用。
+- 实测：经典 idle 首帧 `idle-chubby/00.png` 正面圆胖；经典 `beckon` 第 1 帧 `actions/beckon/01.png` 抬手；原色/量子 ASCII `beckon` 都显示抬手，HUD `NAIWA//BECKON`；流程锁实测 `wave → beckon`，招手 300ms 内再点仍是 `beckon`，1.9s 后下一档才到 `walk`。
+- 动作原画仍来自 Nailong-Studio 的 MIT 素材；没有引入新的外部授权来源。`pnpm build` 通过。
+
 ## 待人工确认
 
 - 托盘菜单的物理点击仍需在桌面通知区实际点一遍；窗口 show/hide/设置/退出逻辑已实现。

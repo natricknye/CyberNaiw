@@ -23,6 +23,15 @@ const CLASSIC_LAUGH_FRAMES = Object.keys(CLASSIC_LAUGH_MODULES)
   .map((key) => CLASSIC_LAUGH_MODULES[key]);
 const CLASSIC_HAPPY_FRAMES = CLASSIC_LAUGH_FRAMES;
 
+const CLASSIC_IDLE_MODULES = import.meta.glob(
+  "./classic/idle-chubby/*.png",
+  { eager: true, import: "default" },
+) as Record<string, string>;
+
+const CLASSIC_IDLE_FRAMES = Object.keys(CLASSIC_IDLE_MODULES)
+  .sort()
+  .map((key) => CLASSIC_IDLE_MODULES[key]);
+
 const CLASSIC_ACTION_MODULES = import.meta.glob(
   "./classic/actions/*/*.png",
   { eager: true, import: "default" },
@@ -39,10 +48,10 @@ for (const key of Object.keys(CLASSIC_ACTION_MODULES).sort()) {
   );
 }
 
-// The adult action stack is shared by all three art forms. ASCII has no
-// separate action drawings yet, so it reuses the closest existing pose.
-// Never point a left-click action at happy/click: those frames are the laugh,
-// and the laugh must only be reachable through right-click.
+// The adult action stack is shared by all three art forms. Most ASCII actions
+// still reuse the closest existing pose; `beckon` has its own three-frame
+// conversion. Never point a left-click action at happy/click: those frames are
+// the laugh, and the laugh must only be reachable through right-click.
 const ADULT_ASCII_FRAMES: FrameMap = {
   ...CYBER_NAIWA_FRAMES,
   run: CYBER_NAIWA_FRAMES.walk,
@@ -117,7 +126,9 @@ export const PET_SKINS: readonly PetSkin[] = [
     credit:
       "Original Naiwa artwork; adult laugh frames from liaosongjie/Codex-Voice-Input (MIT); action frames from Nailong-Studio/NaiWa-Wallpaper",
     frames: {
-      idle: [adultIdle],
+      idle:
+        CLASSIC_IDLE_FRAMES.length > 0 ? CLASSIC_IDLE_FRAMES : [adultIdle],
+      beckon: CLASSIC_ACTION_FRAMES.beckon ?? [adultIdle],
       walk: CLASSIC_ACTION_FRAMES.walk ?? [adultIdle],
       run: CLASSIC_ACTION_FRAMES.run ?? [adultIdle],
       look: CLASSIC_ACTION_FRAMES.look ?? [adultIdle],
@@ -138,6 +149,8 @@ export const PET_SKINS: readonly PetSkin[] = [
     },
     frameIntervalMs: 164,
     frameIntervalMsByState: {
+      idle: 1200,
+      beckon: 220,
       walk: 140,
       run: 90,
       look: 220,
