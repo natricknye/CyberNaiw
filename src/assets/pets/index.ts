@@ -13,7 +13,7 @@ import babyWave from "./classic/baby-wave.png";
 
 type FrameMap = Partial<Record<PetAnimationState, readonly string[]>>;
 
-const CLASSIC_LAUGH_MODULES = import.meta.glob("./classic/laugh-hires/*.webp", {
+const CLASSIC_LAUGH_MODULES = import.meta.glob("./classic/laugh-hd/*.webp", {
   eager: true,
   import: "default",
 }) as Record<string, string>;

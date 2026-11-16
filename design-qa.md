@@ -185,6 +185,14 @@
 - 实测经典动作序列 `idle → wave → walk → run → look → think → clap → eat → crouch → idle → wave`；右键采样 `idle → happy(005) → happy(013) → idle`；中键后设置窗 `visibility: visible`；幼体采样 `idle → click → happy → idle`。
 - 截图：`_qa/art/classic-run.png`、`_qa/art/classic-crouch.png`、`_qa/art/classic-actions-padded.png`。`pnpm build` 通过。
 
+## 2026-11-16 — Phase 23：1080p 大笑原片
+
+- 用户反馈 6× Lanczos 仍然偏糊、边缘过锐，并同意使用素材库里的 1080×1474 `naiwa-laugh.mp4`。
+- 从 6.50–8.75 秒按 11.11fps 精确抽 25 帧（1080×1474），动作覆盖手放肚子 → 仰头 → 双手抱头 → 回落，首尾姿态接近，可无缝循环。
+- 抠图第一版出现奶油肚皮被咬掉、脚下白影、手臂/头之间白三角；改为：白底/软阴影阈值 `B>200 & S<25`、最大连通块、15px 形态学闭运算补细缝、脸部/身体保护区内的亮色细节保留、底部 18% 清地面阴影、脸部外亮楔形清除。
+- 产品帧统一留 3% padding，Lanczos 缩到 524×720，透明 WebP quality 95，无 UnsharpMask，25 帧共约 975 KiB；`laugh-hires` 648×888 保留为 MIT 180×180 回退版。
+- 验证：真实右键后 `naturalWidth×naturalHeight = 524×720`，`src` 为 `laugh-hd/008.webp`，显示 215×296；可见像素 x=86–256 / y=82–349（343×379 窗口），脚底距底边 30px，无裁切。截图 `_qa/art/classic-laugh-hd.png`。`pnpm build` 通过。
+
 ## 待人工确认
 
 - 托盘菜单的物理点击仍需在桌面通知区实际点一遍；窗口 show/hide/设置/退出逻辑已实现。
