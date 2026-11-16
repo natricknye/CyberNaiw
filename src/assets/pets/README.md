@@ -12,7 +12,7 @@ characters to colour tones and declares frame timing. The grids use printable
 ASCII only and were pixel-mapped from official reference images; those ASCII
 reference images are not shipped in this repository.
 
-The JSON now covers six base poses: idle/walk/happy/click/wave/beckon. `beckon`
+The adult JSON now covers six base poses: idle/walk/happy/click/wave/beckon; the baby keeps the original five. `beckon`
 has its own three-frame 112×70/128×80 conversion; `index.ts` aliases the other
 newer adult states to the closest existing pose: run→walk, look/think→idle,
 clap→wave, eat→idle, crouch→wave. The laugh (`happy`/`click`) is deliberately
