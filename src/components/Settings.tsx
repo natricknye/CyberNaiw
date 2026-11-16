@@ -110,11 +110,7 @@ export default function Settings() {
 
         </div>
 
-        <p className="settings-intro">
-          {strings.settings.intro}
-          <br />
-          {strings.settings.introSecond}
-        </p>
+        <p className="settings-intro">{strings.settings.intro}</p>
       </header>
 
       {error ? (
@@ -263,6 +259,24 @@ export default function Settings() {
         </div>
 
         <p className="settings-note">{strings.settings.animationNote}</p>
+
+        <div className="settings-row">
+          <div className="settings-row__copy">
+            <span className="settings-label">{strings.settings.hud}</span>
+            <span className="settings-hint">{strings.settings.hudHint}</span>
+          </div>
+          <button
+            type="button"
+            role="switch"
+            aria-label={strings.settings.hud}
+            aria-checked={settings.hudEnabled}
+            className={`toggle${settings.hudEnabled ? " is-on" : ""}`}
+            onClick={() => update({ hudEnabled: !settings.hudEnabled })}
+            disabled={!loaded}
+          >
+            <span className="toggle__thumb" />
+          </button>
+        </div>
 
         <div className="settings-row">
           <div className="settings-row__copy">

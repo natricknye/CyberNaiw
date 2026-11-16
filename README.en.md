@@ -58,7 +58,7 @@ Baby preview:
 
 <img src="docs/settings.png" alt="CyberNaiwa settings" width="420" />
 
-Always-on-top, size, adult/baby, Original/Quantum mode, animation, and sound live in one panel; About opens on demand and takes no main-panel space. The console uses the Quantum blue-black terminal palette.
+Always-on-top, size, adult/baby, Original/Quantum mode, animation, the status label, and sound live in one panel; About opens on demand and takes no main-panel space. The console uses the Quantum blue-black terminal palette.
 
 ## Stack
 

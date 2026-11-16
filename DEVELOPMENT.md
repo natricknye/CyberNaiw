@@ -120,7 +120,7 @@ CyberNaiwa/
 ## 设置持久化
 
 - 使用官方 `tauri-plugin-store`，文件 `settings.json`，`autoSave: false`，显式 `save()`。
-- 键 `settings`：`{ alwaysOnTop, scale, animationsEnabled, soundEnabled, language, age, palette }`。
+- 键 `settings`：`{ alwaysOnTop, scale, animationsEnabled, soundEnabled, hudEnabled, language, age, palette }`。`hudEnabled` 控制桌宠下方 `NAIWA//IDLE` 是否显示，旧设置缺省为 `true`。
 - 键 `windowPosition`：`{ x, y }`（物理像素）。
 - 读取时做类型校验和范围夹取：`scale` 限制在 0.7–1.5，`language` 只接受 `zh/en`，`age` 只接受 `adult/baby`，`palette` 只接受 `cyber/original`，非法值回退默认。
 - App 界面固定中文（设置页不再提供语言切换）；README 保留 `README.en.md`。托盘语言固定调用 `zh`，设置窗口标题为中文。
@@ -242,4 +242,5 @@ cargo check --manifest-path src-tauri/Cargo.toml
 - 2026-11-16 raise every UI font in the settings console, pet HUD/bubble and NSIS installer art (minimum 12px in the console) to keep all text readable.
 - 2026-11-16 theme the NSIS installer with the baby ASCII sidebar/header BMPs, installer icon, dark MUI colours, Chinese-only pages and a custom welcome/finish copy.
 - 2026-11-16 replace the adult single-frame laugh with 25 ASCII frames sampled from Codex Voice Input's MIT 25-frame Naiwa laugh; use one fixed crop for all frames, 90ms per frame, and continue the same frame index across click→happy (380ms + 1870ms = 2.25s) so the hands-on-head beat plays once.
+- 2026-11-16 remove the settings intro's local-only line and add a persisted `hudEnabled` toggle for the pet's `NAIWA//IDLE` label; the settings panel still fits 520×760 without scrolling.
 - 2026-11-16 bump to 0.2.1 and replace `docs/settings.png` with the 赛博奶蛙 settings screenshot (原色模式/量子模式, no sleep copy, version 0.2.1).

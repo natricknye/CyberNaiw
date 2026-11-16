@@ -214,10 +214,12 @@ export default function Pet() {
         age={settings.age}
         palette={settings.palette}
       />
-      <div className="pet-hud" aria-hidden="true">
-        <span className={`pet-hud-dot${ready ? " is-online" : ""}`} />
-        NAIWA//{PET_STATE_LABELS[state]}
-      </div>
+      {settings.hudEnabled ? (
+        <div className="pet-hud" aria-hidden="true">
+          <span className={`pet-hud-dot${ready ? " is-online" : ""}`} />
+          NAIWA//{PET_STATE_LABELS[state]}
+        </div>
+      ) : null}
     </main>
   );
 }
