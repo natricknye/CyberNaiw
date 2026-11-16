@@ -23,15 +23,6 @@ const CLASSIC_LAUGH_FRAMES = Object.keys(CLASSIC_LAUGH_MODULES)
   .map((key) => CLASSIC_LAUGH_MODULES[key]);
 const CLASSIC_HAPPY_FRAMES = CLASSIC_LAUGH_FRAMES;
 
-const CLASSIC_IDLE_MODULES = import.meta.glob(
-  "./classic/idle/*.png",
-  { eager: true, import: "default" },
-) as Record<string, string>;
-
-const CLASSIC_IDLE_FRAMES = Object.keys(CLASSIC_IDLE_MODULES)
-  .sort()
-  .map((key) => CLASSIC_IDLE_MODULES[key]);
-
 const CLASSIC_ACTION_MODULES = import.meta.glob(
   "./classic/actions/*/*.png",
   { eager: true, import: "default" },
@@ -47,9 +38,6 @@ for (const key of Object.keys(CLASSIC_ACTION_MODULES).sort()) {
     CLASSIC_ACTION_MODULES[key],
   );
 }
-
-const CLASSIC_IDLE_FALLBACK =
-  CLASSIC_IDLE_FRAMES.length > 0 ? CLASSIC_IDLE_FRAMES : [adultIdle];
 
 // The adult action stack is shared by all three art forms. ASCII has no
 // separate action drawings yet, so it reuses the closest existing pose.
@@ -129,14 +117,14 @@ export const PET_SKINS: readonly PetSkin[] = [
     credit:
       "Original Naiwa artwork; adult laugh frames from liaosongjie/Codex-Voice-Input (MIT); action frames from Nailong-Studio/NaiWa-Wallpaper",
     frames: {
-      idle: CLASSIC_IDLE_FALLBACK,
-      walk: CLASSIC_ACTION_FRAMES.walk ?? CLASSIC_IDLE_FALLBACK,
-      run: CLASSIC_ACTION_FRAMES.run ?? CLASSIC_IDLE_FALLBACK,
-      look: CLASSIC_ACTION_FRAMES.look ?? CLASSIC_IDLE_FALLBACK,
-      think: CLASSIC_ACTION_FRAMES.think ?? CLASSIC_IDLE_FALLBACK,
-      clap: CLASSIC_ACTION_FRAMES.clap ?? CLASSIC_IDLE_FALLBACK,
-      eat: CLASSIC_ACTION_FRAMES.eat ?? CLASSIC_IDLE_FALLBACK,
-      crouch: CLASSIC_ACTION_FRAMES.crouch ?? CLASSIC_IDLE_FALLBACK,
+      idle: [adultIdle],
+      walk: CLASSIC_ACTION_FRAMES.walk ?? [adultIdle],
+      run: CLASSIC_ACTION_FRAMES.run ?? [adultIdle],
+      look: CLASSIC_ACTION_FRAMES.look ?? [adultIdle],
+      think: CLASSIC_ACTION_FRAMES.think ?? [adultIdle],
+      clap: CLASSIC_ACTION_FRAMES.clap ?? [adultIdle],
+      eat: CLASSIC_ACTION_FRAMES.eat ?? [adultIdle],
+      crouch: CLASSIC_ACTION_FRAMES.crouch ?? [adultIdle],
       happy: CLASSIC_HAPPY_FRAMES,
       click: CLASSIC_HAPPY_FRAMES,
       wave: [adultWave],
@@ -150,7 +138,6 @@ export const PET_SKINS: readonly PetSkin[] = [
     },
     frameIntervalMs: 90,
     frameIntervalMsByState: {
-      idle: 260,
       walk: 140,
       run: 90,
       look: 220,

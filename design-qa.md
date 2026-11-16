@@ -220,6 +220,12 @@
 - 用户反馈大笑胯部有空白白块。25 帧合成到深色背景后确认：两腿/胯下的白底是封闭区域，边缘灌水到不了，身体保护又把它留下。新增下半身 `brightness > 235 & saturation < 20` 清理规则，25 帧全部重抠；深色审计图 `_qa/art/laugh-hd-audit-dark-fixed.png` 中白块消失，脚和腿完整。
 - 截图：`_qa/art/classic-idle-frames.png`、`_qa/art/classic-idle-nailong.png`、`_qa/art/classic-laugh-crotch-fixed-dark.png`。`pnpm build` 通过。
 
+## 2026-11-16 — Phase 27：恢复正面站立
+
+- 用户反馈经典站立变成斜着站，问有没有正面站立。Nailong `待机` 6 帧都是 3/4 侧身；同画风没有正面桌宠待机。
+- 恢复正面官方站立 `adult-idle-aligned.png` 为默认经典 idle（×1.09 亮度、×0.80 色彩，腿部/脚部完整）；Nailong 的 `classic/idle/00–05.png` 保留为 3/4 侧身备选，不再作为默认。
+- `docs/preview-classic.png` 改回正面站立，HUD 仍隐藏；`pnpm build` 通过。
+
 ## 待人工确认
 
 - 托盘菜单的物理点击仍需在桌面通知区实际点一遍；窗口 show/hide/设置/退出逻辑已实现。
