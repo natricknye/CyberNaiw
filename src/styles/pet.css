@@ -81,8 +81,8 @@
   display: block;
 }
 
-/* Only actual character cells are clickable; transparent cells fall through
-   to the stage, where the pointer handler ignores them. */
+/* Only actual character cells are clickable. Transparent cells are also
+   passed through at the native window level by the click-through poll. */
 .pet-ascii [class^="tone-"]:not(.tone-empty) {
   pointer-events: auto;
   cursor: grab;
@@ -265,6 +265,7 @@
 }
 
 .pet-stage:hover .pet-settings-button,
+.pet-stage--pointer-inside .pet-settings-button,
 .pet-settings-button:focus-visible {
   opacity: 1;
   pointer-events: auto;

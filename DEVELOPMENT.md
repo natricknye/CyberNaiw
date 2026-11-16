@@ -92,15 +92,24 @@ CyberNaiwa/
 - `acceptFirstMouse: true` 仅对 macOS 生效，确保未聚焦时第一次点击也能到达 webview。
 - `skipTaskbar: true` 在 Windows 隐藏任务栏项；macOS 行为以实际系统为准。
 
+### 点击穿透
+
+- Tauri 的 `setIgnoreCursorEvents` 只能整窗开关，不能按像素设置；这里用 `useClickThrough` 每 32ms 读取全局光标，换算到窗口 client 坐标后再做命中检测。
+- 命中角色（ASCII tone 格 / 图片 alpha >16）或 `.pet-settings-button` 的矩形时关闭穿透；透明边、气泡、HUD、阴影和窗口空白处保持穿透。
+- 光标进入窗口矩形时给 stage 加 `pet-stage--pointer-inside`，CSS 用它显示齿轮；这样窗口本身处于穿透状态时，齿轮仍然能出现并被点中。
+- 窗口移动或缩放后下一帧重新读取 `innerPosition()`；IPC 短暂失败按 500ms 重试，连续 8 次失败才回退为普通矩形窗口，避免启动瞬间的失败把穿透永久卡死。
+- 透明边不能拖动，拖动只能抓角色；这是点击穿透的直接取舍。
+
 ## 角色状态机
 
-`PetAnimationState = "idle" | "walk" | "happy" | "click" | "wave" | "run" | "look" | "think" | "clap" | "eat" | "crouch"`。
+`PetAnimationState = "idle" | "walk" | "happy" | "click" | "wave" | "beckon" | "run" | "look" | "think" | "clap" | "eat" | "crouch"`。
 
 - `usePetState` 持有唯一状态，避免动画互相冲突。
 - `usePetInteraction`：pointerdown 只记录起点；移动 ≥5px 才调用 `startDragging()`，避免原生拖拽吞掉点击；pointerup 且未拖动才算一次点击。
-- 命中判定：ASCII 必须命中 `.pet-ascii [class^="tone-"]:not(.tone-empty)`，图片必须按 alpha 命中（>16）；透明格/透明像素仍是拖动区，但不触发动作、语音或字幕。
+- 命中判定：ASCII 必须命中 `.pet-ascii [class^="tone-"]:not(.tone-empty)`，图片必须按 alpha 命中（>16）；透明格/透明像素不接收鼠标，由 `useClickThrough` 让原生窗口穿透到后面。
+- 点击穿透：`useClickThrough` 每 32ms 读取全局 `cursorPosition()`，用 `innerPosition()` + `devicePixelRatio` 换算到窗口 client 坐标；命中角色像素或设置键矩形时 `setIgnoreCursorEvents(false)`，其余（透明边、气泡、HUD、阴影）`true`。IPC 短暂失败按 500ms 重试，连续 8 次失败才回退为普通矩形窗口。透明边不再能拖动，拖动请抓角色。
 - **成年左键**：`advanceAction()` 沿 `ADULT_ACTION_STACK` 前进：`idle → wave（扎马步）→ beckon（招手）→ walk → run → look → think → clap → crouch → idle`。每档有独立持续时间，动作结束回 idle，但索引保留，所以流程结束后连续点击能走完整套。左键同时 `speak("meme")` 选一条安迪类台词；`Pet.tsx` 用 `flowLock` 锁住整个流程，锁定时常为 `max(actionDuration, voiceDuration) + 50ms`，期间左键/右键一律忽略；只有动作和语音都结束后，下一次点击才进入下一档。`playNaiwaVoice()` 返回本次语音时长，baby 按 1.35× 折算；`eat` 帧保留在素材里，但因其张嘴仰头太像大笑，不接入左键动作栈。
-- **成年右键**：`interact("laugh")`，`click` 380ms → `happy` 3730ms → `idle`，合计 4.11 秒，和 `naiwa-laugh-long.wav` 对齐；不再打开原生菜单。**大笑只属于右键**，左键动作栈不含 `happy`/`click`。Ctrl/⌘ + 右键打开原生菜单；中键（按下滚轮）打开设置；鼠标悬停在桌宠上时右上角才显示齿轮按钮；托盘入口保留。
+- **成年右键**：`interact("laugh")`，`click` 380ms → `happy` 3730ms → `idle`，合计 4.11 秒，和 `naiwa-laugh-long.wav` 对齐；不再打开原生菜单。**大笑只属于右键**，左键动作栈不含 `happy`/`click`。Ctrl/⌘ + 右键打开原生菜单；中键（按下滚轮）打开设置；光标进入桌宠窗口时右上角才显示齿轮按钮（由 `useClickThrough` 的 `pointerInside` 状态驱动，即使窗口正在穿透也能显示）；托盘入口保留。
 - **幼体左键**：`interact("meme")`，`click` 380ms → `happy` 1100ms → `idle`；没有大笑语音，右键仍是原生菜单。幼体同样使用 `flowLock`（动作 1480ms 与语音时长取最大值），流程中不响应下一次点击；幼体的动作栈与成年完全分开。
 - **空闲自动行为**：成年 idle 9–16 秒后只自动进入 `wave`（扎马步）2.4 秒，再回 idle；beckon/walk/run/look/think/clap/crouch 不会自动播放。幼体保持 7–14 秒随机 walk/wave 的独立行为。
 - 动画关闭时强制回到 idle，并取消进行中的状态定时器；点击仍能切换动作/触发大笑，但只显示静态首帧。
@@ -154,7 +163,7 @@ CyberNaiwa/
 
 `pet` 和 `settings` 各自最小授权：
 
-- `core:default` + 明确的 `core:window:allow-*`：start-dragging、show、hide、set-size、set-position、set-always-on-top、outer-size、outer-position、available-monitors、monitor-from-point、set-focus、unminimize。
+- `core:default` + 明确的 `core:window:allow-*`：start-dragging、show、hide、set-size、set-position、set-always-on-top、outer-size、outer-position、inner-position、available-monitors、monitor-from-point、set-focus、unminimize、cursor-position、scale-factor、set-ignore-cursor-events。
 - `store:default`。
 - 未使用 opener 插件，已移除；没有文件系统、shell、HTTP 等额外权限。
 
@@ -281,4 +290,5 @@ cargo check --manifest-path src-tauri/Cargo.toml
 - 2026-11-16 replace per-click interruption with a full-flow lock (user clarified): each adult/baby action holds a `flowLock` for `max(action duration, voice duration) + 50 ms`; clicks during the flow are ignored and the next click only advances after both animation and voice end. `playNaiwaVoice` now returns the actual duration, and `advanceAction` returns the action duration.
 - 2026-11-16 regenerate the adult ASCII `wave` from `classic/adult-wave.png` with a fixed 430 px crop centred at (148,206) for both the 112×70 and 128×80 sets, replacing the 2-cell padding; promote the shadowed shin cells from `|` to `%` and keep `|` on the feet so the left knee/shin read as one continuous leg. Verified both palettes in-app (`_qa/art/ascii-wave-knee-patched-app-dark.png`, `_qa/art/ascii-cyber-wave-knee-patched-app-dark.png`).
 - 2026-11-16 replace the classic idle with the three-frame `idle-chubby` set from the Nailong `待机-06/01/03` art (front-facing first frame, 180×210, 6 px bottom, 1200 ms) and add the adult `beckon` action (three `招手-01/02/04` frames, 220 ms classic / 350 ms ASCII, 1800 ms flow) right after `wave`; generate dedicated 112×70/128×80 beckon grids, restore misread `_` limb pixels to `|`, and keep the action out of the baby stack.
+- 2026-11-16 implement native click-through: a 32 ms global cursor poll toggles `setIgnoreCursorEvents` only over character pixels or the settings button, while the bubble/HUD/shadow/transparent margins pass clicks to the window below. The gear is shown from the same `pointerInside` state so it remains reachable while the window is click-through; transparent margins no longer drag, so the character is the drag handle.
 - 2026-11-16 bump to 0.2.1 and replace `docs/settings.png` with the 赛博奶蛙 settings screenshot (原色模式/量子模式, no sleep copy, version 0.2.1).

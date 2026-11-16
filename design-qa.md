@@ -267,10 +267,18 @@
 - 实测：经典 idle 首帧 `idle-chubby/00.png` 正面圆胖；经典 `beckon` 第 1 帧 `actions/beckon/01.png` 抬手；原色/量子 ASCII `beckon` 都显示抬手，HUD `NAIWA//BECKON`；流程锁实测 `wave → beckon`，招手 300ms 内再点仍是 `beckon`，1.9s 后下一档才到 `walk`。
 - 动作原画仍来自 Nailong-Studio 的 MIT 素材；没有引入新的外部授权来源。`pnpm build` 通过。
 
+## 2026-11-16 — Phase 33：透明区域点击穿透
+
+- 用户反馈只有桌宠本身和设置键应该拦截鼠标，透明区域不应挡住后面。之前整个矩形窗口都会挡住点击，只有 DOM 层忽略透明格，OS 层没有穿透。
+- 新增 `useClickThrough`：每 32ms 读取全局 `cursorPosition()`，用 `innerPosition()` + `devicePixelRatio` 换算到窗口 client 坐标；ASCII 命中 tone 格、图片命中 alpha>16、或命中 `.pet-settings-button` 矩形时 `setIgnoreCursorEvents(false)`，其余保持 `true`。只在状态变化时调用原生 API。
+- 齿轮显示改由 `pointerInside` 状态类驱动，不再依赖 `:hover`；因此窗口处于穿透状态时，光标进入窗口仍能显示齿轮，齿轮矩形也会参与命中。透明边、气泡、HUD、阴影都不再拦截。
+- 补权限：`core:window:allow-cursor-position`、`allow-inner-position`、`allow-scale-factor`、`allow-set-ignore-cursor-events`。IPC 失败按 500ms 重试，连续 8 次才回退普通窗口。
+- 验证：用仅开发态的命中点模拟分别测 ASCII idle、经典 idle 的角色/透明边/齿轮；Win32 `WS_EX_TRANSPARENT` 在角色和齿轮时为 `False`，在透明边时为 `True`。开发态钩子已移除；物理光标测试受窗口拖动干扰，但原生标志与命中结果一致。
+- 已知取舍：32ms 轮询意味着快速掠过边缘可能有不到一帧的延迟；透明边不再能拖动，拖动要抓角色；设置窗口本身不穿透。`pnpm build` 通过。
+
 ## 待人工确认
 
 - 托盘菜单的物理点击仍需在桌面通知区实际点一遍；窗口 show/hide/设置/退出逻辑已实现。
 - macOS 运行时行为无法在本机验证；CI 只能证明构建通过。
-- 透明边缘点击穿透未实现，作为 v1 已知限制。
 - 原色 112×70 / 赛博 128×80 已完成官方参考重做；赛博的 128 网格更细，原色的 112 网格脸部更清楚。再往上需要同步放大窗口或接受更细的字符。
 - 长腿成年目前只有正面/侧面/背面三视图，大笑/挥手/低头仍用之前的成年动作素材；如果要动作也严格长腿版，需要补长腿动作参考。

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { CSSProperties } from "react";
+import { useClickThrough } from "../hooks/useClickThrough";
 import { usePetInteraction } from "../hooks/usePetInteraction";
 import {
   ADULT_LAUGH_FLOW_MS,
@@ -34,6 +35,7 @@ export default function Pet() {
   const [settings, setSettings] = useState<PetSettings>(DEFAULT_SETTINGS);
   const [ready, setReady] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const [pointerInside, setPointerInside] = useState(false);
 
   const strings = UI_STRINGS[settings.language];
   const { state, reaction, interact, advanceAction, speak } = usePetState(
@@ -137,6 +139,11 @@ export default function Pet() {
     language: settings.language,
   });
 
+  useClickThrough({
+    enabled: ready,
+    onPointerInsideChange: setPointerInside,
+  });
+
   useEffect(() => {
     let cancelled = false;
     const unlisteners: Array<() => void> = [];
@@ -234,7 +241,7 @@ export default function Pet() {
 
   return (
     <main
-      className={`pet-stage pet-stage--${settings.age} pet-stage--palette-${settings.palette}`}
+      className={`pet-stage pet-stage--${settings.age} pet-stage--palette-${settings.palette}${pointerInside ? " pet-stage--pointer-inside" : ""}`}
       style={{ "--pet-scale": settings.scale } as CSSProperties}
       aria-label={strings.pet.aria}
       {...interaction}

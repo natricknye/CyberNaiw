@@ -8,8 +8,9 @@
 
 Cyber Naiwa (赛博奶蛙) is a cross-platform desktop pet built around 奶蛙 (Naiwa), the gleefully unhinged yellow frog from Chinese internet memes. It has three forms: **Original Cyber** and **Quantum Cyber** use a pixel-mapped ASCII sprite (112×70 and 128×80), while **Naiwa Classic** uses the original artwork directly. The adult is tall and long-limbed; the baby is short, round, big-headed, with tiny limbs. Click it to trigger the laugh. Everything runs locally — no account, no cloud, no telemetry.
 
-- A transparent, frameless, always-on-top pet window
-- Left-drag to move; adult left-click cycles actions, right-click laughs
+- A transparent, frameless, always-on-top pet window with click-through margins
+- Left-drag the character to move; adult left-click cycles actions, right-click laughs
+- Only the character's opaque pixels and the settings gear capture the mouse; the bubble, HUD, shadow and transparent margins pass clicks to the window below
 - Middle-click opens Settings; Ctrl/⌘ + right-click opens the native menu
 - Actions and laughs play the matching Naiwa voice line, with a mute switch in Settings
 - Adult actions: stand, horse stance, beckon, walk, run, look around, think, clap, crouch
@@ -177,7 +178,8 @@ Interaction:
 - **Adult start**: stands idle. Every 9–16 seconds it may briefly shift into the horse stance, then stand again.
 - **Adult left-click**: advances one action: stand → horse stance → beckon → walk → run → look around → think → clap → crouch → stand, and plays a random 安迪 / 嘎嘎提拉瞎 / 干巴得 / 哦啦 / 噶韭菜 line. Once an action flow starts, clicks are ignored until both the animation and its voice line finish; the next click then advances.
 - **Adult right-click**: plays the laugh and the full 4.11 s laugh animation; it no longer opens the menu. **The laugh is right-click only** — the left-click stack never contains `happy`/`click` and never summons the laugh-like eating pose either.
-- **Top-right gear**: the gear only appears while the mouse is hovering over the pet window; it opens Settings and hides again when the pointer leaves.
+- **Top-right gear**: the gear only appears while the pointer is inside the pet window; it opens Settings and hides again when the pointer leaves.
+- **Click-through margins**: only the character's opaque pixels and the top-right gear capture the mouse; the transparent margins, bubble, HUD and shadow pass clicks to the window below. Drag the character itself to move the pet.
 - **Adult middle-click**: press the scroll wheel to open Settings (trackpads without a middle button can use the gear or tray).
 - **Adult Ctrl/⌘ + right-click**: opens the native menu (Settings / Hide / Quit).
 - **Tray**: still shows/hides the pet, opens Settings, and quits.
