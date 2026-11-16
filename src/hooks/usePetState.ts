@@ -16,8 +16,8 @@ export interface PetReaction {
 export type PetReactionKind = "laugh" | "meme";
 
 const CLICK_STATE_MS = 380;
-// 25 laugh frames at 90 ms each complete the 2.25 s Naiwa laugh cycle.
-const HAPPY_STATE_MS = 2250;
+// Click (380 ms) + happy (1870 ms) are one continuous 2.25 s laugh cycle.
+const HAPPY_STATE_MS = 1870;
 const BABY_HAPPY_STATE_MS = 1100;
 const REACTION_MS = 2400;
 

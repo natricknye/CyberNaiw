@@ -54,6 +54,10 @@ export function normalizeSettings(value: unknown): PetSettings {
       typeof value.soundEnabled === "boolean"
         ? value.soundEnabled
         : DEFAULT_SETTINGS.soundEnabled,
+    hudEnabled:
+      typeof value.hudEnabled === "boolean"
+        ? value.hudEnabled
+        : DEFAULT_SETTINGS.hudEnabled,
     // The app UI is Chinese-only; English lives in README.en.md.
     language: "zh",
     age: value.age === "baby" ? "baby" : "adult",

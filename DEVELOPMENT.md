@@ -85,7 +85,7 @@ CyberNaiwa/
 - `usePetInteraction`：pointerdown 只记录起点；移动 ≥5px 才调用 `startDragging()`，避免原生拖拽吞掉点击；pointerup 且未拖动才算一次点击。300ms 内的第二次点击算双击。
 - 只有 `event.target` 命中 `.pet-ascii [class^="tone-"]:not(.tone-empty)` 才标记 `onCharacter`；透明格或 stage 上按下仍可拖动窗口，但松开不会触发语音/字幕。
 - `pointermove` 在 `buttons === 0` 时清空 `pressRef`；window 的 pointerup / pointercancel / blur 也会清理，避免 pointerup 丢失后窗口跟着鼠标漂移。
-- 点击：`click` 380ms → 成年 `happy` 2250ms / 幼体 `happy` 1100ms → `idle`。
+- 点击：`click` 380ms → 成年 `happy` 1870ms / 幼体 `happy` 1100ms → `idle`。成年 click 与 happy 共用同一组 25 帧；click→happy 不重置帧索引，合计 2.25 秒，避免“抱头”动作播两遍。
 - 动画开启且 idle 时，7–14 秒随机进入 `walk`（3.2s）或 `wave`（2.4s）。
 - 动画关闭时强制回到 idle，并取消进行中的状态定时器；点击仍保留表情反馈。
 - `PetAnimation` 只在当前状态内轮播帧，切状态立即重置到第 0 帧。
@@ -197,7 +197,7 @@ cargo check --manifest-path src-tauri/Cargo.toml
 - 2026-11-16 幼体嘴部：112×70 待机帧第 19 行 x=44–48 为连续 5 个 `-`，原先散落的嘴线已清掉；128×80 帧同步生成，嘴部在五态预览和 32×32 图标中都可读。
 - 2026-11-16 图标：`src-tauri/icons/32x32.png` 与 `128x128.png` 检查通过，均为幼体原色 ASCII 黄身/绿眼/深色底；Tauri 全套 Windows/macOS/Android/iOS 图标由 `tauri icon` 重新生成。
 - 2026-11-16 0.2.2 生产包：设置窗口 `520×760 / 760 / 760`，提示 13px、标签 15px、说明 12px，关于覆盖层打开/关闭不改变高度；安装器首屏为深色 sidebar + 幼体 ASCII + “欢迎使用赛博奶蛙”，截图在 `_qa/art/settings-final-0.2.2.png`、`_qa/art/installer-final-0.2.2.png`。
-- 2026-11-16 成年大笑 25 帧：`naiwa-frames.json` / `naiwa-cyber-frames.json` 的 happy/click 都是 25 帧；React 页面点击后 2.8 秒采样到 26 个唯一帧，HUD 为 `CLICK → HAPPY → IDLE`；`pnpm build` 通过。参考素材与授权见 `_qa/reference/official/laugh/SOURCES.md`。
+- 2026-11-16 成年大笑 25 帧：`naiwa-frames.json` / `naiwa-cyber-frames.json` 的 happy/click 都是 25 帧；React 页面点击后 2.8 秒采样到 26 个唯一帧，HUD 为 `CLICK → HAPPY → IDLE`；click→happy 连续播放、不重置，修复“抱头两次”；`pnpm build` 通过。参考素材与授权见 `_qa/reference/official/laugh/SOURCES.md`。
 - macOS 本机无法验证，只能依赖 CI 构建。
 
 ## 坑与注意事项
@@ -241,5 +241,5 @@ cargo check --manifest-path src-tauri/Cargo.toml
 - 2026-11-16 bump to 0.2.2; README download links and settings preview point at the new release.
 - 2026-11-16 raise every UI font in the settings console, pet HUD/bubble and NSIS installer art (minimum 12px in the console) to keep all text readable.
 - 2026-11-16 theme the NSIS installer with the baby ASCII sidebar/header BMPs, installer icon, dark MUI colours, Chinese-only pages and a custom welcome/finish copy.
-- 2026-11-16 replace the adult single-frame laugh with 25 ASCII frames sampled from Codex Voice Input's MIT 25-frame Naiwa laugh; use one fixed crop for all frames, 90ms per frame and a 2.25s adult happy state, while keeping the baby's two-frame cadence.
+- 2026-11-16 replace the adult single-frame laugh with 25 ASCII frames sampled from Codex Voice Input's MIT 25-frame Naiwa laugh; use one fixed crop for all frames, 90ms per frame, and continue the same frame index across click→happy (380ms + 1870ms = 2.25s) so the hands-on-head beat plays once.
 - 2026-11-16 bump to 0.2.1 and replace `docs/settings.png` with the 赛博奶蛙 settings screenshot (原色模式/量子模式, no sleep copy, version 0.2.1).

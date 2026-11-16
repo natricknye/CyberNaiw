@@ -32,6 +32,7 @@ export interface PetSettings {
   scale: number;
   animationsEnabled: boolean;
   soundEnabled: boolean;
+  hudEnabled: boolean;
   language: Language;
   age: PetAge;
   palette: PetPalette;
@@ -47,6 +48,7 @@ export const DEFAULT_SETTINGS: PetSettings = {
   scale: 1,
   animationsEnabled: true,
   soundEnabled: true,
+  hudEnabled: true,
   language: "zh",
   age: "adult",
   palette: "cyber",

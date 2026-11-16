@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   BABY_FRAME_INTERVAL_MS,
   FRAME_INTERVAL_MS,
@@ -74,7 +74,18 @@ export default function PetAnimation({
   const frames = frameSet[state];
   const [frameIndex, setFrameIndex] = useState(0);
 
+  const previousState = useRef(state);
+
   useEffect(() => {
+    const previous = previousState.current;
+    previousState.current = state;
+
+    // Click and happy are two phases of the same laugh. Do not rewind at the
+    // click → happy hand-off, otherwise the hands-on-head beat plays twice.
+    if (age === "adult" && state === "happy" && previous === "click") {
+      return;
+    }
+
     setFrameIndex(0);
   }, [state, skin.id, age, palette]);
 

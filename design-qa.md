@@ -134,7 +134,7 @@
 - 找到 Codex Voice Input 的 25 帧 MIT 原始奶蛙大笑（`assets/pet/target/000–024.png`，180×180，2.25s）；动作是手放肚子 → 仰头 → 抱头/抱肚 → 回落。
 - 为解决逐帧自动裁切造成的抖动，转换器增加 `-FixedSide/-CenterX/-CenterY`；25 帧统一使用 `side=149, center=84,101`。
 - 嘴腔处理：先把所有 `_` 还原成手脚，再在上半脸找最大 `@/_` 连通块恢复为嘴腔，补 3 个 `=` 牙齿；解决脚底被误判成红色嘴腔的问题。
-- 成年 happy/click 改为 25 帧、90ms/帧；`HAPPY_STATE_MS 2250`。幼体仍使用 2 帧和 320/180ms 的原节奏。
+- 成年 happy/click 改为 25 帧、90ms/帧；click 380ms + happy 1870ms = 2.25s，click→happy 不重置帧索引，避免“抱头两次”。幼体仍使用 2 帧和 320/180ms 的原节奏。
 - 验证：JSON 中 happy/click 各 25 个唯一帧；React 页面 2.8 秒采样到 26 个唯一帧，HUD `CLICK → HAPPY → IDLE`；`pnpm build` 通过。
 
 ## 待人工确认
