@@ -61,13 +61,19 @@ export default function PetAnimation({
   palette,
   skinId,
 }: PetAnimationProps) {
-  const skin = useMemo(() => getPetSkin(skinId), [skinId]);
+  const asciiSkin = useMemo(() => getPetSkin(skinId), [skinId]);
+  const classicSkin = useMemo(() => getPetSkin("naiwa-classic"), []);
+  const skin = palette === "classic" ? classicSkin : asciiSkin;
   const ariaLabel = UI_STRINGS[language].pet.stateAria[state];
-  const cyberSkin =
-    skin.kind === "ascii" && palette === "cyber" ? skin.cyberFrames : undefined;
-  const baseFrames = cyberSkin ?? skin.frames;
+  const baseFrames =
+    skin.kind === "ascii"
+      ? (palette === "cyber" ? skin.cyberFrames : skin.frames) ??
+        skin.frames
+      : age === "baby"
+        ? (skin.babyFrames ?? skin.frames)
+        : skin.frames;
   const frameSet =
-    age === "baby" && skin.kind === "ascii"
+    skin.kind === "ascii" && age === "baby"
       ? (palette === "cyber" ? skin.cyberBabyFrames : skin.babyFrames) ??
         baseFrames
       : baseFrames;

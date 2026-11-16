@@ -20,12 +20,16 @@ CyberNaiwa/
 │   │   └── pets/
 │   │       ├── README.md            # 图片皮肤扩展说明
 │   │       ├── index.ts             # 皮肤注册表（ASCII / image 两种）
-│   │       └── cyber-naiwa/
-│   │           ├── naiwa-frames.json            # 112×70 原色成年帧
-│   │           ├── naiwa-baby-frames.json       # 112×70 原色幼体帧
-│   │           ├── naiwa-cyber-frames.json      # 128×80 量子模式成年帧
-│   │           ├── naiwa-cyber-baby-frames.json # 128×80 量子模式幼体帧
-│   │           └── frames.ts              # tone、帧间隔、JSON 导入
+│   │       ├── cyber-naiwa/
+│   │       │   ├── naiwa-frames.json            # 112×70 原色赛博成年帧
+│   │       │   ├── naiwa-baby-frames.json       # 112×70 原色赛博幼体帧
+│   │       │   ├── naiwa-cyber-frames.json      # 128×80 量子赛博成年帧
+│   │       │   ├── naiwa-cyber-baby-frames.json # 128×80 量子赛博幼体帧
+│   │       │   └── frames.ts              # tone、帧间隔、JSON 导入
+│   │       └── classic/
+│   │           ├── adult-idle.png / adult-wave.png
+│   │           ├── baby-idle.png / baby-happy.png / baby-wave.png
+│   │           └── laugh/000–024.png    # 成年 happy/click 的 25 帧原画（MIT）
 │   ├── components/
 │   │   ├── Pet.tsx                  # 桌宠启动、设置同步、位置持久化
 │   │   ├── PetAnimation.tsx         # ASCII 分色渲染 / 图片序列渲染
@@ -42,7 +46,7 @@ CyberNaiwa/
 │   │   └── window.ts                # 尺寸/位置/置顶/显示/拖动
 │   ├── i18n/strings.ts               # 中英文 UI 文案
 │   ├── styles/{base,pet,settings}.css
-│   ├── types/pet.ts                  # 设置、年龄、配色、语言类型
+│   ├── types/pet.ts                  # 设置、年龄、形态、语言类型
 │   ├── App.tsx
 │   └── main.tsx
 ├── src-tauri/
@@ -105,9 +109,11 @@ CyberNaiwa/
 
 ### ASCII 渲染
 
-- 原色模式帧在 `naiwa-frames.json` / `naiwa-baby-frames.json`：112 列 × 70 行；量子模式帧在 `naiwa-cyber-frames.json` / `naiwa-cyber-baby-frames.json`：128 列 × 80 行。用 `.` 表示透明格。帧由官方设计资料库的成年 / 幼体 / 大笑 / 挥手参考图逐像素映射到字符 tone；仓库不包含参考图片本身。
+- 原色赛博帧在 `naiwa-frames.json` / `naiwa-baby-frames.json`：112 列 × 70 行；量子赛博帧在 `naiwa-cyber-frames.json` / `naiwa-cyber-baby-frames.json`：128 列 × 80 行。用 `.` 表示透明格。帧由官方设计资料库的成年 / 幼体 / 大笑 / 挥手参考图逐像素映射到字符 tone；仓库不包含参考图片本身。
 - 幼体挥手源图裁切框从 `X=365/W=270` 改为 `X=310/W=285`：原框正好从 V 字手中间切过，导致手指缺失；新框完整包住中间幼体的抬手，112×70 与 128×80 两套网格都已重新采样。
-- `PetAnimation` 根据 `settings.palette` 选择 `cyberFrames` / `cyberBabyFrames`，原色模式走 `frames` / `babyFrames`；两套都是 5 态。成年 happy/click 是 25 帧，其余是 2 帧；幼体全部 2 帧。
+- `PetAnimation` 根据 `settings.palette` 选择帧组：`original` 走 `frames` / `babyFrames`，`cyber` 走 `cyberFrames` / `cyberBabyFrames`，`classic` 直接切到图片皮肤 `naiwa-classic`；三套都是 5 态。ASCII 成年 happy/click 是 25 帧，其余是 2 帧；幼体全部 2 帧。
+- 奶家经典图片皮肤：成年 idle/walk 用 `adult-idle.png`，happy/click 用 `laugh/000–024.png`（90ms/帧），wave 用 `adult-wave.png`；幼体 idle/walk、happy/click、wave 各用一张原画。图片按容器 contain，保持透明背景。
+- 图片皮肤的点击命中按 alpha 判断：`usePetInteraction` 把点击坐标换算到 `naturalWidth × naturalHeight`，首次读取时把当前图片画进 canvas 并按 `currentSrc` 缓存，alpha > 16 才算命中。透明像素不触发点击/语音/字幕，但拖动仍由整个 `.pet-stage` 接管。
 - 逐字符 tone：黄身体 `#`、亮黄 `&`、橙色阴影 `%`、奶油肚皮 `+`、绿眼 `O/~/^`、瞳孔 `@`、嘴腔 `_`、牙齿 `=`、嘴线 `-`、棕色四肢 `|`、高亮 `*/!`、透明 `.`。
 - 闭嘴帧只保留官方源图里的极短嘴线，不再合成嘴线/下巴硬线：试过按眼睛位置画大范围 `-`/`;`，用户反馈像“鼻子 + 大嘴”，已撤销；现在只用 `mouthline` 把源图已有的 5–9 个嘴像素轻微加深，不延长、不画下巴。
 - 幼体直接取 `official-juvenile.png` 05 幼态版左一；保留素材的短圆身体、短手脚和原始腿间缝，不做全局 chibi 压扁、不全局填洞。局部加工只保留：眼睛在源像素上向外扩 1 格、嘴线加深、笑牙按源图嘴腔内部空洞生成。
@@ -122,7 +128,7 @@ CyberNaiwa/
 - 使用官方 `tauri-plugin-store`，文件 `settings.json`，`autoSave: false`，显式 `save()`。
 - 键 `settings`：`{ alwaysOnTop, scale, animationsEnabled, soundEnabled, hudEnabled, language, age, palette }`。`hudEnabled` 控制桌宠下方 `NAIWA//IDLE` 是否显示，旧设置缺省为 `true`。
 - 键 `windowPosition`：`{ x, y }`（物理像素）。
-- 读取时做类型校验和范围夹取：`scale` 限制在 0.7–1.5，`language` 只接受 `zh/en`，`age` 只接受 `adult/baby`，`palette` 只接受 `cyber/original`，非法值回退默认。
+- 读取时做类型校验和范围夹取：`scale` 限制在 0.7–1.5，`language` 只接受 `zh/en`，`age` 只接受 `adult/baby`，`palette` 只接受 `original/cyber/classic`，非法值回退默认 `cyber`。
 - App 界面固定中文（设置页不再提供语言切换）；README 保留 `README.en.md`。托盘语言固定调用 `zh`，设置窗口标题为中文。
 - 设置窗口保存防抖 180ms；跨窗口通知立即发出，保证滑杆跟手。
 - 浏览器预览模式用 `localStorage` 作为回退，不涉及 Tauri store。
@@ -243,4 +249,5 @@ cargo check --manifest-path src-tauri/Cargo.toml
 - 2026-11-16 theme the NSIS installer with the baby ASCII sidebar/header BMPs, installer icon, dark MUI colours, Chinese-only pages and a custom welcome/finish copy.
 - 2026-11-16 replace the adult single-frame laugh with 25 ASCII frames sampled from Codex Voice Input's MIT 25-frame Naiwa laugh; use one fixed crop for all frames, 90ms per frame, and continue the same frame index across click→happy (380ms + 1870ms = 2.25s) so the hands-on-head beat plays once.
 - 2026-11-16 remove the settings intro's local-only line and add a persisted `hudEnabled` toggle for the pet's `NAIWA//IDLE` label; the settings panel still fits 520×760 without scrolling.
+- 2026-11-16 turn the two palettes into three forms: 原色赛博 / 量子赛博 stay ASCII, while 奶家经典 renders cut-out original artwork through a new `naiwa-classic` image skin (25 MIT laugh PNGs at 90ms); click hit-testing now samples image alpha so transparent pixels never trigger a reaction.
 - 2026-11-16 bump to 0.2.1 and replace `docs/settings.png` with the 赛博奶蛙 settings screenshot (原色模式/量子模式, no sleep copy, version 0.2.1).

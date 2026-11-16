@@ -145,6 +145,16 @@
 - 设置页在 520×760 下仍为 `clientHeight 760 / scrollHeight 760`，没有滚动；冷启动后开关 true→false→true 双向生效。
 - `pnpm build` 通过。
 
+## 2026-11-16 — Phase 19：三种形态与奶家经典原画
+
+- 原来的「配色」升级为「形态」：原色赛博 / 量子赛博继续使用 ASCII，新增奶家经典直接显示原画，不再转 ASCII。
+- 从官方设计参考图抠出 6 张透明原画：成年 idle/wave、幼体 idle/happy/wave；只移除与边缘连通的白底/软阴影，并只保留最大连通角色，避免带上邻图手臂和橙色碎片。
+- 成年 happy/click 使用 Codex Voice Input 的 25 帧 MIT 原画（`classic/laugh/000–024.png`），90ms/帧；幼体三态各一张静态原画。图片皮肤注册为 `naiwa-classic`，`palette === "classic"` 时由 `PetAnimation` 切换到图片渲染。
+- 图片点击按 alpha 命中：点击坐标换算到原图尺寸，读取 canvas 像素，alpha > 16 才算本体；透明像素不触发点击/语音/字幕，但透明区域仍可拖动窗口。
+- 设置页改成三个直角分段按钮；`palette` 持久化接受 `original/cyber/classic`。520×760 下仍为 760/760，不滚动。
+- 验证：冷启动恢复 `palette-classic` 后渲染 `adult-idle.png` 且无 ASCII；点击身体 2.7 秒采样到 `laugh/000` → `024` → `adult-idle`，HUD `CLICK → HAPPY → IDLE`；点击 alpha=0 的左上角 HUD 保持 `IDLE`；原色赛博/量子赛博来回切换均恢复 ASCII；`pnpm build` 通过。
+- 截图：`_qa/art/settings-classic.png`、`_qa/art/classic-pet.png`；`docs/settings.png` 与 `docs/preview-classic.png` 已同步。
+
 ## 待人工确认
 
 - 托盘菜单的物理点击仍需在桌面通知区实际点一遍；窗口 show/hide/设置/退出逻辑已实现。

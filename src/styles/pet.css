@@ -207,8 +207,15 @@
   max-width: 92%;
   max-height: 78vh;
   object-fit: contain;
+  pointer-events: auto;
+  cursor: grab;
+  filter: drop-shadow(0 10px 16px rgba(0, 0, 0, 0.5));
   user-select: none;
   -webkit-user-drag: none;
+}
+
+.pet-visual--image img:active {
+  cursor: grabbing;
 }
 
 .pet-shadow {

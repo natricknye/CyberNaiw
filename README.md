@@ -6,13 +6,14 @@
 
 **简体中文** | [English](README.en.md)
 
-赛博奶蛙是一只住在你桌面上的奶蛙。它不是一张贴图，而是一块 **最高 128×80 的彩色 ASCII 像素网格**：量子模式用 128×80，原色模式用 112×70。成年是长腿瘦高版，幼体是短圆大头、短手脚；暖黄色身体、浅奶油色大肚皮、浅绿眼环和居中黑瞳，还有一条极短的水平嘴线——点一下就会笑。所有东西都在本地运行，不联网、不注册、不收集数据。
+赛博奶蛙是一只住在你桌面上的奶蛙。它有三种形态：**原色赛博**和**量子赛博**用彩色 ASCII 像素网格（112×70 / 128×80），**奶家经典**直接使用原画。成年是长腿瘦高版，幼体是短圆大头、短手脚；暖黄色身体、浅奶油色大肚皮、浅绿眼环和居中黑瞳，还有一条极短的水平嘴线——点一下就会笑。所有东西都在本地运行，不联网、不注册、不收集数据。
 
 - 透明、无边框、始终置顶的桌宠窗口
 - 左键拖动、点击互动、右键原生菜单
 - 点击播放对应奶蛙语音，设置里可以静音
 - Idle / Walk / Happy / Click / Wave 五种状态
-- 成年奶蛙 / 幼体奶蛙，量子模式蓝黑 / 原色模式暖黄两套配色
+- 三种形态：原色赛博 / 量子赛博（ASCII）、奶家经典（原画）
+- 成年奶蛙 / 幼体奶蛙，原色赛博暖黄 / 量子赛博蓝黑两套配色
 - 应用界面中文；英文说明保留在 `README.en.md`
 - 系统托盘显示/隐藏、打开设置、退出
 - 设置本地 JSON 持久化，重启后恢复
@@ -36,29 +37,33 @@
 
 ## 预览
 
-| 量子模式 · 128×80 | 原色模式 · 112×70 |
+| 原色赛博 · 112×70 | 量子赛博 · 128×80 |
 | --- | --- |
-| ![赛博奶蛙 量子模式预览](docs/preview.png) | ![赛博奶蛙 原色模式预览](docs/preview-original.png) |
+| ![赛博奶蛙 原色赛博预览](docs/preview-original.png) | ![赛博奶蛙 量子赛博预览](docs/preview.png) |
 
-角色不是图片贴图，而是彩色 ASCII 字符网格：量子模式 128×80、原色模式 112×70。`#` 黄身体、`O` 绿眼、`@` 瞳孔、`+` 奶油肚皮、`|` 橄榄褐手脚、`_` 嘴腔、`=` 牙齿、`*`/`!` 动作高亮；闭嘴帧保留官方源图里的极短嘴线，不额外画鼻/下巴硬线。每个字符背后铺同色实体底，角色内部不会透出桌面，角色外仍然是透明窗口；再叠加 CRT 扫描线，设置里可以缩放。
+原色赛博 / 量子赛博不是图片贴图，而是彩色 ASCII 字符网格：原色赛博 112×70、量子赛博 128×80。`#` 黄身体、`O` 绿眼、`@` 瞳孔、`+` 奶油肚皮、`|` 橄榄褐手脚、`_` 嘴腔、`=` 牙齿、`*`/`!` 动作高亮；闭嘴帧保留官方源图里的极短嘴线，不额外画鼻/下巴硬线。每个字符背后铺同色实体底，角色内部不会透出桌面，角色外仍然是透明窗口；再叠加 CRT 扫描线，设置里可以缩放。
+
+奶家经典使用原画，不再转成 ASCII：
+
+<img src="docs/preview-classic.png" alt="赛博奶蛙 奶家经典原画" width="360" />
 
 | 模式 | 选项 |
 | --- | --- |
 | 成长阶段 | 成年（修长梨形）/ 幼体（短圆大头、短手脚） |
-| 配色 | 量子模式（蓝黑 + 青色终端，128×80）/ 原色模式（暖黄 + 奶油 + 橄榄褐，112×70） |
+| 形态 | 原色赛博（暖黄 + 奶油 + 橄榄褐，112×70）/ 量子赛博（蓝黑 + 青色终端，128×80）/ 奶家经典（原画，透明背景） |
 | 动作 | 站立、迈步、开心、点击互动（成年大笑 / 幼体叉腰）、挥手 |
 
 幼体单独预览：
 
 <img src="docs/preview-baby.png" alt="幼体奶蛙" width="360" />
 
-> 默认是「量子模式」。想看原色形态：打开设置 → 「配色」→ 点「原色模式」。上面右图就是原色模式效果。
+> 默认是「量子赛博」。想看暖黄 ASCII：打开设置 →「形态」→ 点「原色赛博」；想看原画：点「奶家经典」。上面右图是量子赛博效果。
 
 ## 设置页
 
 <img src="docs/settings.png" alt="赛博奶蛙设置页" width="420" />
 
-透明置顶、桌宠大小、成年/幼体、原色模式/量子模式、动画开关、桌宠标签开关和声音开关都在同一个面板里；「关于」按需打开，不占主面板空间。控制台使用量子模式的蓝黑终端配色。
+透明置顶、桌宠大小、成年/幼体、三种形态、动画开关、桌宠标签开关和声音开关都在同一个面板里；「关于」按需打开，不占主面板空间。控制台使用量子赛博的蓝黑终端配色。
 
 ## 技术栈
 
@@ -66,7 +71,7 @@
 | --- | --- |
 | 桌面框架 | Tauri 2 |
 | 前端 | React 19 + TypeScript + Vite |
-| 样式/角色 | CSS + 128×80/112×70 ASCII 帧 + SVG 图标 |
+| 样式/角色 | CSS + 128×80/112×70 ASCII 帧 + 经典原画 PNG + SVG 图标 |
 | 原生层 | Rust（托盘、窗口生命周期、退出） |
 | 设置 | `tauri-plugin-store` 本地 JSON |
 | 包管理 | pnpm（Corepack 可用） |
@@ -127,11 +132,13 @@ pnpm tauri build --bundles dmg
 - Windows：`%APPDATA%\com.cybernaiwa.desktop\settings.json`
 - macOS：`~/Library/Application Support/com.cybernaiwa.desktop/settings.json`
 
-文件里有两个键：`settings`（置顶、缩放、动画、声音、成年/幼体、原色模式/量子模式）和 `windowPosition`（物理像素坐标）。没有云端同步。
+文件里有两个键：`settings`（置顶、缩放、动画、声音、桌宠标签、成年/幼体、原色赛博/量子赛博/奶家经典）和 `windowPosition`（物理像素坐标）。没有云端同步。
 
 ## 角色素材
 
-默认角色 `cyber-naiwa` 的原色模式成年帧在 `src/assets/pets/cyber-naiwa/naiwa-frames.json`，幼体帧在 `naiwa-baby-frames.json`（112×70）；量子模式成年/幼体帧在 `naiwa-cyber-frames.json`、`naiwa-cyber-baby-frames.json`（128×80）。每套 5 个状态；成年 happy/click 各 25 帧，其余状态每态 2 帧；幼体每态 2 帧。字符 tone、帧间隔和渲染逻辑在 `frames.ts`。成年大笑的 25 帧来自 [liaosongjie/Codex-Voice-Input](https://github.com/liaosongjie/Codex-Voice-Input) 的 MIT 动画帧（固定取景后转成 ASCII）；其余帧由官方设计资料库中的成年 / 幼体 / 大笑 / 挥手参考图逐像素映射生成。仓库不包含参考图片本身。应用图标取自幼体原色 ASCII 待机帧，不再单独绘制。
+默认 ASCII 角色 `cyber-naiwa` 的原色赛博成年帧在 `src/assets/pets/cyber-naiwa/naiwa-frames.json`，幼体帧在 `naiwa-baby-frames.json`（112×70）；量子赛博成年/幼体帧在 `naiwa-cyber-frames.json`、`naiwa-cyber-baby-frames.json`（128×80）。每套 5 个状态；成年 happy/click 各 25 帧，其余状态每态 2 帧；幼体每态 2 帧。字符 tone、帧间隔和渲染逻辑在 `frames.ts`。成年大笑的 25 帧来自 [liaosongjie/Codex-Voice-Input](https://github.com/liaosongjie/Codex-Voice-Input) 的 MIT 动画帧（固定取景后转成 ASCII）；其余帧由官方设计资料库中的成年 / 幼体 / 大笑 / 挥手参考图逐像素映射生成，ASCII 帧的参考图片本身不入库。应用图标取自幼体原色赛博 ASCII 待机帧，不再单独绘制。
+
+奶家经典皮肤 `naiwa-classic` 在 `src/assets/pets/classic/`：成年待机/挥手和幼体三态是官方设计参考图的透明抠图；成年 happy/click 使用 `classic/laugh/000–024.png`，即 Codex Voice Input 的 25 帧 MIT 原画，90ms/帧。抠图脚本是 `_qa/make-classic-cutouts.ps1`（`_qa/` 不入库）。这部分是粉丝二创非商业使用，来源与授权说明见 `_qa/reference/official/laugh/SOURCES.md`。
 
 想换成 PNG/WEBP/GIF 皮肤时，按 `src/assets/pets/README.md` 的说明注册 `ImagePetSkin` 即可，渲染器同时支持 ASCII 和图片序列。请不要提交没有 redistribution 权限的素材。
 

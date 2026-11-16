@@ -12,7 +12,7 @@ export type Language = "zh" | "en";
 
 export type PetAge = "adult" | "baby";
 
-export type PetPalette = "original" | "cyber";
+export type PetPalette = "original" | "cyber" | "classic";
 
 export type NaiwaVoice =
   | "andi"

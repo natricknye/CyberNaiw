@@ -4,13 +4,21 @@ All character artwork lives here. The app never downloads artwork at runtime.
 
 ## Default skin
 
-`cyber-naiwa` is the default ASCII skin. Original-colour frames are 112×70 in
-`cyber-naiwa/naiwa-frames.json` and `naiwa-baby-frames.json`; cyber frames are
-128×80 in `naiwa-cyber-frames.json` and `naiwa-cyber-baby-frames.json`.
-`cyber-naiwa/frames.ts` imports the JSON, maps characters to colour tones and
-declares frame timing. The grids use printable ASCII only and were
-pixel-mapped from official reference images; those images are not shipped in
-this repository.
+`cyber-naiwa` is the default ASCII skin. 原色赛博 (Original Cyber) frames are
+112×70 in `cyber-naiwa/naiwa-frames.json` and `naiwa-baby-frames.json`; 量子赛博
+(Quantum Cyber) frames are 128×80 in `naiwa-cyber-frames.json` and
+`naiwa-cyber-baby-frames.json`. `cyber-naiwa/frames.ts` imports the JSON, maps
+characters to colour tones and declares frame timing. The grids use printable
+ASCII only and were pixel-mapped from official reference images; those ASCII
+reference images are not shipped in this repository.
+
+## Classic skin
+
+`naiwa-classic` is an `ImagePetSkin` using the cut-out original artwork in
+`classic/`: adult idle/wave and baby idle/happy/wave are single PNGs, while the
+adult happy/click sequence is `classic/laugh/000`–`024.png` at 90 ms per frame.
+Image skins may declare a separate `babyFrames` map; otherwise the adult map is
+used for both ages.
 
 ## Adding an image skin
 

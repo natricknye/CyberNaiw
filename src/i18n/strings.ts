@@ -28,6 +28,7 @@ export interface UiStrings {
     paletteHint: string;
     original: string;
     cyber: string;
+    classic: string;
     animation: string;
     animationHint: string;
     animationNote: string;
@@ -78,10 +79,11 @@ const ZH: UiStrings = {
     ageHint: "成年是修长梨形；幼体是短圆大头、短手脚。",
     adult: "成年",
     baby: "幼体",
-    palette: "配色",
-    paletteHint: "原色模式是黄绿奶油；量子模式是蓝黑终端。",
-    original: "原色模式",
-    cyber: "量子模式",
+    palette: "形态",
+    paletteHint: "原色赛博 / 量子赛博是 ASCII；奶家经典是原画。",
+    original: "原色赛博",
+    cyber: "量子赛博",
+    classic: "奶家经典",
     animation: "动画",
     animationHint: "待机、走动和逐帧动画。",
     animationNote:
@@ -149,11 +151,12 @@ const EN: UiStrings = {
     ageHint: "Adults are tall and pear-shaped; babies are short, round, big-headed, with tiny limbs.",
     adult: "Adult",
     baby: "Baby",
-    palette: "Palette",
+    palette: "Form",
     paletteHint:
-      "Original mode is yellow, green and cream. Quantum mode is a blue-black terminal.",
-    original: "Original mode",
-    cyber: "Quantum mode",
+      "Original and Quantum are ASCII; Naiwa Classic uses the original artwork.",
+    original: "Original Cyber",
+    cyber: "Quantum Cyber",
+    classic: "Naiwa Classic",
     animation: "Animation",
     animationHint: "Idle, walking and frame-by-frame motion.",
     animationNote:

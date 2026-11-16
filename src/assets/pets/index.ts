@@ -5,6 +5,23 @@ import {
   CYBER_NAIWA_CYBER_FRAMES,
   CYBER_NAIWA_FRAMES,
 } from "./cyber-naiwa/frames";
+import adultIdle from "./classic/adult-idle.png";
+import adultHappy from "./classic/adult-happy.png";
+import adultWave from "./classic/adult-wave.png";
+import babyIdle from "./classic/baby-idle.png";
+import babyHappy from "./classic/baby-happy.png";
+import babyWave from "./classic/baby-wave.png";
+
+const CLASSIC_LAUGH_MODULES = import.meta.glob("./classic/laugh/*.png", {
+  eager: true,
+  import: "default",
+}) as Record<string, string>;
+
+const CLASSIC_LAUGH_FRAMES = Object.keys(CLASSIC_LAUGH_MODULES)
+  .sort()
+  .map((key) => CLASSIC_LAUGH_MODULES[key]);
+const CLASSIC_HAPPY_FRAMES =
+  CLASSIC_LAUGH_FRAMES.length > 0 ? CLASSIC_LAUGH_FRAMES : [adultHappy];
 
 export type PetSkinKind = "ascii" | "image";
 
@@ -31,6 +48,7 @@ export interface ImagePetSkin extends PetSkinBase {
    * Each state can have one or more frames.
    */
   frames: Record<PetAnimationState, readonly string[]>;
+  babyFrames?: Record<PetAnimationState, readonly string[]>;
   frameIntervalMs?: number;
 }
 
@@ -50,6 +68,28 @@ export const PET_SKINS: readonly PetSkin[] = [
     babyFrames: CYBER_NAIWA_BABY_FRAMES,
     cyberFrames: CYBER_NAIWA_CYBER_FRAMES,
     cyberBabyFrames: CYBER_NAIWA_CYBER_BABY_FRAMES,
+  },
+  {
+    id: "naiwa-classic",
+    name: "奶家经典",
+    kind: "image",
+    credit:
+      "Original Naiwa artwork; adult laugh frames from liaosongjie/Codex-Voice-Input (MIT)",
+    frames: {
+      idle: [adultIdle],
+      walk: [adultIdle],
+      happy: CLASSIC_HAPPY_FRAMES,
+      click: CLASSIC_HAPPY_FRAMES,
+      wave: [adultWave],
+    },
+    babyFrames: {
+      idle: [babyIdle],
+      walk: [babyIdle],
+      happy: [babyHappy],
+      click: [babyHappy],
+      wave: [babyWave],
+    },
+    frameIntervalMs: 90,
   },
 ];
 

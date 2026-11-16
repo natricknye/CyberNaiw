@@ -61,7 +61,12 @@ export function normalizeSettings(value: unknown): PetSettings {
     // The app UI is Chinese-only; English lives in README.en.md.
     language: "zh",
     age: value.age === "baby" ? "baby" : "adult",
-    palette: value.palette === "original" ? "original" : "cyber",
+    palette:
+      value.palette === "original"
+        ? "original"
+        : value.palette === "classic"
+          ? "classic"
+          : "cyber",
   };
 }
 

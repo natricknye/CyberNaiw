@@ -233,6 +233,15 @@ export default function Settings() {
             >
               {strings.settings.cyber}
             </button>
+            <button
+              type="button"
+              className={settings.palette === "classic" ? "is-active" : ""}
+              aria-pressed={settings.palette === "classic"}
+              onClick={() => update({ palette: "classic" })}
+              disabled={!loaded}
+            >
+              {strings.settings.classic}
+            </button>
           </div>
         </div>
 
