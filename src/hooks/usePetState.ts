@@ -33,7 +33,6 @@ export const ADULT_ACTION_STACK = [
   "look",
   "think",
   "clap",
-  "eat",
   "crouch",
 ] as const satisfies readonly PetAnimationState[];
 
@@ -44,7 +43,6 @@ const ACTION_DURATION_MS: Partial<Record<PetAnimationState, number>> = {
   look: 1900,
   think: 2200,
   clap: 1400,
-  eat: 1800,
   crouch: 1800,
 };
 

@@ -21,27 +21,26 @@ duration still come from the real state, and the baby never uses these aliases.
 ## Classic skin
 
 `naiwa-classic` is an `ImagePetSkin` using the cut-out original artwork in
-`classic/`: adult idle/wave and baby idle/happy/wave are single PNGs, while the
+`classic/`: adult idle uses `classic/idle/00`–`05.png` from the Nailong-Studio
+MIT idle sequence, so the standing pose shares the colour/art style of the
+action frames. Wave and baby idle/happy/wave remain single cut-out PNGs. The
 adult happy/click sequence is `classic/laugh-hd/000`–`024.webp` at 90 ms per
-frame. The 524×720 transparent WebP frames come from the 1080×1474
-`naiwa-laugh.mp4` segment at 6.5–8.75 s: 25 frames are extracted, background
-and floor shadow are removed, the character is padded by 3% and downscaled with
-Lanczos, with no sharpening. `classic/laugh-hires/` keeps the 648×888 6×
-upscale fallback built from the 180×180 MIT frames (`classic/laugh/`), and
-`classic/laugh-cropped/` keeps the tight 108×148 crop. The video source has no
-explicit redistribution licence in `SOURCES.md`; the project owner approved its
-fan-use inclusion, and it can be swapped back to `laugh-hires` if needed.
-`adult-idle-aligned.png` is the product standing frame: the original cut-out is
-multiplied by 1.09 brightness and 0.80 colour, bringing its mean
-luminance/saturation close to the Nailong action frames. `adult-idle.png` keeps
-the unmodified cut-out.
+frame: 25 frames from the 1080×1474 `naiwa-laugh.mp4` at 6.5–8.75 s, with the
+white background, floor shadow, and white crotch gap removed, 3% padding and
+Lanczos downscale to 524×720, no sharpening. `classic/laugh-hires/` keeps the
+648×888 6× MIT upscale fallback and `classic/laugh-cropped/` keeps the tight
+108×148 crop. `adult-idle-aligned.png` is now only a fallback/reference: the old
+tall cut-out with ×1.09 brightness and ×0.80 colour; `adult-idle.png` keeps the
+unmodified cut-out.
 
-Adult walk/run/look/think/clap/eat/crouch live in `classic/actions/<state>/`.
+Adult walk/run/look/think/clap/crouch live in `classic/actions/<state>/`.
 They come from the Nailong-Studio `pet/` MIT frame sequences, padded to a
 180×210 canvas and bottom-aligned to y=204 (6 px bottom margin), so feet and
-knees stay visible. Use `frameIntervalMsByState` for per-action cadence; the
-global `frameIntervalMs` remains the laugh interval. Image skins may declare a
-separate `babyFrames` map; otherwise the adult map is used for both ages.
+knees stay visible. The `eat` frames stay in the library but are not wired to
+the left-click stack: the open-mouth head-back pose reads as a laugh. Use
+`frameIntervalMsByState` for per-action cadence; the global `frameIntervalMs`
+remains the laugh interval. Image skins may declare a separate `babyFrames`
+map; otherwise the adult map is used for both ages.
 
 ## Adding an image skin
 

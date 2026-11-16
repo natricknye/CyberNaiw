@@ -12,7 +12,7 @@ Cyber Naiwa (赛博奶蛙) is a cross-platform desktop pet built around 奶蛙 (
 - Left-drag to move; adult left-click cycles actions, right-click laughs
 - Middle-click opens Settings; Ctrl/⌘ + right-click opens the native menu
 - Actions and laughs play the matching Naiwa voice line, with a mute switch in Settings
-- Adult actions: stand, horse stance, walk, run, look around, think, clap, eat, crouch
+- Adult actions: stand, horse stance, walk, run, look around, think, clap, crouch
 - Three forms: Original Cyber / Quantum Cyber (ASCII) and Naiwa Classic (original artwork)
 - Adult and baby Naiwa, with warm Original or blue-black Quantum colourways
 - Chinese app UI; English documentation in `README.en.md`
@@ -52,7 +52,7 @@ Naiwa Classic uses the original artwork with no ASCII conversion:
 | --- | --- |
 | Growth stage | Adult (tall pear) / Baby (short, round, big-headed, tiny limbs) |
 | Form | Original Cyber (warm yellow + cream + olive, 112×70) / Quantum Cyber (blue-black + cyan terminal, 128×80) / Naiwa Classic (original artwork, transparent background) |
-| Actions | Adult: stand, horse stance, walk, run, look around, think, clap, eat, crouch; baby: idle, walk, happy, raise-hand — the two stacks are separate |
+| Actions | Adult: stand, horse stance, walk, run, look around, think, clap, crouch; baby: idle, walk, happy, raise-hand — the two stacks are separate |
 
 Baby preview:
 
@@ -139,7 +139,7 @@ Two keys live in that file: `settings` (always-on-top, scale, animation, sound, 
 
 The default `cyber-naiwa` skin stores Original Cyber adult/baby frames in `naiwa-frames.json` and `naiwa-baby-frames.json` (112×70), and Quantum Cyber adult/baby frames in `naiwa-cyber-frames.json` and `naiwa-cyber-baby-frames.json` (128×80). Each set covers five base poses; adult happy/click use 25 frames each, other base states use two, and the baby uses two per state. The extra adult actions (run/look/think/clap/eat/crouch) are registered in `index.ts` as aliases of the closest base pose, with their own HUD labels, timing and durations. `frames.ts` maps characters to colour tones and declares frame timing. The 25 adult laugh frames come from [liaosongjie/Codex-Voice-Input](https://github.com/liaosongjie/Codex-Voice-Input)'s MIT animation frames (fixed-crop conversion to ASCII); the other grids were pixel-mapped from the official design database's adult, juvenile, laugh, and wave references. No ASCII reference image files themselves are shipped in the repo. The app icon is taken from the baby's Original Cyber ASCII idle frame instead of being drawn separately.
 
-The `naiwa-classic` skin lives in `src/assets/pets/classic/`: adult idle uses the brightened `adult-idle-aligned.png` (original cut-out ×1.09 brightness, ×0.80 colour to match the action frames' luminance/saturation), adult wave and all three baby states are transparent cut-outs of the official design reference sheets; adult happy/click uses `classic/laugh-hd/000–024.webp`, extracted from the 1080×1474 `naiwa-laugh.mp4` at 6.5–8.75 s. The 25 frames have their white background and floor shadow removed, keep 3% padding, and are Lanczos-downscaled to 524×720 with no sharpening at 90 ms each. `classic/laugh/` keeps the original 180×180 MIT frames and `classic/laugh-hires/` keeps the 648×888 6× upscale fallback. The video source has no explicit redistribution licence in `SOURCES.md`; the project owner approved its fan-use inclusion, and the skin can switch back to `laugh-hires` if needed. Action frames use `classic/actions/<action>/` padded to 180×210 with a 6 px bottom margin. Images scale to the window height so the body stays about 280 px and the feet stay visible. The cut-out/upscale scripts are `_qa/make-classic-cutouts.ps1`, `_qa/crop-classic-laugh.ps1`, `_qa/upscale-classic-laugh.py`, `_qa/build-hd-laugh.py`, and `_qa/build-classic-actions.py` (`_qa/` is not committed). This is fan-made, non-commercial use; source and licence notes are in `_qa/reference/official/laugh/SOURCES.md`.
+The `naiwa-classic` skin lives in `src/assets/pets/classic/`: adult idle uses `classic/idle/00–05.png`, the Nailong-Studio MIT idle frames, so the standing pose has the same colour and art style as walk/run/look/etc.; the old brightened tall idle (`adult-idle-aligned.png`) stays as a fallback/reference. Adult wave and all three baby states are transparent cut-outs of the official design reference sheets; adult happy/click uses `classic/laugh-hd/000–024.webp`, extracted from the 1080×1474 `naiwa-laugh.mp4` at 6.5–8.75 s. The 25 frames have their white background, floor shadow, and white crotch gap removed, keep 3% padding, and are Lanczos-downscaled to 524×720 with no sharpening at 90 ms each. `classic/laugh/` keeps the original 180×180 MIT frames and `classic/laugh-hires/` keeps the 648×888 6× upscale fallback. The video source has no explicit redistribution licence in `SOURCES.md`; the project owner approved its fan-use inclusion, and the skin can switch back to `laugh-hires` if needed. Action frames use `classic/actions/<action>/` padded to 180×210 with a 6 px bottom margin; the eating frames stay in the library but are not wired to left-click because the open-mouth pose reads as a laugh. Images scale to the window height so the body stays about 280 px and the feet stay visible. The cut-out/upscale scripts are `_qa/make-classic-cutouts.ps1`, `_qa/crop-classic-laugh.ps1`, `_qa/upscale-classic-laugh.py`, `_qa/build-hd-laugh.py`, `_qa/build-classic-actions.py`, and `_qa/build-classic-idle.py` (`_qa/` is not committed). This is fan-made, non-commercial use; source and licence notes are in `_qa/reference/official/laugh/SOURCES.md`.
 
 Want to try a PNG/WEBP/GIF skin? `src/assets/pets/README.md` shows how to register an `ImagePetSkin`. The renderer already handles both ASCII and image sequences. Please only add art you have the right to redistribute.
 
@@ -175,15 +175,15 @@ The six clips come from the `音效/` directory of [VIPmrgj/Dragon-frog](https:/
 Interaction:
 
 - **Adult start**: stands idle. Every 9–16 seconds it may briefly shift into the horse stance, then stand again.
-- **Adult left-click**: advances one action: stand → horse stance → walk → run → look around → think → clap → eat → crouch → stand, and plays a random 安迪 / 嘎嘎提拉瞎 / 干巴得 / 哦啦 / 噶韭菜 line.
-- **Adult right-click**: plays the laugh and the full laugh animation; it no longer opens the menu. **The laugh is right-click only** — the left-click stack never contains `happy`/`click` and never summons the laugh.
-- **Top-right gear**: a small always-visible gear button opens Settings; it brightens on hover.
+- **Adult left-click**: advances one action: stand → horse stance → walk → run → look around → think → clap → crouch → stand, and plays a random 安迪 / 嘎嘎提拉瞎 / 干巴得 / 哦啦 / 噶韭菜 line.
+- **Adult right-click**: plays the laugh and the full laugh animation; it no longer opens the menu. **The laugh is right-click only** — the left-click stack never contains `happy`/`click` and never summons the laugh-like eating pose either.
+- **Top-right gear**: the gear only appears while the mouse is hovering over the pet window; it opens Settings and hides again when the pointer leaves.
 - **Adult middle-click**: press the scroll wheel to open Settings (trackpads without a middle button can use the gear or tray).
 - **Adult Ctrl/⌘ + right-click**: opens the native menu (Settings / Hide / Quit).
 - **Tray**: still shows/hides the pet, opens Settings, and quits.
 - **Baby**: keeps a separate stack with no laugh clip; left-click plays one meme line and the happy reaction, right-click still opens the native menu.
 - With sound off, the same line is shown as a subtitle instead.
-- Every other adult action is click-only and never plays automatically. In Original/Quantum ASCII, clap reuses the horse-stance frames and eat reuses the idle frames — never the laugh frames.
+- Every other adult action is click-only and never plays automatically. In Original/Quantum ASCII, clap reuses the horse-stance frames — never the laugh frames. The eating frames stay in the asset library but are not wired to the left-click stack because the open-mouth head-back pose reads as a laugh.
 
 Line research and the older 1.8 s MIT laugh:
 

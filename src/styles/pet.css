@@ -254,8 +254,8 @@
   border-radius: 4px;
   background: rgba(3, 17, 11, 0.55);
   color: rgba(255, 255, 255, 0.72);
-  opacity: 0.45;
-  pointer-events: auto;
+  opacity: 0;
+  pointer-events: none;
   cursor: pointer;
   font: inherit;
   transition:
@@ -267,6 +267,7 @@
 .pet-stage:hover .pet-settings-button,
 .pet-settings-button:focus-visible {
   opacity: 1;
+  pointer-events: auto;
 }
 
 .pet-settings-button:hover {
@@ -289,13 +290,6 @@
 .pet-stage--palette-cyber .pet-settings-button:hover {
   background: rgba(1, 10, 18, 0.85);
   color: #d8ffff;
-}
-
-@media (hover: none) {
-  .pet-settings-button {
-    opacity: 0.7;
-    pointer-events: auto;
-  }
 }
 
 .pet-hud {
