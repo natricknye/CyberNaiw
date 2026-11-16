@@ -4,6 +4,12 @@ export const PET_ANIMATION_STATES = [
   "happy",
   "click",
   "wave",
+  "run",
+  "look",
+  "think",
+  "clap",
+  "eat",
+  "crouch",
 ] as const;
 
 export type PetAnimationState = (typeof PET_ANIMATION_STATES)[number];
@@ -69,5 +75,11 @@ export const PET_STATE_LABELS: Record<PetAnimationState, string> = {
   walk: "WALK",
   happy: "HAPPY",
   click: "CLICK",
-  wave: "WAVE",
+  wave: "STANCE",
+  run: "RUN",
+  look: "LOOK",
+  think: "THINK",
+  clap: "CLAP",
+  eat: "EAT",
+  crouch: "CROUCH",
 };

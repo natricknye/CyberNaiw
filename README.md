@@ -9,9 +9,10 @@
 赛博奶蛙是一只住在你桌面上的奶蛙。它有三种形态：**原色赛博**和**量子赛博**用彩色 ASCII 像素网格（112×70 / 128×80），**奶家经典**直接使用原画。成年是长腿瘦高版，幼体是短圆大头、短手脚；暖黄色身体、浅奶油色大肚皮、浅绿眼环和居中黑瞳，还有一条极短的水平嘴线——点一下就会笑。所有东西都在本地运行，不联网、不注册、不收集数据。
 
 - 透明、无边框、始终置顶的桌宠窗口
-- 左键拖动、点击互动、右键原生菜单
-- 点击播放对应奶蛙语音，设置里可以静音
-- Idle / Walk / Happy / Click / Wave 五种状态
+- 左键拖动；成年左键切换动作，右键大笑；中键打开设置
+- Ctrl/⌘ + 右键打开原生菜单（设置 / 隐藏 / 退出）
+- 切换动作或大笑时播放对应奶蛙语音，设置里可以静音
+- 成年动作：站立、扎马步、走、跑、张望、思考、鼓掌、进食、蹲伏
 - 三种形态：原色赛博 / 量子赛博（ASCII）、奶家经典（原画）
 - 成年奶蛙 / 幼体奶蛙，原色赛博暖黄 / 量子赛博蓝黑两套配色
 - 应用界面中文；英文说明保留在 `README.en.md`
@@ -51,7 +52,7 @@
 | --- | --- |
 | 成长阶段 | 成年（修长梨形）/ 幼体（短圆大头、短手脚） |
 | 形态 | 原色赛博（暖黄 + 奶油 + 橄榄褐，112×70）/ 量子赛博（蓝黑 + 青色终端，128×80）/ 奶家经典（原画，透明背景） |
-| 动作 | 站立、迈步、开心、点击互动（成年大笑 / 幼体叉腰）、挥手 |
+| 动作 | 成年：站立、扎马步、走、跑、张望、思考、鼓掌、进食、蹲伏；幼体：待机、走、开心、抬手，动作栈与成年分开 |
 
 幼体单独预览：
 
@@ -136,15 +137,15 @@ pnpm tauri build --bundles dmg
 
 ## 角色素材
 
-默认 ASCII 角色 `cyber-naiwa` 的原色赛博成年帧在 `src/assets/pets/cyber-naiwa/naiwa-frames.json`，幼体帧在 `naiwa-baby-frames.json`（112×70）；量子赛博成年/幼体帧在 `naiwa-cyber-frames.json`、`naiwa-cyber-baby-frames.json`（128×80）。每套 5 个状态；成年 happy/click 各 25 帧，其余状态每态 2 帧；幼体每态 2 帧。字符 tone、帧间隔和渲染逻辑在 `frames.ts`。成年大笑的 25 帧来自 [liaosongjie/Codex-Voice-Input](https://github.com/liaosongjie/Codex-Voice-Input) 的 MIT 动画帧（固定取景后转成 ASCII）；其余帧由官方设计资料库中的成年 / 幼体 / 大笑 / 挥手参考图逐像素映射生成，ASCII 帧的参考图片本身不入库。应用图标取自幼体原色赛博 ASCII 待机帧，不再单独绘制。
+默认 ASCII 角色 `cyber-naiwa` 的原色赛博成年帧在 `src/assets/pets/cyber-naiwa/naiwa-frames.json`，幼体帧在 `naiwa-baby-frames.json`（112×70）；量子赛博成年/幼体帧在 `naiwa-cyber-frames.json`、`naiwa-cyber-baby-frames.json`（128×80）。现有帧覆盖 idle / walk / happy / click / wave；成年 happy/click 各 25 帧，其余状态每态 2 帧；幼体每态 2 帧。新增的 run / look / think / clap / eat / crouch 在 `src/assets/pets/index.ts` 复用最接近的现有 ASCII 姿态，但保留独立 HUD 标签、帧间隔和动作时长。字符 tone、帧间隔和渲染逻辑在 `frames.ts`。成年大笑的 25 帧来自 [liaosongjie/Codex-Voice-Input](https://github.com/liaosongjie/Codex-Voice-Input) 的 MIT 动画帧（固定取景后转成 ASCII）；其余帧由官方设计资料库中的成年 / 幼体 / 大笑 / 挥手参考图逐像素映射生成，ASCII 帧的参考图片本身不入库。应用图标取自幼体原色赛博 ASCII 待机帧，不再单独绘制。
 
-奶家经典皮肤 `naiwa-classic` 在 `src/assets/pets/classic/`：成年待机/挥手和幼体三态是官方设计参考图的透明抠图；成年 happy/click 使用 `classic/laugh-hires/000–024.webp`，即 Codex Voice Input 的 25 帧 MIT 原画裁掉透明边距后，再用 6× Lanczos 放大到 648×888，不做额外锐化，90ms/帧；原始 180×180 帧保留在 `classic/laugh/`，紧裁中间帧在 `classic/laugh-cropped/`。图片按窗口高度缩放，六个状态的身体高度一致、脚完整落在窗口内。抠图/放大脚本是 `_qa/make-classic-cutouts.ps1`、`_qa/crop-classic-laugh.ps1` 和 `_qa/upscale-classic-laugh.py`（`_qa/` 不入库）。这部分是粉丝二创非商业使用，来源与授权说明见 `_qa/reference/official/laugh/SOURCES.md`。
+奶家经典皮肤 `naiwa-classic` 在 `src/assets/pets/classic/`：成年待机/挥手和幼体三态是官方设计参考图的透明抠图；成年 happy/click 使用 `classic/laugh-hires/000–024.webp`，即 Codex Voice Input 的 25 帧 MIT 原画裁掉透明边距后，再用 6× Lanczos 放大到 648×888，不做额外锐化，90ms/帧；原始 180×180 帧保留在 `classic/laugh/`，紧裁中间帧在 `classic/laugh-cropped/`。走、跑、张望、思考、鼓掌、进食、蹲伏使用 `classic/actions/<action>/` 的逐帧原画，来自 [Nailong-Studio/NaiWa-Wallpaper](https://github.com/Nailong-Studio/NaiWa-Wallpaper) 的 MIT 素材，统一补齐到 180×210 画布、底部留 6px，所以脚和膝盖不会被窗口裁掉。图片按窗口高度缩放，成年待机和动作的身体高度约 280px。抠图/放大/补帧脚本是 `_qa/make-classic-cutouts.ps1`、`_qa/crop-classic-laugh.ps1`、`_qa/upscale-classic-laugh.py` 和 `_qa/build-classic-actions.py`（`_qa/` 不入库）。这部分是粉丝二创非商业使用，来源与授权说明见 `_qa/reference/official/laugh/SOURCES.md`。
 
 想换成 PNG/WEBP/GIF 皮肤时，按 `src/assets/pets/README.md` 的说明注册 `ImagePetSkin` 即可，渲染器同时支持 ASCII 和图片序列。请不要提交没有 redistribution 权限的素材。
 
 ## 设计参考
 
-角色设定参考奶蛙官方设计资料库与 [奶蛙百科](https://neta.art/app/milk-frog-wiki)：成年是长腿瘦高版，幼体是短圆大头、短手脚；浅奶油色大肚皮、浅绿眼环和居中黑瞳、极短水平嘴线。点击互动是核心，挥手是额外动作。另参考了 [Nailong-Studio/NaiWa-Wallpaper](https://github.com/Nailong-Studio/NaiWa-Wallpaper) 的公开素材目录，只取角色动作参考，不使用与艺术作品结合的整图。
+角色设定参考奶蛙官方设计资料库与 [奶蛙百科](https://neta.art/app/milk-frog-wiki)：成年是长腿瘦高版，幼体是短圆大头、短手脚；浅奶油色大肚皮、浅绿眼环和居中黑瞳、极短水平嘴线。成年动作库来自 [Nailong-Studio/NaiWa-Wallpaper](https://github.com/Nailong-Studio/NaiWa-Wallpaper) 的 `pet/` 逐帧（MIT）：走、跑、张望、思考、鼓掌、进食、蹲伏；幼体只使用官方幼体三视图里的待机 / V 字手 / 叉腰，不与成年共用动作。点击互动是核心：成年左键走动作栈、右键大笑；初始站立，空闲时只偶尔自动扎马步。
 
 ## 台词与声音来源
 
@@ -161,12 +162,17 @@ pnpm tauri build --bundles dmg
 
 六段语音取自 [VIPmrgj/Dragon-frog](https://github.com/VIPmrgj/Dragon-frog) 的 `音效/` 目录。该仓库没有声明 LICENSE；本项目按粉丝二创、非商业方式使用，并在 `src/assets/audio/README.md` 标注原始文件名与来源。奶蛙形象和语音的权利归各自原作者/二创作者，若权利人要求会立即移除。
 
-点击规则：
+交互规则：
 
-- **成年单击**：只播「哈哈哈哈哈」大笑，不播安迪等台词。
-- **成年双击**：取消待播的大笑，随机播一条安迪 / 嘎嘎提拉瞎 / 干巴得 / 哦啦 / 噶韭菜。
-- **幼体**：没有大笑语音；单击或双击都只播安迪类台词，双击只触发一次。
+- **成年初始**：站立待机；空闲 9–16 秒会偶尔自动切到扎马步，然后回到站立。
+- **成年左键**：按动作栈前进一档：站立 → 扎马步 → 走 → 跑 → 张望 → 思考 → 鼓掌 → 进食 → 蹲伏 → 站立，并随机播一条安迪 / 嘎嘎提拉瞎 / 干巴得 / 哦啦 / 噶韭菜。
+- **成年右键**：播「哈哈哈哈哈」并完整播放大笑，不再弹出菜单。
+- **成年中键**：打开设置窗口。
+- **成年 Ctrl/⌘ + 右键**：打开原生菜单（设置 / 隐藏 / 退出）。
+- **托盘**：仍然可以显示/隐藏桌宠、打开设置、退出。
+- **幼体**：没有大笑语音，动作栈与成年分开；左键只播安迪类台词并开心，右键仍是原生菜单。
 - 静音时不播音频，改成显示同一句字幕。
+- 其他成年动作只能通过左键点击到达，不会随机自动播放。
 
 台词考据与旧版 1.8 秒 MIT 笑声来源：
 
@@ -182,15 +188,16 @@ pnpm tauri build --bundles dmg
 - **Windows**：本机已实际启动和构建验证。透明窗口、无边框、拖动、托盘、设置持久化均按 Windows 路径实现。
 - **macOS**：透明窗口依赖 `macOSPrivateApi`，这会限制 Mac App Store 上架；本机无法验证 macOS 运行时，CI 只负责构建 DMG。代码签名与公证尚未配置，正式分发前需要 Apple Developer 证书和 `notarytool`。
 - 只有点到角色的非透明像素才会触发点击效果；透明边缘只用于拖动窗口，不会触发语音/字幕。窗口整体仍会接收鼠标，暂时不能点击穿透到下层，这是 v1 的已知限制。
-- 关闭设置窗口只是隐藏，退出应用请使用托盘或右键菜单。
-- 点击桌宠会同时触发反馈并开始原生拖动；拖动中会显露出“被抓住”的点击表情。
-- 动画关闭后保留点击表情反馈，但不自动走动，也不逐帧播放。
+- 关闭设置窗口只是隐藏，退出应用请使用托盘或 Ctrl/⌘ + 右键菜单。
+- 左键点击和拖动共用指针：移动超过 5px 才开始拖窗，纯点击不会拖走桌宠。
+- 动画关闭后仍可点击切换动作和大笑，但动作帧保持静态，也不自动切扎马步。
+- 成年三种美术形式共用同一套动作栈；奶家经典使用逐帧原画，原色/量子赛博的新动作暂时复用最接近的现有 ASCII 姿态（跑=快走、蹲伏=扎马步、张望/思考=待机、鼓掌/进食=笑）。
 
 ## 开源与免责声明
 
 MIT License，见 [LICENSE](LICENSE)。
 
-CyberNaiwa 是粉丝向、非商业的开源项目，灵感来自中文互联网迷因「奶蛙」。奶龙是可爱的原版、有版权；奶蛙是猎奇向的 AI/网友二创，本项目只做奶蛙，与奶龙官方及其权利方无关联。仓库内的 ASCII 角色帧由本项目基于公开参考图转换和绘制；奶家经典的原画抠图来自公开的设计参考图，成年大笑 25 帧来自 Codex Voice Input 的 MIT 动画帧；这些图片素材的权利归各自原作者/二创作者，按粉丝二创非商业使用，若权利人要求会移除。六段点击语音同样来自上述公开素材仓库。
+CyberNaiwa 是粉丝向、非商业的开源项目，灵感来自中文互联网迷因「奶蛙」。奶龙是可爱的原版、有版权；奶蛙是猎奇向的 AI/网友二创，本项目只做奶蛙，与奶龙官方及其权利方无关联。仓库内的 ASCII 角色帧由本项目基于公开参考图转换和绘制；奶家经典的原画抠图来自公开的设计参考图，成年大笑 25 帧来自 Codex Voice Input 的 MIT 动画帧，成年动作逐帧来自 Nailong-Studio/NaiWa-Wallpaper（MIT）；这些图片素材的权利归各自原作者/二创作者，按粉丝二创非商业使用，若权利人要求会移除。六段点击语音同样来自上述公开素材仓库。
 
 ## 构建状态
 

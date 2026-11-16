@@ -77,7 +77,7 @@ export default function PetAnimation({
       ? (palette === "cyber" ? skin.cyberBabyFrames : skin.babyFrames) ??
         baseFrames
       : baseFrames;
-  const frames = frameSet[state];
+  const frames = frameSet[state] ?? frameSet.idle ?? [];
   const [frameIndex, setFrameIndex] = useState(0);
 
   const previousState = useRef(state);
@@ -110,7 +110,9 @@ export default function PetAnimation({
         ? age === "baby"
           ? BABY_FRAME_INTERVAL_MS[state]
           : FRAME_INTERVAL_MS[state]
-        : (skin.frameIntervalMs ?? 320);
+        : (skin.frameIntervalMsByState?.[state] ??
+          skin.frameIntervalMs ??
+          320);
 
     const timer = window.setInterval(() => {
       setFrameIndex((current) => (current + 1) % frames.length);

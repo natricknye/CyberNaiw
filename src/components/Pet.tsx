@@ -26,8 +26,8 @@ import PetAnimation from "./PetAnimation";
 import SpeechBubble from "./SpeechBubble";
 import "../styles/pet.css";
 
-const DOUBLE_CLICK_WINDOW_MS = 300;
-const LAUGH_DELAY_MS = 300;
+const BABY_DOUBLE_CLICK_MS = 300;
+const ADULT_ACTION_DEBOUNCE_MS = 260;
 
 export default function Pet() {
   const [settings, setSettings] = useState<PetSettings>(DEFAULT_SETTINGS);
@@ -35,32 +35,23 @@ export default function Pet() {
   const [loadError, setLoadError] = useState<string | null>(null);
 
   const strings = UI_STRINGS[settings.language];
-  const { state, reaction, interact } = usePetState(
+  const { state, reaction, interact, advanceAction, speak } = usePetState(
     ready && settings.animationsEnabled,
     settings.language,
     settings.age,
   );
 
-  const laughTimer = useRef<number | null>(null);
-  const lastClickAt = useRef(0);
-
-  const clearLaughTimer = useCallback(() => {
-    if (laughTimer.current !== null) {
-      window.clearTimeout(laughTimer.current);
-      laughTimer.current = null;
-    }
-  }, []);
+  const lastActionAt = useRef(0);
+  const lastBabyClickAt = useRef(0);
 
   const handleInteract = useCallback(() => {
-    const now = Date.now();
-    const isDouble = now - lastClickAt.current < DOUBLE_CLICK_WINDOW_MS;
-    lastClickAt.current = now;
-
-    // The baby has no laugh clip: every click is one of the meme lines.
+    // Baby keeps its own action stack: click = one meme line, no laugh.
     if (settings.age === "baby") {
-      if (isDouble) {
+      const now = Date.now();
+      if (now - lastBabyClickAt.current < BABY_DOUBLE_CLICK_MS) {
         return;
       }
+      lastBabyClickAt.current = now;
 
       const nextReaction = interact("meme");
       if (settings.soundEnabled) {
@@ -69,38 +60,45 @@ export default function Pet() {
       return;
     }
 
-    // Adult double-click: cancel the pending laugh and play a meme line.
-    if (isDouble) {
-      clearLaughTimer();
-      const nextReaction = interact("meme");
-      if (settings.soundEnabled) {
-        playNaiwaVoice(nextReaction.voice, "adult");
-      }
+    // Adult: left-click advances the action stack and plays a meme line.
+    const now = Date.now();
+    if (now - lastActionAt.current < ADULT_ACTION_DEBOUNCE_MS) {
+      return;
+    }
+    lastActionAt.current = now;
+
+    advanceAction();
+    const nextReaction = speak("meme");
+    if (settings.soundEnabled) {
+      playNaiwaVoice(nextReaction.voice, "adult");
+    }
+  }, [
+    advanceAction,
+    interact,
+    settings.age,
+    settings.soundEnabled,
+    speak,
+  ]);
+
+  const handleLaugh = useCallback(() => {
+    if (settings.age !== "adult") {
       return;
     }
 
-    // Adult single-click: laugh only. Delay it briefly so a second click can
-    // cancel it and switch to the meme line instead.
-    interact("laugh");
-    if (!settings.soundEnabled) {
-      return;
+    const nextReaction = interact("laugh");
+    if (settings.soundEnabled) {
+      playNaiwaVoice(nextReaction.voice, "adult");
     }
-
-    clearLaughTimer();
-    laughTimer.current = window.setTimeout(() => {
-      laughTimer.current = null;
-      playNaiwaVoice("laugh", "adult");
-    }, LAUGH_DELAY_MS);
-  }, [clearLaughTimer, interact, settings.age, settings.soundEnabled]);
+  }, [interact, settings.age, settings.soundEnabled]);
 
   useEffect(() => {
-    lastClickAt.current = 0;
-    clearLaughTimer();
-    return clearLaughTimer;
-  }, [clearLaughTimer, settings.age, settings.soundEnabled]);
+    lastActionAt.current = 0;
+    lastBabyClickAt.current = 0;
+  }, [settings.age]);
 
   const interaction = usePetInteraction({
     onInteract: handleInteract,
+    onSecondary: settings.age === "adult" ? handleLaugh : undefined,
     onOpenSettings: () => {
       void openSettingsWindow().catch((settingsError: unknown) => {
         console.error("Unable to open the settings window", settingsError);

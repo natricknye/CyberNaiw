@@ -174,6 +174,17 @@
 - 逐帧检查：25 帧全部为 648×888；按 alpha > 64 计算，最外可见像素距边缘至少 23px，腿、手臂和脚都没有被裁切。
 - 验证：真实点击后 `img.naturalWidth×naturalHeight = 648×888`，`src` 为 `laugh-hires/006.webp`，显示尺寸 216×296；身体像素完整、脚底距底边 32px；`pnpm build` 通过。
 
+## 2026-11-16 — Phase 22：成年动作栈、右键大笑与设置入口
+
+- 成年左键改为走动作栈：`站立 → 扎马步 → 走 → 跑 → 张望 → 思考 → 鼓掌 → 进食 → 蹲伏 → 站立`；每档有独立时长，动作结束回站立但索引保留，连续点击可走完整套。左键同时随机播安迪类台词，260ms 防抖。
+- 成年右键改为完整大笑：`click 380ms → happy 1870ms → idle`，不再打开原生菜单。中键点桌宠直接打开设置；Ctrl/⌘ + 右键保留原生菜单；托盘入口不变。
+- 幼体保持独立动作栈：左键 `interact("meme")` → click/happy 1100ms，无大笑语音，右键仍是原生菜单。
+- 空闲行为：成年 idle 9–16 秒只自动切 `wave`（扎马步）2.4 秒；walk/run/look/think/clap/eat/crouch 不自动播放。幼体仍随机 walk/wave。
+- 奶家经典新增 47 张 Nailong-Studio MIT 动作帧，统一补齐到 180×210、底部对齐 y=204（6px 底边距）；逐帧 alpha 检查最小边距 6px。实测奔跑可见像素 x=70–273 / y=66–345，蹲伏 x=90–252 / y=67–346（343×379 窗口），脚和膝盖完整。
+- 原色/量子 ASCII 共用同一动作栈，但新动作暂时映射到最接近的现有姿态：run=walk、look/think=idle、clap/eat=happy、crouch=wave；HUD/语音/时长仍是真实动作。实测 ASCII 状态序列 `idle → run → look → think → clap → eat → crouch → idle → wave → walk → run`。
+- 实测经典动作序列 `idle → wave → walk → run → look → think → clap → eat → crouch → idle → wave`；右键采样 `idle → happy(005) → happy(013) → idle`；中键后设置窗 `visibility: visible`；幼体采样 `idle → click → happy → idle`。
+- 截图：`_qa/art/classic-run.png`、`_qa/art/classic-crouch.png`、`_qa/art/classic-actions-padded.png`。`pnpm build` 通过。
+
 ## 待人工确认
 
 - 托盘菜单的物理点击仍需在桌面通知区实际点一遍；窗口 show/hide/设置/退出逻辑已实现。

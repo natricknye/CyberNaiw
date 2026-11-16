@@ -12,6 +12,11 @@ characters to colour tones and declares frame timing. The grids use printable
 ASCII only and were pixel-mapped from official reference images; those ASCII
 reference images are not shipped in this repository.
 
+The JSON still covers the five original poses. `index.ts` aliases the newer
+adult states to the closest existing pose: run→walk, look/think→idle,
+clap/eat→happy, crouch→wave. The HUD label, frame interval and action duration
+still come from the real state, and the baby never uses these aliases.
+
 ## Classic skin
 
 `naiwa-classic` is an `ImagePetSkin` using the cut-out original artwork in
@@ -21,8 +26,14 @@ frame. The 648×888 transparent WebP frames are 6× Lanczos upscales of the
 108×148 tight crop (`classic/laugh-cropped/`) with no extra sharpening;
 `classic/laugh/` keeps the original 180×180 MIT frames. The crop removes the
 transparent margins so the laugh body matches the idle height, and the upscale
-keeps the edges clean at the window sizes the app supports. Image skins may declare a separate
-`babyFrames` map; otherwise the adult map is used for both ages.
+keeps the edges clean at the window sizes the app supports.
+
+Adult walk/run/look/think/clap/eat/crouch live in `classic/actions/<state>/`.
+They come from the Nailong-Studio `pet/` MIT frame sequences, padded to a
+180×210 canvas and bottom-aligned to y=204 (6 px bottom margin), so feet and
+knees stay visible. Use `frameIntervalMsByState` for per-action cadence; the
+global `frameIntervalMs` remains the laugh interval. Image skins may declare a
+separate `babyFrames` map; otherwise the adult map is used for both ages.
 
 ## Adding an image skin
 

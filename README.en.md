@@ -9,9 +9,10 @@
 Cyber Naiwa (赛博奶蛙) is a cross-platform desktop pet built around 奶蛙 (Naiwa), the gleefully unhinged yellow frog from Chinese internet memes. It has three forms: **Original Cyber** and **Quantum Cyber** use a pixel-mapped ASCII sprite (112×70 and 128×80), while **Naiwa Classic** uses the original artwork directly. The adult is tall and long-limbed; the baby is short, round, big-headed, with tiny limbs. Click it to trigger the laugh. Everything runs locally — no account, no cloud, no telemetry.
 
 - A transparent, frameless, always-on-top pet window
-- Left-drag to move, click to interact, right-click for a native menu
-- Click to play the matching Naiwa voice line, with a mute switch in Settings
-- Five states: Idle / Walk / Happy / Click / Wave
+- Left-drag to move; adult left-click cycles actions, right-click laughs
+- Middle-click opens Settings; Ctrl/⌘ + right-click opens the native menu
+- Actions and laughs play the matching Naiwa voice line, with a mute switch in Settings
+- Adult actions: stand, horse stance, walk, run, look around, think, clap, eat, crouch
 - Three forms: Original Cyber / Quantum Cyber (ASCII) and Naiwa Classic (original artwork)
 - Adult and baby Naiwa, with warm Original or blue-black Quantum colourways
 - Chinese app UI; English documentation in `README.en.md`
@@ -51,7 +52,7 @@ Naiwa Classic uses the original artwork with no ASCII conversion:
 | --- | --- |
 | Growth stage | Adult (tall pear) / Baby (short, round, big-headed, tiny limbs) |
 | Form | Original Cyber (warm yellow + cream + olive, 112×70) / Quantum Cyber (blue-black + cyan terminal, 128×80) / Naiwa Classic (original artwork, transparent background) |
-| Actions | Idle, walk, happy, click-to-interact (adult laugh / baby hands-on-hips), wave |
+| Actions | Adult: stand, horse stance, walk, run, look around, think, clap, eat, crouch; baby: idle, walk, happy, raise-hand — the two stacks are separate |
 
 Baby preview:
 
@@ -136,7 +137,7 @@ Two keys live in that file: `settings` (always-on-top, scale, animation, sound, 
 
 ## Character art
 
-The default `cyber-naiwa` skin stores Original Cyber adult/baby frames in `naiwa-frames.json` and `naiwa-baby-frames.json` (112×70), and Quantum Cyber adult/baby frames in `naiwa-cyber-frames.json` and `naiwa-cyber-baby-frames.json` (128×80). Each set has five states; adult happy/click use 25 frames each, other states use two, and the baby uses two per state. `frames.ts` maps characters to colour tones and declares frame timing. The 25 adult laugh frames come from [liaosongjie/Codex-Voice-Input](https://github.com/liaosongjie/Codex-Voice-Input)'s MIT animation frames (fixed-crop conversion to ASCII); the other grids were pixel-mapped from the official design database's adult, juvenile, laugh, and wave references. No ASCII reference image files themselves are shipped in the repo. The app icon is taken from the baby's Original Cyber ASCII idle frame instead of being drawn separately.
+The default `cyber-naiwa` skin stores Original Cyber adult/baby frames in `naiwa-frames.json` and `naiwa-baby-frames.json` (112×70), and Quantum Cyber adult/baby frames in `naiwa-cyber-frames.json` and `naiwa-cyber-baby-frames.json` (128×80). Each set covers five base poses; adult happy/click use 25 frames each, other base states use two, and the baby uses two per state. The extra adult actions (run/look/think/clap/eat/crouch) are registered in `index.ts` as aliases of the closest base pose, with their own HUD labels, timing and durations. `frames.ts` maps characters to colour tones and declares frame timing. The 25 adult laugh frames come from [liaosongjie/Codex-Voice-Input](https://github.com/liaosongjie/Codex-Voice-Input)'s MIT animation frames (fixed-crop conversion to ASCII); the other grids were pixel-mapped from the official design database's adult, juvenile, laugh, and wave references. No ASCII reference image files themselves are shipped in the repo. The app icon is taken from the baby's Original Cyber ASCII idle frame instead of being drawn separately.
 
 The `naiwa-classic` skin lives in `src/assets/pets/classic/`: adult idle/wave and all three baby states are transparent cut-outs of the official design reference sheets; adult happy/click uses `classic/laugh-hires/000–024.webp`, the 25 MIT-licensed Codex Voice Input frames with their transparent margins cropped and then 6× Lanczos-upscaled to 648×888 without extra sharpening, at 90 ms each. The original 180×180 frames stay in `classic/laugh/`; the tight 108×148 crop stays in `classic/laugh-cropped/`. Images scale to the window height so all six states keep the same body height and show the feet fully. The cut-out/upscale scripts are `_qa/make-classic-cutouts.ps1`, `_qa/crop-classic-laugh.ps1`, and `_qa/upscale-classic-laugh.py` (`_qa/` is not committed). This is fan-made, non-commercial use; source and licence notes are in `_qa/reference/official/laugh/SOURCES.md`.
 
@@ -147,13 +148,14 @@ Want to try a PNG/WEBP/GIF skin? `src/assets/pets/README.md` shows how to regist
 - **Windows**: built and exercised on this machine. Transparency, the frameless window, native drag, tray, and settings persistence all work.
 - **macOS**: transparent windows rely on `macOSPrivateApi`, which rules out the Mac App Store. The app hasn't been run on a Mac here; CI only proves it builds. Code signing and notarization are not configured yet.
 - Only non-transparent character pixels trigger a click effect; transparent margins can still drag the window but never play a voice line or show a subtitle. The window itself still catches the mouse and does not click through to the desktop yet, which is a known v1 limitation.
-- Closing the settings window only hides it. Use the tray menu or Naiwa's right-click menu to quit.
-- A click both gives feedback and starts the native drag, so a drag shows the "gotcha" face.
-- With animation off, Naiwa stays still; clicks still change the expression, but there's no automatic walking.
+- Closing the settings window only hides it. Use the tray menu or Ctrl/⌘ + right-click to quit.
+- Click and drag share the pointer: the native drag starts only after 5px of movement, so a plain click never drags the pet away.
+- With animation off, clicks still switch actions and trigger the laugh, but frames stay static and the horse stance no longer appears automatically.
+- All three adult art forms share the same action stack. Naiwa Classic uses real frame sequences; Original/Quantum ASCII reuse the closest existing poses for the new actions (run = fast walk, crouch = horse stance, look/think = idle, clap/eat = laugh).
 
 ## Design notes
 
-The character follows the official Naiwa design database and the [Naiwa wiki](https://neta.art/app/milk-frog-wiki): the adult is tall and long-limbed, the baby is short, round, big-headed, with tiny limbs; both have a pale cream belly, pale green eye rings with centred black pupils, and a tiny horizontal mouth. Click-to-interact is the core interaction, with waving as an extra action. The [Nailong-Studio/NaiWa-Wallpaper](https://github.com/Nailong-Studio/NaiWa-Wallpaper) public asset index was also used for character poses and audio; artwork-integrated images were deliberately ignored.
+The character follows the official Naiwa design database and the [Naiwa wiki](https://neta.art/app/milk-frog-wiki): the adult is tall and long-limbed, the baby is short, round, big-headed, with tiny limbs; both have a pale cream belly, pale green eye rings with centred black pupils, and a tiny horizontal mouth. The adult action library comes from the `pet/` frame sequences in [Nailong-Studio/NaiWa-Wallpaper](https://github.com/Nailong-Studio/NaiWa-Wallpaper) (MIT): walk, run, look around, think, clap, eat, and crouch. The baby uses only the official juvenile reference poses and never borrows adult actions. Click-to-interact is the core: adult left-click advances the action stack, right-click laughs; it starts standing and only occasionally shifts into the horse stance on its own.
 
 ## Voice and audio sources
 
@@ -170,12 +172,17 @@ Each click line has a matching audio clip; all come from Chinese Naiwa memes, no
 
 The six clips come from the `音效/` directory of [VIPmrgj/Dragon-frog](https://github.com/VIPmrgj/Dragon-frog). That repository declares no LICENSE. This project uses them as a non-commercial fan work and records the original file names and source in `src/assets/audio/README.md`; the rights remain with their creators, and the clips will be removed on request.
 
-Click behaviour:
+Interaction:
 
-- **Adult single-click**: plays only the laugh clip, never the meme lines.
-- **Adult double-click**: cancels the pending laugh and plays one of 安迪 / 嘎嘎提拉瞎 / 干巴得 / 哦啦 / 噶韭菜.
-- **Baby**: has no laugh clip; single or double click plays one meme line only.
+- **Adult start**: stands idle. Every 9–16 seconds it may briefly shift into the horse stance, then stand again.
+- **Adult left-click**: advances one action: stand → horse stance → walk → run → look around → think → clap → eat → crouch → stand, and plays a random 安迪 / 嘎嘎提拉瞎 / 干巴得 / 哦啦 / 噶韭菜 line.
+- **Adult right-click**: plays the laugh and the full laugh animation; it no longer opens the menu.
+- **Adult middle-click**: opens Settings.
+- **Adult Ctrl/⌘ + right-click**: opens the native menu (Settings / Hide / Quit).
+- **Tray**: still shows/hides the pet, opens Settings, and quits.
+- **Baby**: keeps a separate stack with no laugh clip; left-click plays one meme line and the happy reaction, right-click still opens the native menu.
 - With sound off, the same line is shown as a subtitle instead.
+- Every other adult action is click-only and never plays automatically.
 
 Line research and the older 1.8 s MIT laugh:
 
@@ -190,7 +197,7 @@ Line research and the older 1.8 s MIT laugh:
 
 MIT — see [LICENSE](LICENSE).
 
-CyberNaiwa is a fan-made, non-commercial open-source project inspired by the Chinese internet meme 奶蛙 (Naiwa). 奶龙 (Nailong) is the cute, copyrighted original; 奶蛙 is the uncanny AI/community derivative, and this project uses only 奶蛙. The ASCII frames in this repo were converted and drawn by this project from public references. Naiwa Classic ships cut-outs made from public design references, and the 25 adult laugh frames come from Codex Voice Input's MIT animation. Those image assets remain the property of their original creators and are used for this non-commercial fan project; they will be removed on request. The six click voice clips come from the public asset repository above and remain the property of their original creators.
+CyberNaiwa is a fan-made, non-commercial open-source project inspired by the Chinese internet meme 奶蛙 (Naiwa). 奶龙 (Nailong) is the cute, copyrighted original; 奶蛙 is the uncanny AI/community derivative, and this project uses only 奶蛙. The ASCII frames in this repo were converted and drawn by this project from public references. Naiwa Classic ships cut-outs made from public design references, the 25 adult laugh frames come from Codex Voice Input's MIT animation, and the adult action frames come from Nailong-Studio/NaiWa-Wallpaper (MIT). Those image assets remain the property of their original creators and are used for this non-commercial fan project; they will be removed on request. The six click voice clips come from the public asset repository above and remain the property of their original creators.
 
 ## Build status
 

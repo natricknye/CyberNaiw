@@ -9,24 +9,20 @@ import type { PetAnimationState } from "../../../types/pet";
  * 128 × 80 grid so its fine terminal lines stay sharp. Both sets share the
  * same five states; adult happy/click use 25 frames, the rest use two.
  */
-export const CYBER_NAIWA_FRAMES = rawFrames as Record<
-  PetAnimationState,
-  readonly string[]
+export const CYBER_NAIWA_FRAMES = rawFrames as Partial<
+  Record<PetAnimationState, readonly string[]>
 >;
 
-export const CYBER_NAIWA_BABY_FRAMES = rawBabyFrames as Record<
-  PetAnimationState,
-  readonly string[]
+export const CYBER_NAIWA_BABY_FRAMES = rawBabyFrames as Partial<
+  Record<PetAnimationState, readonly string[]>
 >;
 
-export const CYBER_NAIWA_CYBER_FRAMES = rawCyberFrames as Record<
-  PetAnimationState,
-  readonly string[]
+export const CYBER_NAIWA_CYBER_FRAMES = rawCyberFrames as Partial<
+  Record<PetAnimationState, readonly string[]>
 >;
 
-export const CYBER_NAIWA_CYBER_BABY_FRAMES = rawCyberBabyFrames as Record<
-  PetAnimationState,
-  readonly string[]
+export const CYBER_NAIWA_CYBER_BABY_FRAMES = rawCyberBabyFrames as Partial<
+  Record<PetAnimationState, readonly string[]>
 >;
 
 export type AsciiTone =
@@ -78,12 +74,20 @@ export function toneForChar(char: string): AsciiTone {
 }
 
 // Adult laugh: 25 frames at 90 ms = the source GIF's 2.25 s loop.
+// New adult actions use the closest existing ASCII pose but keep their own
+// cadence, so run reads faster than walk and crouch/stance is slower.
 export const FRAME_INTERVAL_MS: Record<PetAnimationState, number> = {
   idle: 1200,
   walk: 260,
   happy: 90,
   click: 90,
   wave: 500,
+  run: 130,
+  look: 300,
+  think: 350,
+  clap: 160,
+  eat: 260,
+  crouch: 500,
 };
 
 // The baby has only two frames per state; keep the slower original cadence.
@@ -93,4 +97,10 @@ export const BABY_FRAME_INTERVAL_MS: Record<PetAnimationState, number> = {
   happy: 320,
   click: 180,
   wave: 500,
+  run: 260,
+  look: 500,
+  think: 500,
+  clap: 320,
+  eat: 320,
+  crouch: 500,
 };

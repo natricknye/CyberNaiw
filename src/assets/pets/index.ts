@@ -11,6 +11,8 @@ import babyIdle from "./classic/baby-idle.png";
 import babyHappy from "./classic/baby-happy.png";
 import babyWave from "./classic/baby-wave.png";
 
+type FrameMap = Partial<Record<PetAnimationState, readonly string[]>>;
+
 const CLASSIC_LAUGH_MODULES = import.meta.glob("./classic/laugh-hires/*.webp", {
   eager: true,
   import: "default",
@@ -20,6 +22,45 @@ const CLASSIC_LAUGH_FRAMES = Object.keys(CLASSIC_LAUGH_MODULES)
   .sort()
   .map((key) => CLASSIC_LAUGH_MODULES[key]);
 const CLASSIC_HAPPY_FRAMES = CLASSIC_LAUGH_FRAMES;
+
+const CLASSIC_ACTION_MODULES = import.meta.glob(
+  "./classic/actions/*/*.png",
+  { eager: true, import: "default" },
+) as Record<string, string>;
+
+const CLASSIC_ACTION_FRAMES: Record<string, string[]> = {};
+for (const key of Object.keys(CLASSIC_ACTION_MODULES).sort()) {
+  const match = key.match(/actions\/([^/]+)\//);
+  if (!match) {
+    continue;
+  }
+  (CLASSIC_ACTION_FRAMES[match[1]] ??= []).push(
+    CLASSIC_ACTION_MODULES[key],
+  );
+}
+
+// The adult action stack is shared by all three art forms. ASCII has no
+// separate action drawings yet, so it reuses the closest existing pose:
+// run = fast walk, look/think = idle, clap/eat = laugh, crouch = horse stance.
+const ADULT_ASCII_FRAMES: FrameMap = {
+  ...CYBER_NAIWA_FRAMES,
+  run: CYBER_NAIWA_FRAMES.walk,
+  look: CYBER_NAIWA_FRAMES.idle,
+  think: CYBER_NAIWA_FRAMES.idle,
+  clap: CYBER_NAIWA_FRAMES.happy,
+  eat: CYBER_NAIWA_FRAMES.happy,
+  crouch: CYBER_NAIWA_FRAMES.wave,
+};
+
+const ADULT_ASCII_CYBER_FRAMES: FrameMap = {
+  ...CYBER_NAIWA_CYBER_FRAMES,
+  run: CYBER_NAIWA_CYBER_FRAMES.walk,
+  look: CYBER_NAIWA_CYBER_FRAMES.idle,
+  think: CYBER_NAIWA_CYBER_FRAMES.idle,
+  clap: CYBER_NAIWA_CYBER_FRAMES.happy,
+  eat: CYBER_NAIWA_CYBER_FRAMES.happy,
+  crouch: CYBER_NAIWA_CYBER_FRAMES.wave,
+};
 
 export type PetSkinKind = "ascii" | "image";
 
@@ -32,11 +73,11 @@ interface PetSkinBase {
 
 export interface AsciiPetSkin extends PetSkinBase {
   kind: "ascii";
-  frames: Record<PetAnimationState, readonly string[]>;
-  babyFrames?: Record<PetAnimationState, readonly string[]>;
+  frames: FrameMap;
+  babyFrames?: FrameMap;
   /** Optional denser frame set used by the cyber palette. */
-  cyberFrames?: Record<PetAnimationState, readonly string[]>;
-  cyberBabyFrames?: Record<PetAnimationState, readonly string[]>;
+  cyberFrames?: FrameMap;
+  cyberBabyFrames?: FrameMap;
 }
 
 export interface ImagePetSkin extends PetSkinBase {
@@ -45,9 +86,10 @@ export interface ImagePetSkin extends PetSkinBase {
    * Imported image URLs (PNG / WEBP / SVG, or one GIF per state).
    * Each state can have one or more frames.
    */
-  frames: Record<PetAnimationState, readonly string[]>;
-  babyFrames?: Record<PetAnimationState, readonly string[]>;
+  frames: FrameMap;
+  babyFrames?: FrameMap;
   frameIntervalMs?: number;
+  frameIntervalMsByState?: Partial<Record<PetAnimationState, number>>;
 }
 
 export type PetSkin = AsciiPetSkin | ImagePetSkin;
@@ -62,9 +104,9 @@ export const PET_SKINS: readonly PetSkin[] = [
     name: "Cyber Naiwa",
     kind: "ascii",
     credit: "Original ASCII art for CyberNaiwa",
-    frames: CYBER_NAIWA_FRAMES,
+    frames: ADULT_ASCII_FRAMES,
     babyFrames: CYBER_NAIWA_BABY_FRAMES,
-    cyberFrames: CYBER_NAIWA_CYBER_FRAMES,
+    cyberFrames: ADULT_ASCII_CYBER_FRAMES,
     cyberBabyFrames: CYBER_NAIWA_CYBER_BABY_FRAMES,
   },
   {
@@ -72,10 +114,16 @@ export const PET_SKINS: readonly PetSkin[] = [
     name: "奶家经典",
     kind: "image",
     credit:
-      "Original Naiwa artwork; adult laugh frames from liaosongjie/Codex-Voice-Input (MIT)",
+      "Original Naiwa artwork; adult laugh frames from liaosongjie/Codex-Voice-Input (MIT); action frames from Nailong-Studio/NaiWa-Wallpaper",
     frames: {
       idle: [adultIdle],
-      walk: [adultIdle],
+      walk: CLASSIC_ACTION_FRAMES.walk ?? [adultIdle],
+      run: CLASSIC_ACTION_FRAMES.run ?? [adultIdle],
+      look: CLASSIC_ACTION_FRAMES.look ?? [adultIdle],
+      think: CLASSIC_ACTION_FRAMES.think ?? [adultIdle],
+      clap: CLASSIC_ACTION_FRAMES.clap ?? [adultIdle],
+      eat: CLASSIC_ACTION_FRAMES.eat ?? [adultIdle],
+      crouch: CLASSIC_ACTION_FRAMES.crouch ?? [adultIdle],
       happy: CLASSIC_HAPPY_FRAMES,
       click: CLASSIC_HAPPY_FRAMES,
       wave: [adultWave],
@@ -88,6 +136,15 @@ export const PET_SKINS: readonly PetSkin[] = [
       wave: [babyWave],
     },
     frameIntervalMs: 90,
+    frameIntervalMsByState: {
+      walk: 140,
+      run: 90,
+      look: 220,
+      think: 260,
+      clap: 110,
+      eat: 180,
+      crouch: 160,
+    },
   },
 ];
 
