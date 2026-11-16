@@ -251,6 +251,14 @@
 - 设置齿轮、托盘、中键/Ctrl+右键不受流程锁影响，仍可打开设置/菜单。
 - `pnpm build` 通过。
 
+## 2026-11-16 — Phase 31：ASCII 马扎步左膝补全
+
+- 用户反馈 Phase 29 的“加 2 格边距”后左膝仍像被削。审计发现：源图 `classic/adult-wave.png` 左膝完整，ASCII 网格也没有越界；源图在脚踝处本身有收窄，112×70 下膝→小腿的宽度从 19 格降到 11 格，且小腿被判成棕色 `|`，与金色膝盖之间出现生硬断层，视觉上像被截断。
+- 改为从 `classic/adult-wave.png` 固定取景重采样：`FixedSide 430`、`CenterX 148`、`CenterY 206`（原色 112×70，量子 128×80）；网格帧四周留 3/4 格，膝/脚不再贴边。审计图 `_qa/art/ascii-wave-regenerated.png`。
+- 新增 `_qa/patch-ascii-wave-knee.py`：把成年 wave 帧膝下小腿的 `|`（棕色四肢）提升为 `%`（金色阴影），脚掌保留 `|`；左膝到小腿变成连续金色轮廓，脚仍是棕色。原色/量子两套都处理，其他动作帧和幼体不动。
+- 实机截图：`_qa/art/ascii-wave-knee-patched-app-dark.png`、`_qa/art/ascii-cyber-wave-knee-patched-app-dark.png`；两套都确认左膝、左脚完整，HUD 仍为 STANCE。
+- `pnpm build` 通过。
+
 ## 待人工确认
 
 - 托盘菜单的物理点击仍需在桌面通知区实际点一遍；窗口 show/hide/设置/退出逻辑已实现。

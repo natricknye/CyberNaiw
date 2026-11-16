@@ -17,6 +17,10 @@ adult states to the closest existing pose: run→walk, look/think→idle,
 clap→wave, eat→idle, crouch→wave. The laugh (`happy`/`click`) is deliberately
 never used by a left-click action. The HUD label, frame interval and action
 duration still come from the real state, and the baby never uses these aliases.
+Adult `wave` is regenerated from `classic/adult-wave.png` with a fixed 430 px
+crop centred at (148,206), not by padding the old cut frames. The shadowed
+shins use `%` (shade gold) and only the feet keep the brown `|` tone, so the
+left knee and shin read as one continuous leg at 112×70 and 128×80.
 
 ## Classic skin
 
