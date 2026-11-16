@@ -17,11 +17,11 @@ reference images are not shipped in this repository.
 `naiwa-classic` is an `ImagePetSkin` using the cut-out original artwork in
 `classic/`: adult idle/wave and baby idle/happy/wave are single PNGs, while the
 adult happy/click sequence is `classic/laugh-hires/000`–`024.webp` at 90 ms per
-frame. The 432×592 transparent WebP frames are 4× Lanczos upscales of the
-108×148 tight crop (`classic/laugh-cropped/`); `classic/laugh/` keeps the
-original 180×180 MIT frames. The crop removes the transparent margins so the
-laugh body matches the idle height, and the upscale keeps the edges crisp at
-the window sizes the app supports. Image skins may declare a separate
+frame. The 648×888 transparent WebP frames are 6× Lanczos upscales of the
+108×148 tight crop (`classic/laugh-cropped/`) with no extra sharpening;
+`classic/laugh/` keeps the original 180×180 MIT frames. The crop removes the
+transparent margins so the laugh body matches the idle height, and the upscale
+keeps the edges clean at the window sizes the app supports. Image skins may declare a separate
 `babyFrames` map; otherwise the adult map is used for both ages.
 
 ## Adding an image skin

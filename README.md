@@ -138,7 +138,7 @@ pnpm tauri build --bundles dmg
 
 默认 ASCII 角色 `cyber-naiwa` 的原色赛博成年帧在 `src/assets/pets/cyber-naiwa/naiwa-frames.json`，幼体帧在 `naiwa-baby-frames.json`（112×70）；量子赛博成年/幼体帧在 `naiwa-cyber-frames.json`、`naiwa-cyber-baby-frames.json`（128×80）。每套 5 个状态；成年 happy/click 各 25 帧，其余状态每态 2 帧；幼体每态 2 帧。字符 tone、帧间隔和渲染逻辑在 `frames.ts`。成年大笑的 25 帧来自 [liaosongjie/Codex-Voice-Input](https://github.com/liaosongjie/Codex-Voice-Input) 的 MIT 动画帧（固定取景后转成 ASCII）；其余帧由官方设计资料库中的成年 / 幼体 / 大笑 / 挥手参考图逐像素映射生成，ASCII 帧的参考图片本身不入库。应用图标取自幼体原色赛博 ASCII 待机帧，不再单独绘制。
 
-奶家经典皮肤 `naiwa-classic` 在 `src/assets/pets/classic/`：成年待机/挥手和幼体三态是官方设计参考图的透明抠图；成年 happy/click 使用 `classic/laugh-hires/000–024.webp`，即 Codex Voice Input 的 25 帧 MIT 原画裁掉透明边距后，再 4× Lanczos 放大并轻量锐化到 432×592，90ms/帧；原始 180×180 帧保留在 `classic/laugh/`，紧裁中间帧在 `classic/laugh-cropped/`。图片按窗口高度缩放，六个状态的身体高度一致、脚完整落在窗口内。抠图/放大脚本是 `_qa/make-classic-cutouts.ps1`、`_qa/crop-classic-laugh.ps1` 和 `_qa/upscale-classic-laugh.py`（`_qa/` 不入库）。这部分是粉丝二创非商业使用，来源与授权说明见 `_qa/reference/official/laugh/SOURCES.md`。
+奶家经典皮肤 `naiwa-classic` 在 `src/assets/pets/classic/`：成年待机/挥手和幼体三态是官方设计参考图的透明抠图；成年 happy/click 使用 `classic/laugh-hires/000–024.webp`，即 Codex Voice Input 的 25 帧 MIT 原画裁掉透明边距后，再用 6× Lanczos 放大到 648×888，不做额外锐化，90ms/帧；原始 180×180 帧保留在 `classic/laugh/`，紧裁中间帧在 `classic/laugh-cropped/`。图片按窗口高度缩放，六个状态的身体高度一致、脚完整落在窗口内。抠图/放大脚本是 `_qa/make-classic-cutouts.ps1`、`_qa/crop-classic-laugh.ps1` 和 `_qa/upscale-classic-laugh.py`（`_qa/` 不入库）。这部分是粉丝二创非商业使用，来源与授权说明见 `_qa/reference/official/laugh/SOURCES.md`。
 
 想换成 PNG/WEBP/GIF 皮肤时，按 `src/assets/pets/README.md` 的说明注册 `ImagePetSkin` 即可，渲染器同时支持 ASCII 和图片序列。请不要提交没有 redistribution 权限的素材。
 
