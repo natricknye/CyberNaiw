@@ -85,14 +85,14 @@ CyberNaiwa/
 - `usePetInteraction`：pointerdown 只记录起点；移动 ≥5px 才调用 `startDragging()`，避免原生拖拽吞掉点击；pointerup 且未拖动才算一次点击。300ms 内的第二次点击算双击。
 - 只有 `event.target` 命中 `.pet-ascii [class^="tone-"]:not(.tone-empty)` 才标记 `onCharacter`；透明格或 stage 上按下仍可拖动窗口，但松开不会触发语音/字幕。
 - `pointermove` 在 `buttons === 0` 时清空 `pressRef`；window 的 pointerup / pointercancel / blur 也会清理，避免 pointerup 丢失后窗口跟着鼠标漂移。
-- 点击：`click` 380ms → `happy` 1100ms → `idle`。
+- 点击：`click` 380ms → 成年 `happy` 2250ms / 幼体 `happy` 1100ms → `idle`。
 - 动画开启且 idle 时，7–14 秒随机进入 `walk`（3.2s）或 `wave`（2.4s）。
 - 动画关闭时强制回到 idle，并取消进行中的状态定时器；点击仍保留表情反馈。
 - `PetAnimation` 只在当前状态内轮播帧，切状态立即重置到第 0 帧。
-- 成年：Idle / Walk 使用站立正面（第二帧闭眼）；Click / Happy 使用官方仰头大笑；Wave 使用官方挥手。
+- 成年：Idle / Walk 使用站立正面（第二帧闭眼）；Click / Happy 使用 Codex Voice Input 的 25 帧大笑（手放肚子 → 仰头 → 抱头 → 回落），不再用单帧；Wave 使用官方挥手。动作参考是圆胖体型，和长腿站立帧会有体型差异。
 - 幼体：Idle / Walk 使用幼体正面；Happy / Click 使用幼体素材右一叉腰；Wave 使用幼体素材中间抬手。幼体不使用成年大笑、挥手素材。
 - Sleep 与 Sad 状态均已移除（用户反馈睡觉和伤心界面不好看）；不再生成/播放 sleep 或 sad 帧。
-- 帧间隔：idle 1200ms、walk 260ms、happy 320ms、click 180ms、wave 500ms。
+- 帧间隔：成年 idle 1200ms、walk 260ms、happy/click 90ms、wave 500ms；幼体 idle 1200ms、walk 260ms、happy 320ms、click 180ms、wave 500ms。25×90ms = 2.25s，和源 GIF 循环一致。
 
 ### 点击语音
 
@@ -107,7 +107,7 @@ CyberNaiwa/
 
 - 原色模式帧在 `naiwa-frames.json` / `naiwa-baby-frames.json`：112 列 × 70 行；量子模式帧在 `naiwa-cyber-frames.json` / `naiwa-cyber-baby-frames.json`：128 列 × 80 行。用 `.` 表示透明格。帧由官方设计资料库的成年 / 幼体 / 大笑 / 挥手参考图逐像素映射到字符 tone；仓库不包含参考图片本身。
 - 幼体挥手源图裁切框从 `X=365/W=270` 改为 `X=310/W=285`：原框正好从 V 字手中间切过，导致手指缺失；新框完整包住中间幼体的抬手，112×70 与 128×80 两套网格都已重新采样。
-- `PetAnimation` 根据 `settings.palette` 选择 `cyberFrames` / `cyberBabyFrames`，原色模式走 `frames` / `babyFrames`；两套都是 5 态、每态 2 帧。
+- `PetAnimation` 根据 `settings.palette` 选择 `cyberFrames` / `cyberBabyFrames`，原色模式走 `frames` / `babyFrames`；两套都是 5 态。成年 happy/click 是 25 帧，其余是 2 帧；幼体全部 2 帧。
 - 逐字符 tone：黄身体 `#`、亮黄 `&`、橙色阴影 `%`、奶油肚皮 `+`、绿眼 `O/~/^`、瞳孔 `@`、嘴腔 `_`、牙齿 `=`、嘴线 `-`、棕色四肢 `|`、高亮 `*/!`、透明 `.`。
 - 闭嘴帧只保留官方源图里的极短嘴线，不再合成嘴线/下巴硬线：试过按眼睛位置画大范围 `-`/`;`，用户反馈像“鼻子 + 大嘴”，已撤销；现在只用 `mouthline` 把源图已有的 5–9 个嘴像素轻微加深，不延长、不画下巴。
 - 幼体直接取 `official-juvenile.png` 05 幼态版左一；保留素材的短圆身体、短手脚和原始腿间缝，不做全局 chibi 压扁、不全局填洞。局部加工只保留：眼睛在源像素上向外扩 1 格、嘴线加深、笑牙按源图嘴腔内部空洞生成。
@@ -197,6 +197,7 @@ cargo check --manifest-path src-tauri/Cargo.toml
 - 2026-11-16 幼体嘴部：112×70 待机帧第 19 行 x=44–48 为连续 5 个 `-`，原先散落的嘴线已清掉；128×80 帧同步生成，嘴部在五态预览和 32×32 图标中都可读。
 - 2026-11-16 图标：`src-tauri/icons/32x32.png` 与 `128x128.png` 检查通过，均为幼体原色 ASCII 黄身/绿眼/深色底；Tauri 全套 Windows/macOS/Android/iOS 图标由 `tauri icon` 重新生成。
 - 2026-11-16 0.2.2 生产包：设置窗口 `520×760 / 760 / 760`，提示 13px、标签 15px、说明 12px，关于覆盖层打开/关闭不改变高度；安装器首屏为深色 sidebar + 幼体 ASCII + “欢迎使用赛博奶蛙”，截图在 `_qa/art/settings-final-0.2.2.png`、`_qa/art/installer-final-0.2.2.png`。
+- 2026-11-16 成年大笑 25 帧：`naiwa-frames.json` / `naiwa-cyber-frames.json` 的 happy/click 都是 25 帧；React 页面点击后 2.8 秒采样到 26 个唯一帧，HUD 为 `CLICK → HAPPY → IDLE`；`pnpm build` 通过。参考素材与授权见 `_qa/reference/official/laugh/SOURCES.md`。
 - macOS 本机无法验证，只能依赖 CI 构建。
 
 ## 坑与注意事项
@@ -240,4 +241,5 @@ cargo check --manifest-path src-tauri/Cargo.toml
 - 2026-11-16 bump to 0.2.2; README download links and settings preview point at the new release.
 - 2026-11-16 raise every UI font in the settings console, pet HUD/bubble and NSIS installer art (minimum 12px in the console) to keep all text readable.
 - 2026-11-16 theme the NSIS installer with the baby ASCII sidebar/header BMPs, installer icon, dark MUI colours, Chinese-only pages and a custom welcome/finish copy.
+- 2026-11-16 replace the adult single-frame laugh with 25 ASCII frames sampled from Codex Voice Input's MIT 25-frame Naiwa laugh; use one fixed crop for all frames, 90ms per frame and a 2.25s adult happy state, while keeping the baby's two-frame cadence.
 - 2026-11-16 bump to 0.2.1 and replace `docs/settings.png` with the 赛博奶蛙 settings screenshot (原色模式/量子模式, no sleep copy, version 0.2.1).

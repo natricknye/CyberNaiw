@@ -131,7 +131,7 @@ pnpm tauri build --bundles dmg
 
 ## 角色素材
 
-默认角色 `cyber-naiwa` 的原色模式成年帧在 `src/assets/pets/cyber-naiwa/naiwa-frames.json`，幼体帧在 `naiwa-baby-frames.json`（112×70）；量子模式成年/幼体帧在 `naiwa-cyber-frames.json`、`naiwa-cyber-baby-frames.json`（128×80）。每套 5 个状态、每态 2 帧，字符 tone、帧间隔和渲染逻辑在 `frames.ts`。帧由官方设计资料库中的成年 / 幼体 / 大笑 / 挥手参考图逐像素映射生成，仓库不包含参考图片本身。应用图标取自幼体原色 ASCII 待机帧，不再单独绘制。
+默认角色 `cyber-naiwa` 的原色模式成年帧在 `src/assets/pets/cyber-naiwa/naiwa-frames.json`，幼体帧在 `naiwa-baby-frames.json`（112×70）；量子模式成年/幼体帧在 `naiwa-cyber-frames.json`、`naiwa-cyber-baby-frames.json`（128×80）。每套 5 个状态；成年 happy/click 各 25 帧，其余状态每态 2 帧；幼体每态 2 帧。字符 tone、帧间隔和渲染逻辑在 `frames.ts`。成年大笑的 25 帧来自 [liaosongjie/Codex-Voice-Input](https://github.com/liaosongjie/Codex-Voice-Input) 的 MIT 动画帧（固定取景后转成 ASCII）；其余帧由官方设计资料库中的成年 / 幼体 / 大笑 / 挥手参考图逐像素映射生成。仓库不包含参考图片本身。应用图标取自幼体原色 ASCII 待机帧，不再单独绘制。
 
 想换成 PNG/WEBP/GIF 皮肤时，按 `src/assets/pets/README.md` 的说明注册 `ImagePetSkin` 即可，渲染器同时支持 ASCII 和图片序列。请不要提交没有 redistribution 权限的素材。
 
@@ -183,7 +183,7 @@ pnpm tauri build --bundles dmg
 
 MIT License，见 [LICENSE](LICENSE)。
 
-CyberNaiwa 是粉丝向、非商业的开源项目，灵感来自中文互联网迷因「奶蛙」。奶蛙形象源自 AI 生成与网友二创；本项目与奶龙官方及其权利方无关联。仓库内的 ASCII 角色帧由本项目基于公开参考图转换和绘制，不包含第三方图片素材；六段点击语音来自上述公开素材仓库，权利归各自原作者/二创作者，若权利人要求会移除。
+CyberNaiwa 是粉丝向、非商业的开源项目，灵感来自中文互联网迷因「奶蛙」。奶龙是可爱的原版、有版权；奶蛙是猎奇向的 AI/网友二创，本项目只做奶蛙，与奶龙官方及其权利方无关联。仓库内的 ASCII 角色帧由本项目基于公开参考图转换和绘制；成年大笑 25 帧来自 Codex Voice Input 的 MIT 动画帧；不包含第三方图片素材。六段点击语音来自上述公开素材仓库，权利归各自原作者/二创作者，若权利人要求会移除。
 
 ## 构建状态
 

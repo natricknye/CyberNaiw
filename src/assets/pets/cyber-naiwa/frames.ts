@@ -7,7 +7,7 @@ import type { PetAnimationState } from "../../../types/pet";
 /**
  * Original-colour frames are 112 × 70; the cyber palette uses a denser
  * 128 × 80 grid so its fine terminal lines stay sharp. Both sets share the
- * same five states and two frames per state.
+ * same five states; adult happy/click use 25 frames, the rest use two.
  */
 export const CYBER_NAIWA_FRAMES = rawFrames as Record<
   PetAnimationState,
@@ -77,7 +77,17 @@ export function toneForChar(char: string): AsciiTone {
   }
 }
 
+// Adult laugh: 25 frames at 90 ms = the source GIF's 2.25 s loop.
 export const FRAME_INTERVAL_MS: Record<PetAnimationState, number> = {
+  idle: 1200,
+  walk: 260,
+  happy: 90,
+  click: 90,
+  wave: 500,
+};
+
+// The baby has only two frames per state; keep the slower original cadence.
+export const BABY_FRAME_INTERVAL_MS: Record<PetAnimationState, number> = {
   idle: 1200,
   walk: 260,
   happy: 320,

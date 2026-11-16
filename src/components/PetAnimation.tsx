@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import {
+  BABY_FRAME_INTERVAL_MS,
   FRAME_INTERVAL_MS,
   toneForChar,
   type AsciiTone,
@@ -89,7 +90,9 @@ export default function PetAnimation({
 
     const interval =
       skin.kind === "ascii"
-        ? FRAME_INTERVAL_MS[state]
+        ? age === "baby"
+          ? BABY_FRAME_INTERVAL_MS[state]
+          : FRAME_INTERVAL_MS[state]
         : (skin.frameIntervalMs ?? 320);
 
     const timer = window.setInterval(() => {

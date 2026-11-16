@@ -131,7 +131,7 @@ Two keys live in that file: `settings` (always-on-top, scale, animation, sound, 
 
 ## Character art
 
-The default `cyber-naiwa` skin stores Original-mode adult/baby frames in `naiwa-frames.json` and `naiwa-baby-frames.json` (112×70), and Quantum-mode adult/baby frames in `naiwa-cyber-frames.json` and `naiwa-cyber-baby-frames.json` (128×80). Each set has five states and two frames per state. `frames.ts` maps characters to colour tones and declares frame timing. The grids were pixel-mapped from the official design database's adult, juvenile, laugh, and wave references; no reference image files themselves are shipped in the repo. The app icon is taken from the baby's Original-mode ASCII idle frame instead of being drawn separately.
+The default `cyber-naiwa` skin stores Original-mode adult/baby frames in `naiwa-frames.json` and `naiwa-baby-frames.json` (112×70), and Quantum-mode adult/baby frames in `naiwa-cyber-frames.json` and `naiwa-cyber-baby-frames.json` (128×80). Each set has five states; adult happy/click use 25 frames each, other states use two, and the baby uses two per state. `frames.ts` maps characters to colour tones and declares frame timing. The 25 adult laugh frames come from [liaosongjie/Codex-Voice-Input](https://github.com/liaosongjie/Codex-Voice-Input)'s MIT animation frames (fixed-crop conversion to ASCII); the other grids were pixel-mapped from the official design database's adult, juvenile, laugh, and wave references. No reference image files themselves are shipped in the repo. The app icon is taken from the baby's Original-mode ASCII idle frame instead of being drawn separately.
 
 Want to try a PNG/WEBP/GIF skin? `src/assets/pets/README.md` shows how to register an `ImagePetSkin`. The renderer already handles both ASCII and image sequences. Please only add art you have the right to redistribute.
 
@@ -183,7 +183,7 @@ Line research and the older 1.8 s MIT laugh:
 
 MIT — see [LICENSE](LICENSE).
 
-CyberNaiwa is a fan-made, non-commercial open-source project inspired by the Chinese internet meme 奶蛙 (Naiwa). The character emerged from AI-generated fan art and community remixes. This project is not affiliated with 奶龙 or its rights holders. The ASCII frames in this repo were converted and drawn by this project from public references; no third-party image assets are included. The six click voice clips come from the public asset repository above and remain the property of their original creators; they will be removed on request.
+CyberNaiwa is a fan-made, non-commercial open-source project inspired by the Chinese internet meme 奶蛙 (Naiwa). 奶龙 (Nailong) is the cute, copyrighted original; 奶蛙 is the uncanny AI/community derivative, and this project uses only 奶蛙. The ASCII frames in this repo were converted and drawn by this project from public references; the 25 adult laugh frames come from Codex Voice Input's MIT animation. No third-party image assets are included. The six click voice clips come from the public asset repository above and remain the property of their original creators; they will be removed on request.
 
 ## Build status
 

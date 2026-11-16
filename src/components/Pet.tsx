@@ -37,6 +37,7 @@ export default function Pet() {
   const { state, reaction, interact } = usePetState(
     ready && settings.animationsEnabled,
     settings.language,
+    settings.age,
   );
 
   const laughTimer = useRef<number | null>(null);

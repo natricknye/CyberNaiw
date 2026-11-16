@@ -3,6 +3,7 @@ import { UI_STRINGS } from "../i18n/strings";
 import type {
   Language,
   NaiwaVoice,
+  PetAge,
   PetAnimationState,
 } from "../types/pet";
 
@@ -15,7 +16,9 @@ export interface PetReaction {
 export type PetReactionKind = "laugh" | "meme";
 
 const CLICK_STATE_MS = 380;
-const HAPPY_STATE_MS = 1100;
+// 25 laugh frames at 90 ms each complete the 2.25 s Naiwa laugh cycle.
+const HAPPY_STATE_MS = 2250;
+const BABY_HAPPY_STATE_MS = 1100;
 const REACTION_MS = 2400;
 
 const IDLE_MIN_MS = 7000;
@@ -26,6 +29,7 @@ const WAVE_STATE_MS = 2400;
 export function usePetState(
   animationsEnabled: boolean,
   language: Language,
+  age: PetAge,
 ) {
   const [state, setState] = useState<PetAnimationState>("idle");
   const [reaction, setReaction] = useState<PetReaction | null>(null);
@@ -44,6 +48,8 @@ export function usePetState(
   const interact = useCallback((kind: PetReactionKind = "meme") => {
     clearTransition();
     setState("click");
+    const happyDuration =
+      age === "adult" ? HAPPY_STATE_MS : BABY_HAPPY_STATE_MS;
 
     reactionId.current += 1;
     const reactions = UI_STRINGS[language].pet.reactions;
@@ -73,11 +79,11 @@ export function usePetState(
       transitionTimer.current = window.setTimeout(() => {
         transitionTimer.current = null;
         setState("idle");
-      }, HAPPY_STATE_MS);
+      }, happyDuration);
     }, CLICK_STATE_MS);
 
     return nextReaction;
-  }, [clearTransition, language]);
+  }, [age, clearTransition, language]);
 
   // Turning animations off cancels any in-flight automatic/click transition.
   useEffect(() => {
