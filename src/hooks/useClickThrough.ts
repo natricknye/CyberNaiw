@@ -5,44 +5,21 @@ import { isCharacterPointAt } from "../services/hitTest";
 
 interface UseClickThroughOptions {
   enabled: boolean;
-  /** Fired when the cursor enters/leaves the pet window rectangle. */
-  onPointerInsideChange?: (inside: boolean) => void;
 }
 
 const POLL_MS = 32;
 const RETRY_MS = 500;
 const MAX_FAILURES = 8;
-const GEAR_PADDING_PX = 2;
-
-function isInsideSettingsButton(x: number, y: number): boolean {
-  const button = document.querySelector<HTMLElement>(".pet-settings-button");
-  if (!button) {
-    return false;
-  }
-  const rect = button.getBoundingClientRect();
-  return (
-    rect.width > 0 &&
-    rect.height > 0 &&
-    x >= rect.left - GEAR_PADDING_PX &&
-    x <= rect.right + GEAR_PADDING_PX &&
-    y >= rect.top - GEAR_PADDING_PX &&
-    y <= rect.bottom + GEAR_PADDING_PX
-  );
-}
 
 /**
  * Keeps the transparent window click-through except over the actual pet
- * pixels and the settings button.
+ * pixels.
  *
  * `setIgnoreCursorEvents` is all-or-nothing, so a short global cursor poll
  * toggles it. The webview keeps running while the window ignores the mouse,
  * which lets the poll re-enable clicks when the cursor reaches the pet.
  */
-export function useClickThrough({
-  enabled,
-  onPointerInsideChange,
-}: UseClickThroughOptions) {
-  const insideRef = useRef(false);
+export function useClickThrough({ enabled }: UseClickThroughOptions) {
   const ignoreRef = useRef<boolean | null>(null);
 
   useEffect(() => {
@@ -55,14 +32,6 @@ export function useClickThrough({
     let stopped = false;
     let timer: number | null = null;
     let failures = 0;
-
-    const setInside = (next: boolean) => {
-      if (insideRef.current === next) {
-        return;
-      }
-      insideRef.current = next;
-      onPointerInsideChange?.(next);
-    };
 
     const setIgnore = async (next: boolean): Promise<boolean> => {
       if (ignoreRef.current === next) {
@@ -91,7 +60,6 @@ export function useClickThrough({
         window.clearTimeout(timer);
         timer = null;
       }
-      setInside(false);
       // Never leave the whole window permanently click-through if polling
       // fails after repeated retries.
       ignoreRef.current = null;
@@ -125,11 +93,7 @@ export function useClickThrough({
           x < window.innerWidth &&
           y < window.innerHeight;
 
-        setInside(inside);
-
-        const hit =
-          inside &&
-          (isCharacterPointAt(x, y) || isInsideSettingsButton(x, y));
+        const hit = inside && isCharacterPointAt(x, y);
 
         if (cancelled || stopped) {
           return;
@@ -177,11 +141,10 @@ export function useClickThrough({
         window.clearTimeout(timer);
         timer = null;
       }
-      setInside(false);
       ignoreRef.current = null;
       void win.setIgnoreCursorEvents(false).catch(() => {
         // Ignore cleanup errors.
       });
     };
-  }, [enabled, onPointerInsideChange]);
+  }, [enabled]);
 }

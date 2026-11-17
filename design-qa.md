@@ -276,6 +276,16 @@
 - 验证：用仅开发态的命中点模拟分别测 ASCII idle、经典 idle 的角色/透明边/齿轮；Win32 `WS_EX_TRANSPARENT` 在角色和齿轮时为 `False`，在透明边时为 `True`。开发态钩子已移除；物理光标测试受窗口拖动干扰，但原生标志与命中结果一致。
 - 已知取舍：32ms 轮询意味着快速掠过边缘可能有不到一帧的延迟；透明边不再能拖动，拖动要抓角色；设置窗口本身不穿透。`pnpm build` 通过。
 
+## 2026-11-17 — Phase 34：右键菜单、双击大笑、走跑静音与取消齿轮
+
+- 用户要求成年右键恢复原生菜单，左键双击大笑；走、跑不搭配声音；右键可用后去掉右上角设置键。
+- `usePetInteraction` 的右键分支简化为始终 `showPetMenu(language)`，删掉 `onSecondary`、Ctrl/⌘ 条件和右键大笑。`PetMenu` 里已有「设置 / 隐藏 / 退出」三项。
+- `Pet.tsx` 的成年单击改为 300ms 双击窗口：第一次点击只启动计时；300ms 内第二次点击取消待执行动作并 `interact("laugh")`；超时后才 `advanceAction()`。单击流程锁仍按 `max(actionDuration, voiceDuration) + 50ms`。
+- 走、跑进入时调用 `clearReaction()`，不调用 `speak()` / `playNaiwaVoice()`；流程锁只按动作时长。其他动作保持原语音和字幕。
+- 去掉 `.pet-settings-button` 按钮、悬停 CSS、`pointerInside` 状态和 `pet-stage--pointer-inside` 类；`useClickThrough` 也去掉设置键矩形命中。现在只有角色不透明像素拦截鼠标，透明边、气泡、HUD、阴影和右上角全部穿透。
+- 实测：单击后 100ms 仍是 `idle`，400ms 进入 `wave`；双击后进入 `happy`，音频日志只有 `naiwa-laugh-long.wav`；`walk` / `run` 进入时音频日志为空；右键后状态保持 `idle`，系统出现 `#32768` 原生菜单窗口，没有笑声。
+- 已知取舍：双击要等 300ms 才执行单击动作；动作流程进行中双击仍被流程锁忽略；设置可通过右键菜单、中键或托盘进入。`pnpm build` 通过。
+
 ## 待人工确认
 
 - 托盘菜单的物理点击仍需在桌面通知区实际点一遍；窗口 show/hide/设置/退出逻辑已实现。

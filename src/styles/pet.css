@@ -240,59 +240,6 @@
   pointer-events: none;
 }
 
-.pet-settings-button {
-  position: absolute;
-  z-index: 7;
-  top: 8px;
-  right: 8px;
-  width: 26px;
-  height: 26px;
-  display: grid;
-  place-items: center;
-  padding: 0;
-  border: 1px solid rgba(255, 255, 255, 0.28);
-  border-radius: 4px;
-  background: rgba(3, 17, 11, 0.55);
-  color: rgba(255, 255, 255, 0.72);
-  opacity: 0;
-  pointer-events: none;
-  cursor: pointer;
-  font: inherit;
-  transition:
-    opacity 140ms ease,
-    background-color 140ms ease,
-    color 140ms ease;
-}
-
-.pet-stage:hover .pet-settings-button,
-.pet-stage--pointer-inside .pet-settings-button,
-.pet-settings-button:focus-visible {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.pet-settings-button:hover {
-  background: rgba(3, 17, 11, 0.82);
-  color: #fff;
-}
-
-.pet-settings-button svg {
-  width: 15px;
-  height: 15px;
-  display: block;
-}
-
-.pet-stage--palette-cyber .pet-settings-button {
-  border-color: rgba(126, 249, 255, 0.35);
-  background: rgba(1, 10, 18, 0.6);
-  color: rgba(126, 249, 255, 0.8);
-}
-
-.pet-stage--palette-cyber .pet-settings-button:hover {
-  background: rgba(1, 10, 18, 0.85);
-  color: #d8ffff;
-}
-
 .pet-hud {
   position: absolute;
   z-index: 2;

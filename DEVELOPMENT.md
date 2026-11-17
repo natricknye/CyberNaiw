@@ -5,7 +5,7 @@
 CyberNaiwa 是一个 Tauri 2 + React + TypeScript 桌面宠物。应用有两个 webview 窗口：
 
 - `pet`：透明、无边框、置顶、不可聚焦、默认隐藏，启动后由前端应用设置与位置再显示。
-- `settings`：普通系统窗口，默认隐藏，通过托盘、悬停桌宠时出现的右上角齿轮、中键（按下滚轮）或 Ctrl/⌘ + 右键菜单打开；关闭时只隐藏。
+- `settings`：普通系统窗口，默认隐藏，通过右键菜单、中键（按下滚轮）或托盘打开；关闭时只隐藏。
 
 Rust 只负责系统级部分：托盘图标/菜单、窗口显示隐藏、退出。业务状态、动画、设置 UI 都在前端。
 
@@ -49,7 +49,7 @@ CyberNaiwa/
 │   │   └── SpeechBubble.tsx
 │   ├── hooks/
 │   │   ├── usePetState.ts           # 动作栈/点击反应/自动扎马步
-│   │   ├── usePetInteraction.ts     # 左键动作 + 右键大笑 + 中键设置 + 拖动
+│   │   ├── usePetInteraction.ts     # 左键单击/双击 + 右键菜单 + 中键设置 + 拖动
 │   │   └── useSettings.ts           # 读取/防抖保存/跨窗口通知
 │   ├── services/
 │   │   ├── settings.ts              # store JSON、校验、事件
@@ -83,7 +83,7 @@ CyberNaiwa/
    - 最后 `show()`
 3. 位置通过 `onMoved` 监听，500ms 防抖后存 `windowPosition`。
 4. 设置窗口改动通过 Tauri event `cybernaiwa-settings-changed` 广播；`Pet.tsx` 接收后实时应用尺寸/置顶，但不回跳位置。
-5. 设置窗口 `onCloseRequested` 阻止默认关闭并 `hide()`；托盘或 Ctrl/⌘ + 右键菜单负责真正退出。
+5. 设置窗口 `onCloseRequested` 阻止默认关闭并 `hide()`；托盘或右键菜单负责真正退出。
 
 ### 平台差异
 
@@ -95,8 +95,7 @@ CyberNaiwa/
 ### 点击穿透
 
 - Tauri 的 `setIgnoreCursorEvents` 只能整窗开关，不能按像素设置；这里用 `useClickThrough` 每 32ms 读取全局光标，换算到窗口 client 坐标后再做命中检测。
-- 命中角色（ASCII tone 格 / 图片 alpha >16）或 `.pet-settings-button` 的矩形时关闭穿透；透明边、气泡、HUD、阴影和窗口空白处保持穿透。
-- 光标进入窗口矩形时给 stage 加 `pet-stage--pointer-inside`，CSS 用它显示齿轮；这样窗口本身处于穿透状态时，齿轮仍然能出现并被点中。
+- 命中角色（ASCII tone 格 / 图片 alpha >16）时关闭穿透；透明边、气泡、HUD、阴影和窗口空白处保持穿透。
 - 窗口移动或缩放后下一帧重新读取 `innerPosition()`；IPC 短暂失败按 500ms 重试，连续 8 次失败才回退为普通矩形窗口，避免启动瞬间的失败把穿透永久卡死。
 - 透明边不能拖动，拖动只能抓角色；这是点击穿透的直接取舍。
 
@@ -107,14 +106,14 @@ CyberNaiwa/
 - `usePetState` 持有唯一状态，避免动画互相冲突。
 - `usePetInteraction`：pointerdown 只记录起点；移动 ≥5px 才调用 `startDragging()`，避免原生拖拽吞掉点击；pointerup 且未拖动才算一次点击。
 - 命中判定：ASCII 必须命中 `.pet-ascii [class^="tone-"]:not(.tone-empty)`，图片必须按 alpha 命中（>16）；透明格/透明像素不接收鼠标，由 `useClickThrough` 让原生窗口穿透到后面。
-- 点击穿透：`useClickThrough` 每 32ms 读取全局 `cursorPosition()`，用 `innerPosition()` + `devicePixelRatio` 换算到窗口 client 坐标；命中角色像素或设置键矩形时 `setIgnoreCursorEvents(false)`，其余（透明边、气泡、HUD、阴影）`true`。IPC 短暂失败按 500ms 重试，连续 8 次失败才回退为普通矩形窗口。透明边不再能拖动，拖动请抓角色。
-- **成年左键**：`advanceAction()` 沿 `ADULT_ACTION_STACK` 前进：`idle → wave（扎马步）→ beckon（招手）→ walk → run → look → think → clap → crouch → idle`。每档有独立持续时间，动作结束回 idle，但索引保留，所以流程结束后连续点击能走完整套。左键同时 `speak("meme")` 选一条安迪类台词；`Pet.tsx` 用 `flowLock` 锁住整个流程，锁定时常为 `max(actionDuration, voiceDuration) + 50ms`，期间左键/右键一律忽略；只有动作和语音都结束后，下一次点击才进入下一档。`playNaiwaVoice()` 返回本次语音时长，baby 按 1.35× 折算；`eat` 帧保留在素材里，但因其张嘴仰头太像大笑，不接入左键动作栈。
-- **成年右键**：`interact("laugh")`，`click` 380ms → `happy` 3730ms → `idle`，合计 4.11 秒，和 `naiwa-laugh-long.wav` 对齐；不再打开原生菜单。**大笑只属于右键**，左键动作栈不含 `happy`/`click`。Ctrl/⌘ + 右键打开原生菜单；中键（按下滚轮）打开设置；光标进入桌宠窗口时右上角才显示齿轮按钮（由 `useClickThrough` 的 `pointerInside` 状态驱动，即使窗口正在穿透也能显示）；托盘入口保留。
+- 点击穿透：`useClickThrough` 每 32ms 读取全局 `cursorPosition()`，用 `innerPosition()` + `devicePixelRatio` 换算到窗口 client 坐标；命中角色像素时 `setIgnoreCursorEvents(false)`，其余（透明边、气泡、HUD、阴影）`true`。IPC 短暂失败按 500ms 重试，连续 8 次失败才回退为普通矩形窗口。透明边不再能拖动，拖动请抓角色。
+- **成年左键**：单击会先等 300ms 确认不是双击；确认后 `advanceAction()` 沿 `ADULT_ACTION_STACK` 前进：`idle → wave（扎马步）→ beckon（招手）→ walk → run → look → think → clap → crouch → idle`。每档有独立持续时间，动作结束回 idle，但索引保留。300ms 内第二次左键会取消待执行的单击并 `interact("laugh")`：`click` 380ms → `happy` 3730ms → `idle`，合计 4.11 秒，和 `naiwa-laugh-long.wav` 对齐。走、跑进入时 `clearReaction()` 且不调 `speak`/`playNaiwaVoice`，所以无语音、无台词；其他动作仍随机选一条安迪类台词。`Pet.tsx` 用 `flowLock` 锁住整个动作流程，锁定时常为 `max(actionDuration, voiceDuration) + 50ms`，期间左键一律忽略；只有动作和语音都结束后，下一次单击才进入下一档。`playNaiwaVoice()` 返回本次语音时长，baby 按 1.35× 折算；`eat` 帧保留在素材里，但因其张嘴仰头太像大笑，不接入左键动作栈。
+- **成年右键**：打开原生菜单（设置 / 隐藏 / 退出），不再触发大笑，也不再需要 Ctrl/⌘ 组合键。**大笑只由左键双击触发**，单击动作栈不含 `happy`/`click`。中键（按下滚轮）打开设置；托盘入口保留。
 - **幼体左键**：`interact("meme")`，`click` 380ms → `happy` 1100ms → `idle`；没有大笑语音，右键仍是原生菜单。幼体同样使用 `flowLock`（动作 1480ms 与语音时长取最大值），流程中不响应下一次点击；幼体的动作栈与成年完全分开。
 - **空闲自动行为**：成年 idle 9–16 秒后只自动进入 `wave`（扎马步）2.4 秒，再回 idle；beckon/walk/run/look/think/clap/crouch 不会自动播放。幼体保持 7–14 秒随机 walk/wave 的独立行为。
 - 动画关闭时强制回到 idle，并取消进行中的状态定时器；点击仍能切换动作/触发大笑，但只显示静态首帧。
 - `PetAnimation` 只在当前状态内轮播帧，切状态立即重置到第 0 帧；缺少某状态的帧时回退到 `idle`，不会渲染空帧。
-- 成年：经典 Idle 使用 `classic/idle-chubby/00–02.png` 三帧圆胖待机（`待机-06/01/03`，首帧最正面，1200ms/帧）；Walk 使用同一画风的 Nailong 走路帧；Click / Happy 使用 Codex Voice Input 的 25 帧大笑（手放肚子 → 仰头 → 抱头 → 回落），只由右键触发；Wave（扎马步）使用 `adult-wave.png`，Beckon（招手）使用 `classic/actions/beckon/00–02.png`。新动作的经典原画来自 Nailong-Studio 的 `pet/` 逐帧；ASCII 端 `beckon` 有独立 3 帧，其余新增动作复用最接近的现有姿态：run=walk、look/think=idle、clap=wave、eat=idle、crouch=wave，**绝不把 clap/eat 指到 happy/click 大笑帧**。
+- 成年：经典 Idle 使用 `classic/idle-chubby/00–02.png` 三帧圆胖待机（`待机-06/01/03`，首帧最正面，1200ms/帧）；Walk 使用同一画风的 Nailong 走路帧；Click / Happy 使用 Codex Voice Input 的 25 帧大笑（手放肚子 → 仰头 → 抱头 → 回落），只由左键双击触发；Wave（扎马步）使用 `adult-wave.png`，Beckon（招手）使用 `classic/actions/beckon/00–02.png`。新动作的经典原画来自 Nailong-Studio 的 `pet/` 逐帧；ASCII 端 `beckon` 有独立 3 帧，其余新增动作复用最接近的现有姿态：run=walk、look/think=idle、clap=wave、eat=idle、crouch=wave，**绝不把 clap/eat 指到 happy/click 大笑帧**。
 - 幼体：Idle / Walk 使用幼体正面；Happy / Click 使用幼体素材右一叉腰；Wave 使用幼体素材中间抬手。幼体不使用成年大笑、挥手或新动作素材。
 - Sleep 与 Sad 状态均已移除（用户反馈睡觉和伤心界面不好看）；不再生成/播放 sleep 或 sad 帧。
 - ASCII 帧间隔：成年 idle 1200ms、walk 260ms、happy/click 164ms、wave 500ms、beckon 350ms、run 130ms、look 300ms、think 350ms、clap 160ms、eat 260ms、crouch 500ms；幼体 idle 1200ms、walk 260ms、happy 320ms、click 180ms、wave 500ms、beckon 350ms。
@@ -123,10 +122,10 @@ CyberNaiwa/
 ### 点击语音
 
 - 六句台词和六个 WAV 一一对应：安迪、嘎嘎提拉瞎、干巴得、哈哈哈哈哈、哦啦、噶韭菜。
-- 成年左键：`advanceAction()` 切动作，`speak("meme")` 随机选安迪类台词；右键：`interact("laugh")` 只选「哈哈哈哈哈」。幼体左键：`interact("meme")` 选安迪类，300ms 内第二次点击忽略。
+- 成年左键：单击 `advanceAction()` 切动作；走/跑不调 `speak`，其他动作 `speak("meme")` 随机选安迪类台词；300ms 内双击 `interact("laugh")` 只选「哈哈哈哈哈」。成年右键：`showPetMenu()` 原生菜单。幼体左键：`interact("meme")` 选安迪类，没有双击大笑。
 - `usePetState.speak(kind)` 只负责随机选 `NaiwaReaction`（含 `text` 和 `voice`）并显示字幕；`interact(kind)` 在 speak 之上再加 click→happy→idle 动画。`Pet.tsx` 用同一个 `voice` 调 `playNaiwaVoice()`，避免字幕和声音不一致。
 - `sound.ts` 为每个 `voice` 缓存一个 `HTMLAudioElement`；成年 `playbackRate 1`，幼体 `1.35`，两者都设 `preservesPitch false`。
-- 声音开启时气泡不渲染文字；静音时才显示同一句台词作为字幕。
+- 声音开启时气泡不渲染文字；静音时才显示同一句台词作为字幕。走/跑不进入 `speak`，所以静音时也不会显示台词。
 - 音频来自 `VIPmrgj/Dragon-frog` 的 `音效/`（无 LICENSE），按粉丝二创非商业使用，来源和移除声明写在 `src/assets/audio/README.md`。旧版 1.8 秒 MIT 笑声保留为 `naiwa-laugh.wav` 备用。
 
 ### ASCII 渲染
@@ -291,4 +290,5 @@ cargo check --manifest-path src-tauri/Cargo.toml
 - 2026-11-16 regenerate the adult ASCII `wave` from `classic/adult-wave.png` with a fixed 430 px crop centred at (148,206) for both the 112×70 and 128×80 sets, replacing the 2-cell padding; promote the shadowed shin cells from `|` to `%` and keep `|` on the feet so the left knee/shin read as one continuous leg. Verified both palettes in-app (`_qa/art/ascii-wave-knee-patched-app-dark.png`, `_qa/art/ascii-cyber-wave-knee-patched-app-dark.png`).
 - 2026-11-16 replace the classic idle with the three-frame `idle-chubby` set from the Nailong `待机-06/01/03` art (front-facing first frame, 180×210, 6 px bottom, 1200 ms) and add the adult `beckon` action (three `招手-01/02/04` frames, 220 ms classic / 350 ms ASCII, 1800 ms flow) right after `wave`; generate dedicated 112×70/128×80 beckon grids, restore misread `_` limb pixels to `|`, and keep the action out of the baby stack.
 - 2026-11-16 implement native click-through: a 32 ms global cursor poll toggles `setIgnoreCursorEvents` only over character pixels or the settings button, while the bubble/HUD/shadow/transparent margins pass clicks to the window below. The gear is shown from the same `pointerInside` state so it remains reachable while the window is click-through; transparent margins no longer drag, so the character is the drag handle.
+- 2026-11-17 move the adult laugh to left double-click, restore right-click to the native menu, skip voice/subtitles for walk/run, and remove the settings gear now that the right-click menu always exposes Settings; transparent edges now have no button hotspot at all.
 - 2026-11-16 bump to 0.2.1 and replace `docs/settings.png` with the 赛博奶蛙 settings screenshot (原色模式/量子模式, no sleep copy, version 0.2.1).

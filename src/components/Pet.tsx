@@ -31,21 +31,25 @@ import PetAnimation from "./PetAnimation";
 import SpeechBubble from "./SpeechBubble";
 import "../styles/pet.css";
 
+const ADULT_DOUBLE_CLICK_MS = 300;
+
 export default function Pet() {
   const [settings, setSettings] = useState<PetSettings>(DEFAULT_SETTINGS);
   const [ready, setReady] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
-  const [pointerInside, setPointerInside] = useState(false);
 
   const strings = UI_STRINGS[settings.language];
-  const { state, reaction, interact, advanceAction, speak } = usePetState(
-    ready && settings.animationsEnabled,
-    settings.language,
-    settings.age,
-  );
+  const { state, reaction, interact, advanceAction, speak, clearReaction } =
+    usePetState(
+      ready && settings.animationsEnabled,
+      settings.language,
+      settings.age,
+    );
 
   const flowLock = useRef(false);
   const flowTimer = useRef<number | null>(null);
+  const singleClickTimer = useRef<number | null>(null);
+  const lastLeftClickAt = useRef(0);
 
   const lockFlow = useCallback((durationMs: number) => {
     flowLock.current = true;
@@ -57,6 +61,48 @@ export default function Pet() {
       flowLock.current = false;
     }, Math.max(0, durationMs) + 50);
   }, []);
+
+  const performAdultAction = useCallback(() => {
+    if (flowLock.current) {
+      return;
+    }
+
+    const next = advanceAction();
+    if (!next) {
+      return;
+    }
+
+    // Walking and running are intentionally silent: no voice and no subtitle.
+    if (next.state === "walk" || next.state === "run") {
+      clearReaction();
+      lockFlow(next.duration);
+      return;
+    }
+
+    const nextReaction = speak("meme");
+    const voiceMs = settings.soundEnabled
+      ? playNaiwaVoice(nextReaction.voice, "adult")
+      : 0;
+    lockFlow(Math.max(next.duration, voiceMs));
+  }, [
+    advanceAction,
+    clearReaction,
+    lockFlow,
+    settings.soundEnabled,
+    speak,
+  ]);
+
+  const handleLaugh = useCallback(() => {
+    if (flowLock.current || settings.age !== "adult") {
+      return;
+    }
+
+    const nextReaction = interact("laugh");
+    const voiceMs = settings.soundEnabled
+      ? playNaiwaVoice(nextReaction.voice, "adult")
+      : 0;
+    lockFlow(Math.max(ADULT_LAUGH_FLOW_MS, voiceMs));
+  }, [interact, lockFlow, settings.age, settings.soundEnabled]);
 
   const handleInteract = useCallback(() => {
     // A click belongs to the current flow only when that flow has completely
@@ -75,33 +121,36 @@ export default function Pet() {
       return;
     }
 
-    // Adult: advance one action and hold the flow until it and its line end.
-    const next = advanceAction();
-    const nextReaction = speak("meme");
-    const voiceMs = settings.soundEnabled
-      ? playNaiwaVoice(nextReaction.voice, "adult")
-      : 0;
-    lockFlow(Math.max(next?.duration ?? 0, voiceMs));
-  }, [
-    advanceAction,
-    interact,
-    lockFlow,
-    settings.age,
-    settings.soundEnabled,
-    speak,
-  ]);
-
-  const handleLaugh = useCallback(() => {
-    if (flowLock.current || settings.age !== "adult") {
+    // Adult: wait one double-click window before advancing, so a second
+    // click can cancel the action and trigger the laugh instead.
+    const now = Date.now();
+    if (now - lastLeftClickAt.current <= ADULT_DOUBLE_CLICK_MS) {
+      lastLeftClickAt.current = 0;
+      if (singleClickTimer.current !== null) {
+        window.clearTimeout(singleClickTimer.current);
+        singleClickTimer.current = null;
+      }
+      handleLaugh();
       return;
     }
 
-    const nextReaction = interact("laugh");
-    const voiceMs = settings.soundEnabled
-      ? playNaiwaVoice(nextReaction.voice, "adult")
-      : 0;
-    lockFlow(Math.max(ADULT_LAUGH_FLOW_MS, voiceMs));
-  }, [interact, lockFlow, settings.age, settings.soundEnabled]);
+    lastLeftClickAt.current = now;
+    if (singleClickTimer.current !== null) {
+      window.clearTimeout(singleClickTimer.current);
+    }
+    singleClickTimer.current = window.setTimeout(() => {
+      singleClickTimer.current = null;
+      lastLeftClickAt.current = 0;
+      performAdultAction();
+    }, ADULT_DOUBLE_CLICK_MS);
+  }, [
+    handleLaugh,
+    interact,
+    lockFlow,
+    performAdultAction,
+    settings.age,
+    settings.soundEnabled,
+  ]);
 
   useEffect(() => {
     flowLock.current = false;
@@ -109,6 +158,11 @@ export default function Pet() {
       window.clearTimeout(flowTimer.current);
       flowTimer.current = null;
     }
+    if (singleClickTimer.current !== null) {
+      window.clearTimeout(singleClickTimer.current);
+      singleClickTimer.current = null;
+    }
+    lastLeftClickAt.current = 0;
     stopNaiwaVoice();
   }, [settings.age]);
 
@@ -123,6 +177,9 @@ export default function Pet() {
       if (flowTimer.current !== null) {
         window.clearTimeout(flowTimer.current);
       }
+      if (singleClickTimer.current !== null) {
+        window.clearTimeout(singleClickTimer.current);
+      }
     };
   }, []);
 
@@ -134,15 +191,11 @@ export default function Pet() {
 
   const interaction = usePetInteraction({
     onInteract: handleInteract,
-    onSecondary: settings.age === "adult" ? handleLaugh : undefined,
     onOpenSettings: handleOpenSettings,
     language: settings.language,
   });
 
-  useClickThrough({
-    enabled: ready,
-    onPointerInsideChange: setPointerInside,
-  });
+  useClickThrough({ enabled: ready });
 
   useEffect(() => {
     let cancelled = false;
@@ -241,7 +294,7 @@ export default function Pet() {
 
   return (
     <main
-      className={`pet-stage pet-stage--${settings.age} pet-stage--palette-${settings.palette}${pointerInside ? " pet-stage--pointer-inside" : ""}`}
+      className={`pet-stage pet-stage--${settings.age} pet-stage--palette-${settings.palette}`}
       style={{ "--pet-scale": settings.scale } as CSSProperties}
       aria-label={strings.pet.aria}
       {...interaction}
@@ -255,35 +308,6 @@ export default function Pet() {
         age={settings.age}
         palette={settings.palette}
       />
-      <button
-        type="button"
-        className="pet-settings-button"
-        aria-label={strings.menu.settings}
-        title={strings.menu.settings}
-        onPointerDown={(event) => event.stopPropagation()}
-        onPointerUp={(event) => event.stopPropagation()}
-        onClick={(event) => {
-          event.stopPropagation();
-          handleOpenSettings();
-        }}
-        onContextMenu={(event) => {
-          event.preventDefault();
-          event.stopPropagation();
-        }}
-      >
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-        >
-          <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" />
-          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.01a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.01a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z" />
-        </svg>
-      </button>
       {settings.palette !== "classic" ? (
         <div className="pet-hud" aria-hidden="true">
           <span className={`pet-hud-dot${ready ? " is-online" : ""}`} />

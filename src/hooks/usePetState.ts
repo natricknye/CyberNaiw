@@ -231,5 +231,5 @@ export function usePetState(
     };
   }, [clearReaction, clearTransition]);
 
-  return { state, reaction, interact, advanceAction, speak };
+  return { state, reaction, interact, advanceAction, speak, clearReaction };
 }

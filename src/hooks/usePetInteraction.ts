@@ -11,9 +11,7 @@ import type { Language } from "../types/pet";
 
 interface PetInteractionOptions {
   onInteract: () => void;
-  /** Right-click on the character. When set, the native pet menu is disabled. */
-  onSecondary?: () => void;
-  /** Middle-click on the pet. Keeps settings reachable when right-click laughs. */
+  /** Middle-click on the pet. */
   onOpenSettings?: () => void;
   language: Language;
 }
@@ -25,12 +23,11 @@ const DRAG_THRESHOLD_PX = 5;
  * after the pointer moves a few pixels, so a click (and especially a
  * double-click) is not swallowed by the OS drag loop.
  *
- * Adult pets use right-click for the laugh, so `onSecondary` replaces the
- * native context menu. Baby pets keep the menu by omitting `onSecondary`.
+ * Right-click always opens the native pet menu. Adult double-left-click is
+ * handled by the pet component and triggers the laugh.
  */
 export function usePetInteraction({
   onInteract,
-  onSecondary,
   onOpenSettings,
   language,
 }: PetInteractionOptions) {
@@ -141,19 +138,9 @@ export function usePetInteraction({
   const handleContextMenu = useCallback(
     (event: ReactMouseEvent<HTMLElement>) => {
       event.preventDefault();
-
-      // Ctrl/⌘ + right-click is the escape hatch for the native menu
-      // (settings / hide / quit) after plain right-click becomes the laugh.
-      if (onSecondary && !event.ctrlKey && !event.metaKey) {
-        if (isCharacterPoint(event)) {
-          onSecondary();
-        }
-        return;
-      }
-
       void showPetMenu(language);
     },
-    [language, onSecondary],
+    [language],
   );
 
   return {

@@ -9,10 +9,9 @@
 Cyber Naiwa (赛博奶蛙) is a cross-platform desktop pet built around 奶蛙 (Naiwa), the gleefully unhinged yellow frog from Chinese internet memes. It has three forms: **Original Cyber** and **Quantum Cyber** use a pixel-mapped ASCII sprite (112×70 and 128×80), while **Naiwa Classic** uses the original artwork directly. The adult is tall and long-limbed; the baby is short, round, big-headed, with tiny limbs. Click it to trigger the laugh. Everything runs locally — no account, no cloud, no telemetry.
 
 - A transparent, frameless, always-on-top pet window with click-through margins
-- Left-drag the character to move; adult left-click cycles actions, right-click laughs
-- Only the character's opaque pixels and the settings gear capture the mouse; the bubble, HUD, shadow and transparent margins pass clicks to the window below
-- Middle-click opens Settings; Ctrl/⌘ + right-click opens the native menu
-- Actions and laughs play the matching Naiwa voice line, with a mute switch in Settings
+- Left-drag the character to move; adult single-click cycles actions, double-click laughs, right-click opens the native menu
+- Only the character's opaque pixels capture the mouse; the bubble, HUD, shadow and transparent margins pass clicks to the window below
+- Actions and laughs play the matching Naiwa voice line; walk and run are intentionally silent. A mute switch is in Settings
 - Adult actions: stand, horse stance, beckon, walk, run, look around, think, clap, crouch
 - Three forms: Original Cyber / Quantum Cyber (ASCII) and Naiwa Classic (original artwork)
 - Adult and baby Naiwa, with warm Original or blue-black Quantum colourways
@@ -156,7 +155,7 @@ Want to try a PNG/WEBP/GIF skin? `src/assets/pets/README.md` shows how to regist
 
 ## Design notes
 
-The character follows the official Naiwa design database and the [Naiwa wiki](https://neta.art/app/milk-frog-wiki): the adult is tall and long-limbed, the baby is short, round, big-headed, with tiny limbs; both have a pale cream belly, pale green eye rings with centred black pupils, and a tiny horizontal mouth. The adult action library comes from the `pet/` frame sequences in [Nailong-Studio/NaiWa-Wallpaper](https://github.com/Nailong-Studio/NaiWa-Wallpaper) (MIT): walk, run, look around, think, clap, eat, and crouch. The baby uses only the official juvenile reference poses and never borrows adult actions. Click-to-interact is the core: adult left-click advances the action stack, right-click laughs; it starts standing and only occasionally shifts into the horse stance on its own.
+The character follows the official Naiwa design database and the [Naiwa wiki](https://neta.art/app/milk-frog-wiki): the official adult art is tall and long-limbed, the baby is short, round, big-headed, with tiny limbs; both have a pale cream belly, pale green eye rings with centred black pupils, and a tiny horizontal mouth. The desktop standing pose now uses chubby idle frames from the same action library. The adult action library comes from the `pet/` frame sequences in [Nailong-Studio/NaiWa-Wallpaper](https://github.com/Nailong-Studio/NaiWa-Wallpaper) (MIT): idle, beckon, walk, run, look around, think, clap, eat, and crouch. The baby uses only the official juvenile reference poses and never borrows adult actions. Click-to-interact is the core: adult single-click advances the action stack, double-click laughs, right-click opens the native menu; it starts standing and only occasionally shifts into the horse stance on its own.
 
 ## Voice and audio sources
 
@@ -176,12 +175,10 @@ The six clips come from the `音效/` directory of [VIPmrgj/Dragon-frog](https:/
 Interaction:
 
 - **Adult start**: stands idle. Every 9–16 seconds it may briefly shift into the horse stance, then stand again.
-- **Adult left-click**: advances one action: stand → horse stance → beckon → walk → run → look around → think → clap → crouch → stand, and plays a random 安迪 / 嘎嘎提拉瞎 / 干巴得 / 哦啦 / 噶韭菜 line. Once an action flow starts, clicks are ignored until both the animation and its voice line finish; the next click then advances.
-- **Adult right-click**: plays the laugh and the full 4.11 s laugh animation; it no longer opens the menu. **The laugh is right-click only** — the left-click stack never contains `happy`/`click` and never summons the laugh-like eating pose either.
-- **Top-right gear**: the gear only appears while the pointer is inside the pet window; it opens Settings and hides again when the pointer leaves.
-- **Click-through margins**: only the character's opaque pixels and the top-right gear capture the mouse; the transparent margins, bubble, HUD and shadow pass clicks to the window below. Drag the character itself to move the pet.
-- **Adult middle-click**: press the scroll wheel to open Settings (trackpads without a middle button can use the gear or tray).
-- **Adult Ctrl/⌘ + right-click**: opens the native menu (Settings / Hide / Quit).
+- **Adult left-click**: a single click advances one action: stand → horse stance → beckon → walk → run → look around → think → clap → crouch → stand. The pet waits 300 ms to rule out a double-click; a double-click within that window cancels the action and plays the laugh. Walk and run are silent; the other actions play a random 安迪 / 嘎嘎提拉瞎 / 干巴得 / 哦啦 / 噶韭菜 line. Once an action flow starts, clicks are ignored until both the animation and its voice line finish.
+- **Adult right-click**: opens the native menu (Settings / Hide / Quit); it no longer triggers the laugh. **The laugh is left-double-click only**; the single-click stack never contains `happy`/`click` and never summons the laugh-like eating pose either.
+- **Click-through margins**: only the character's opaque pixels capture the mouse; the transparent margins, bubble, HUD and shadow pass clicks to the window below. Drag the character itself to move the pet.
+- **Adult middle-click**: press the scroll wheel to open Settings (trackpads without a middle button can use the right-click menu or tray).
 - **Tray**: still shows/hides the pet, opens Settings, and quits.
 - **Baby**: keeps a separate stack with no laugh clip; left-click plays one meme line and the happy reaction, right-click still opens the native menu.
 - With sound off, the same line is shown as a subtitle instead.
