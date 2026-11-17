@@ -89,6 +89,7 @@ export const FRAME_INTERVAL_MS: Record<PetAnimationState, number> = {
   clap: 160,
   eat: 260,
   crouch: 500,
+  lie: 500,
 };
 
 // The baby has only two frames per state; keep the slower original cadence.
@@ -105,4 +106,5 @@ export const BABY_FRAME_INTERVAL_MS: Record<PetAnimationState, number> = {
   clap: 320,
   eat: 320,
   crouch: 500,
+  lie: 500,
 };

@@ -221,6 +221,14 @@
   cursor: grabbing;
 }
 
+/* The lying pose is wide and short; size it by width instead of the usual
+   78vh height so it does not become a tiny strip at the bottom. */
+.pet-visual--image.pet-visual--lie img {
+  height: auto;
+  width: 92%;
+  max-height: 56vh;
+}
+
 .pet-shadow {
   position: absolute;
   z-index: 0;

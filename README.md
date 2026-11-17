@@ -12,7 +12,7 @@
 - 抓住角色左键拖动；成年单击切换动作，双击大笑；右键打开原生菜单；中键打开设置
 - 只有角色不透明像素拦截鼠标，透明边、气泡、HUD、阴影都落到后面窗口
 - 切换动作或大笑时播放对应奶蛙语音；走、跑刻意不配音，设置里可以静音
-- 成年动作：站立、扎马步、招手、走、跑、张望、思考、鼓掌、蹲伏
+- 成年动作：站立、扎马步、招手、走、跑、张望、思考、鼓掌、蹲伏、躺平
 - 三种形态：原色赛博 / 量子赛博（ASCII）、奶家经典（原画）
 - 成年奶蛙 / 幼体奶蛙，原色赛博暖黄 / 量子赛博蓝黑两套配色
 - 应用界面中文；英文说明保留在 `README.en.md`
@@ -52,7 +52,7 @@
 | --- | --- |
 | 成长阶段 | 成年（圆胖、短腿）/ 幼体（短圆大头、短手脚） |
 | 形态 | 原色赛博（暖黄 + 奶油 + 橄榄褐，112×70）/ 量子赛博（蓝黑 + 青色终端，128×80）/ 奶家经典（原画，透明背景） |
-| 动作 | 成年：站立、扎马步、招手、走、跑、张望、思考、鼓掌、蹲伏；幼体：待机、走、开心、抬手，动作栈与成年分开 |
+| 动作 | 成年：站立、扎马步、招手、走、跑、张望、思考、鼓掌、蹲伏、躺平；幼体：待机、走、开心、抬手，动作栈与成年分开 |
 
 幼体单独预览：
 
@@ -137,15 +137,15 @@ pnpm tauri build --bundles dmg
 
 ## 角色素材
 
-默认 ASCII 角色 `cyber-naiwa` 的原色赛博成年帧在 `src/assets/pets/cyber-naiwa/naiwa-frames.json`，幼体帧在 `naiwa-baby-frames.json`（112×70）；量子赛博成年/幼体帧在 `naiwa-cyber-frames.json`、`naiwa-cyber-baby-frames.json`（128×80）。成年帧覆盖 idle / walk / happy / click / wave / beckon；成年 happy/click 各 25 帧，wave 2 帧，beckon 3 帧，其余状态每态 2 帧；幼体仍是 idle / walk / happy / click / wave 每态 2 帧。新增的 run / look / think / clap / eat / crouch 在 `src/assets/pets/index.ts` 复用最接近的现有 ASCII 姿态，`beckon` 则有独立的 3 帧招手帧，二者都保留独立 HUD 标签、帧间隔和动作时长。成年 wave 帧从 `classic/adult-wave.png` 用固定取景 `FixedSide 430`、中心 `(148,206)` 重采样到 112×70/128×80，膝盖、脚不再贴网格边；膝下小腿的 `|` 色调回金色 `%`，脚掌保留棕色，所以左膝到脚掌是连续轮廓。招手帧从 Nailong 的 `招手-01/02/04` 原画用 `FixedSide 230`、中心 `(63,99)` 转成 112×70/128×80，脚部误判的 `_` 已改回 `|`。字符 tone、帧间隔和渲染逻辑在 `frames.ts`。成年大笑的 25 帧来自 [liaosongjie/Codex-Voice-Input](https://github.com/liaosongjie/Codex-Voice-Input) 的 MIT 动画帧（固定取景后转成 ASCII）；其余基础帧由官方设计资料库中的成年 / 幼体 / 大笑 / 挥手参考图逐像素映射生成，招手 3 帧来自 Nailong-Studio 的 MIT `招手` 素材；ASCII 帧的参考图片本身不入库。应用图标取自幼体原色赛博 ASCII 待机帧，不再单独绘制。
+默认 ASCII 角色 `cyber-naiwa` 的原色赛博成年帧在 `src/assets/pets/cyber-naiwa/naiwa-frames.json`，幼体帧在 `naiwa-baby-frames.json`（112×70）；量子赛博成年/幼体帧在 `naiwa-cyber-frames.json`、`naiwa-cyber-baby-frames.json`（128×80）。成年帧覆盖 idle / walk / happy / click / wave / beckon；成年 happy/click 各 25 帧，wave 2 帧，beckon 3 帧，其余状态每态 2 帧；幼体仍是 idle / walk / happy / click / wave 每态 2 帧。新增的 run / look / think / clap / eat / crouch / lie 在 `src/assets/pets/index.ts` 复用最接近的现有 ASCII 姿态，`beckon` 则有独立的 3 帧招手帧，二者都保留独立 HUD 标签、帧间隔和动作时长。成年 wave 帧从 `classic/adult-wave.png` 用固定取景 `FixedSide 430`、中心 `(148,206)` 重采样到 112×70/128×80，膝盖、脚不再贴网格边；膝下小腿的 `|` 色调回金色 `%`，脚掌保留棕色，所以左膝到脚掌是连续轮廓。招手帧从 Nailong 的 `招手-01/02/04` 原画用 `FixedSide 230`、中心 `(63,99)` 转成 112×70/128×80，脚部误判的 `_` 已改回 `|`。字符 tone、帧间隔和渲染逻辑在 `frames.ts`。成年大笑的 25 帧来自 [liaosongjie/Codex-Voice-Input](https://github.com/liaosongjie/Codex-Voice-Input) 的 MIT 动画帧（固定取景后转成 ASCII）；其余基础帧由官方设计资料库中的成年 / 幼体 / 大笑 / 挥手参考图逐像素映射生成，招手 3 帧来自 Nailong-Studio 的 MIT `招手` 素材；ASCII 帧的参考图片本身不入库。应用图标取自幼体原色赛博 ASCII 待机帧，不再单独绘制。
 
-奶家经典皮肤 `naiwa-classic` 在 `src/assets/pets/classic/`：成年待机默认使用 `classic/idle-chubby/00–05.png`（6 帧，180×210，底部留 6px，600ms/帧，来自 Nailong `待机-01–06` 的圆胖全身原画，循环从最正面的 06 开始），和走路/跑步同一画风；`adult-idle-aligned.png` 保留为高瘦正面备选，Nailong 的 `classic/idle/00–05.png` 仍是 3/4 侧身备选。成年扎马步（wave）和幼体三态是官方设计参考图的透明抠图；幼体三态已重新放宽裁切，手、脚、膝盖都有 14px 内边距；成年 happy/click 使用 `classic/laugh-hd/000–024.webp`，从 1080×1474 的 `naiwa-laugh.mp4` 6.5–8.75 秒抽 25 帧，去掉白底、地面阴影和胯下白块，统一留 3% 边距后 Lanczos 缩到 524×720，不做锐化，164ms/帧，和 4.11 秒大笑音频对齐。`classic/laugh/` 保留原始 180×180 MIT 帧，`classic/laugh-hires/` 保留 648×888 的 6× 放大回退版；视频源的再分发许可记录不完整，已按项目所有者确认作为粉丝二创使用，必要时可切回 `laugh-hires`。走、跑、张望、思考、鼓掌、招手、蹲伏使用 `classic/actions/<action>/` 的逐帧原画，来自 Nailong-Studio 的 MIT 素材，统一补齐到 180×210 画布、底部留 6px，所以脚和膝盖不会被窗口裁掉；招手（beckon）3 帧来自 `招手-01/02/04`，220ms/帧；`进食` 帧保留在素材里，但因为张嘴仰头太像大笑，暂不接入左键动作栈。图片按窗口高度缩放，成年待机和动作的身体高度约 280px。抠图/放大/补帧脚本是 `_qa/make-classic-cutouts.ps1`、`_qa/make-baby-cutouts.py`、`_qa/crop-classic-laugh.ps1`、`_qa/upscale-classic-laugh.py`、`_qa/build-hd-laugh.py`、`_qa/build-classic-actions.py`、`_qa/build-classic-idle.py`、`_qa/build-classic-idle-beckon.py` 和 `_qa/insert-ascii-beckon.py`（`_qa/` 不入库）。这部分是粉丝二创非商业使用，来源与授权说明见 `_qa/reference/official/laugh/SOURCES.md`。
+奶家经典皮肤 `naiwa-classic` 在 `src/assets/pets/classic/`：成年待机默认使用 `classic/idle-chubby/00–05.png`（6 帧，180×210，底部留 6px，600ms/帧，来自 Nailong `待机-01–06` 的圆胖全身原画，循环从最正面的 06 开始），和走路/跑步同一画风；`adult-idle-aligned.png` 保留为高瘦正面备选，Nailong 的 `classic/idle/00–05.png` 仍是 3/4 侧身备选。成年扎马步（wave）和幼体三态是官方设计参考图的透明抠图；幼体三态已重新放宽裁切，手、脚、膝盖都有 14px 内边距；成年 happy/click 使用 `classic/laugh-hd/000–024.webp`，从 1080×1474 的 `naiwa-laugh.mp4` 6.5–8.75 秒抽 25 帧，去掉白底、地面阴影和胯下白块，统一留 3% 边距后 Lanczos 缩到 524×720，不做锐化，164ms/帧，和 4.11 秒大笑音频对齐。`classic/laugh/` 保留原始 180×180 MIT 帧，`classic/laugh-hires/` 保留 648×888 的 6× 放大回退版；视频源的再分发许可记录不完整，已按项目所有者确认作为粉丝二创使用，必要时可切回 `laugh-hires`。走、跑、张望、思考、鼓掌、招手、蹲伏使用 `classic/actions/<action>/` 的逐帧原画，来自 Nailong-Studio 的 MIT 素材，统一补齐到 180×210 画布、底部留 6px，所以脚和膝盖不会被窗口裁掉；招手（beckon）3 帧来自 `招手-01/02/04`，220ms/帧；躺平（lie）使用 `classic/lie/00–01.png`，280×170 宽画布、2 帧 800ms，已去掉贴地浅灰阴影线；`进食` 帧保留在素材里，但因为张嘴仰头太像大笑，暂不接入左键动作栈。图片按窗口高度缩放，成年待机和动作的身体高度约 280px。抠图/放大/补帧脚本是 `_qa/make-classic-cutouts.ps1`、`_qa/make-baby-cutouts.py`、`_qa/crop-classic-laugh.ps1`、`_qa/upscale-classic-laugh.py`、`_qa/build-hd-laugh.py`、`_qa/build-classic-actions.py`、`_qa/build-classic-idle.py`、`_qa/build-classic-idle-beckon.py` 和 `_qa/insert-ascii-beckon.py`（`_qa/` 不入库）。这部分是粉丝二创非商业使用，来源与授权说明见 `_qa/reference/official/laugh/SOURCES.md`。
 
 想换成 PNG/WEBP/GIF 皮肤时，按 `src/assets/pets/README.md` 的说明注册 `ImagePetSkin` 即可，渲染器同时支持 ASCII 和图片序列。请不要提交没有 redistribution 权限的素材。
 
 ## 设计参考
 
-角色设定参考奶蛙官方设计资料库与 [奶蛙百科](https://neta.art/app/milk-frog-wiki)：官方成年立绘是长腿瘦高版，幼体是短圆大头、短手脚；浅奶油色大肚皮、浅绿眼环和居中黑瞳、极短水平嘴线。桌面站立现在使用动作库同画风的圆胖待机帧。成年动作库来自 [Nailong-Studio/NaiWa-Wallpaper](https://github.com/Nailong-Studio/NaiWa-Wallpaper) 的 `pet/` 逐帧（MIT）：待机、招手、走、跑、张望、思考、鼓掌、进食、蹲伏；幼体只使用官方幼体三视图里的待机 / V 字手 / 叉腰，不与成年共用动作。点击互动是核心：成年单击走动作栈、双击大笑、右键原生菜单；初始站立，空闲时只偶尔自动扎马步。
+角色设定参考奶蛙官方设计资料库与 [奶蛙百科](https://neta.art/app/milk-frog-wiki)：官方成年立绘是长腿瘦高版，幼体是短圆大头、短手脚；浅奶油色大肚皮、浅绿眼环和居中黑瞳、极短水平嘴线。桌面站立现在使用动作库同画风的圆胖待机帧。成年动作库来自 [Nailong-Studio/NaiWa-Wallpaper](https://github.com/Nailong-Studio/NaiWa-Wallpaper) 的 `pet/` 逐帧（MIT）：待机、招手、走、跑、张望、思考、鼓掌、进食、蹲伏、躺平；幼体只使用官方幼体三视图里的待机 / V 字手 / 叉腰，不与成年共用动作。点击互动是核心：成年单击走动作栈、双击大笑、右键原生菜单；初始站立，空闲时只偶尔自动扎马步。
 
 ## 台词与声音来源
 
@@ -165,7 +165,7 @@ pnpm tauri build --bundles dmg
 交互规则：
 
 - **成年初始**：站立待机；空闲 9–16 秒会偶尔自动切到扎马步，然后回到站立。
-- **成年左键**：单击按动作栈前进一档：站立 → 扎马步 → 招手 → 走 → 跑 → 张望 → 思考 → 鼓掌 → 蹲伏 → 站立。单击会等 300ms 确认不是双击后再进入动作；300ms 内双击则取消单击并播放大笑。走、跑不配音、不显示台词；其他动作随机播一条安迪 / 嘎嘎提拉瞎 / 干巴得 / 哦啦 / 噶韭菜。点进动作流程后，必须等动作和语音都完全结束，下一次点击才会进入下一档。
+- **成年左键**：单击按动作栈前进一档：站立 → 扎马步 → 招手 → 走 → 跑 → 张望 → 思考 → 鼓掌 → 蹲伏 → 躺平 → 站立。单击会等 300ms 确认不是双击后再进入动作；300ms 内双击则取消单击并播放大笑。走、跑不配音、不显示台词；其他动作随机播一条安迪 / 嘎嘎提拉瞎 / 干巴得 / 哦啦 / 噶韭菜。点进动作流程后，必须等动作和语音都完全结束，下一次点击才会进入下一档。
 - **成年右键**：打开原生菜单（设置 / 隐藏 / 退出），不再触发大笑。**大笑只由左键双击触发**，左键动作栈不含 `happy`/`click`，也不会召唤出像大笑的“进食”张嘴仰头姿势。
 - **透明边穿透**：只有角色不透明像素接收鼠标；透明边、气泡、HUD、阴影都穿透到后面的窗口。因为透明边不再接收鼠标，拖动窗口要抓住角色本身。
 - **成年中键**：按下鼠标滚轮打开设置（笔记本触控板没有中键时用右键菜单或托盘）。

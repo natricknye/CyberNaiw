@@ -42,6 +42,7 @@ export const ADULT_ACTION_STACK = [
   "think",
   "clap",
   "crouch",
+  "lie",
 ] as const satisfies readonly PetAnimationState[];
 
 const ACTION_DURATION_MS: Partial<Record<PetAnimationState, number>> = {
@@ -53,6 +54,7 @@ const ACTION_DURATION_MS: Partial<Record<PetAnimationState, number>> = {
   think: 2200,
   clap: 1400,
   crouch: 1800,
+  lie: 2600,
 };
 
 // Adult idles only stand or occasionally shift into the horse stance. Every

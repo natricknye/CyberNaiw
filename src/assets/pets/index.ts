@@ -32,6 +32,15 @@ const CLASSIC_IDLE_FRAMES = Object.keys(CLASSIC_IDLE_MODULES)
   .sort()
   .map((key) => CLASSIC_IDLE_MODULES[key]);
 
+const CLASSIC_LIE_MODULES = import.meta.glob(
+  "./classic/lie/*.png",
+  { eager: true, import: "default" },
+) as Record<string, string>;
+
+const CLASSIC_LIE_FRAMES = Object.keys(CLASSIC_LIE_MODULES)
+  .sort()
+  .map((key) => CLASSIC_LIE_MODULES[key]);
+
 const CLASSIC_ACTION_MODULES = import.meta.glob(
   "./classic/actions/*/*.png",
   { eager: true, import: "default" },
@@ -60,6 +69,7 @@ const ADULT_ASCII_FRAMES: FrameMap = {
   clap: CYBER_NAIWA_FRAMES.wave,
   eat: CYBER_NAIWA_FRAMES.idle,
   crouch: CYBER_NAIWA_FRAMES.wave,
+  lie: CYBER_NAIWA_FRAMES.crouch,
 };
 
 const ADULT_ASCII_CYBER_FRAMES: FrameMap = {
@@ -70,6 +80,7 @@ const ADULT_ASCII_CYBER_FRAMES: FrameMap = {
   clap: CYBER_NAIWA_CYBER_FRAMES.wave,
   eat: CYBER_NAIWA_CYBER_FRAMES.idle,
   crouch: CYBER_NAIWA_CYBER_FRAMES.wave,
+  lie: CYBER_NAIWA_CYBER_FRAMES.crouch,
 };
 
 export type PetSkinKind = "ascii" | "image";
@@ -129,6 +140,7 @@ export const PET_SKINS: readonly PetSkin[] = [
       idle:
         CLASSIC_IDLE_FRAMES.length > 0 ? CLASSIC_IDLE_FRAMES : [adultIdle],
       beckon: CLASSIC_ACTION_FRAMES.beckon ?? [adultIdle],
+      lie: CLASSIC_LIE_FRAMES.length > 0 ? CLASSIC_LIE_FRAMES : [adultIdle],
       walk: CLASSIC_ACTION_FRAMES.walk ?? [adultIdle],
       run: CLASSIC_ACTION_FRAMES.run ?? [adultIdle],
       look: CLASSIC_ACTION_FRAMES.look ?? [adultIdle],
@@ -151,6 +163,7 @@ export const PET_SKINS: readonly PetSkin[] = [
     frameIntervalMsByState: {
       idle: 600,
       beckon: 220,
+      lie: 800,
       walk: 140,
       run: 90,
       look: 220,

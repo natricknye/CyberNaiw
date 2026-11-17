@@ -293,6 +293,15 @@
 - `frameIntervalMsByState.idle` 从 1200ms 改为 600ms，6 帧约 3.6 秒一循环；`src` 实测在 `00 → 02 → 03` 之间轮播。
 - 文档同步：站立从“3 帧 / 1200ms / 待机-06/01/03”改为“6 帧 / 600ms / 待机-01–06”。`pnpm build` 通过。
 
+## 2026-11-17 — Phase 36：新增躺平
+
+- 用户从候选里只保留躺平，要求去掉地上的白色/浅灰线；倾听、忙碌、沮丧都不接。
+- 源图 `躺平帧.png` / `躺平翻身帧.png` 的贴地浅灰阴影在底部 5 行及缩放后的低饱和区域；`_qa/build-classic-lie.py` 先清底部阴影，再在最终画布上清除低饱和亮像素，白线消失。
+- 躺平使用 280×170 宽画布、2 帧、底部 y=164（6px 底边距），帧间隔 800ms；CSS 对 `.pet-visual--lie img` 改为 `height:auto; width:92%`，否则 78vh 高度规则会把横躺角色缩成小条。
+- `lie` 插在动作栈末尾：`... → crouch → lie → idle`，时长 2600ms；经典使用 `classic/lie/00–01.png`，ASCII 原色/量子复用 `crouch` 帧，HUD 为 `LIE`，ARIA 中英同步。
+- 实机点完整套动作栈后停在 `lie`：`src=/src/assets/pets/classic/lie/00.png`，图片区域 231×140，横躺落在窗口底部，白线不再出现。
+- 同库的 192×208 `emotes`（爬行/得意/张望/托腮）是扁平 2D 风格，和经典 3D 动作不搭；Codex 的 waiting/review 是另一套模型，暂不混入。`pnpm build` 通过。
+
 ## 待人工确认
 
 - 托盘菜单的物理点击仍需在桌面通知区实际点一遍；窗口 show/hide/设置/退出逻辑已实现。

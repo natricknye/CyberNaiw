@@ -119,6 +119,7 @@ const ZH: UiStrings = {
       clap: "赛博奶蛙，鼓掌",
       eat: "赛博奶蛙，进食",
       crouch: "赛博奶蛙，蹲伏",
+      lie: "赛博奶蛙，躺平",
     },
     settingsError: "设置读取失败，已使用默认值",
     // Naiwa meme sound words, not self-written. Each line has a matching
@@ -197,6 +198,7 @@ const EN: UiStrings = {
       clap: "Cyber Naiwa, clapping",
       eat: "Cyber Naiwa, eating",
       crouch: "Cyber Naiwa, crouching",
+      lie: "Cyber Naiwa, lying down",
     },
     settingsError: "Couldn't read settings; using defaults.",
     // These are Naiwa meme sound words; keep the Chinese originals in both locales.
