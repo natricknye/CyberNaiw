@@ -302,6 +302,14 @@
 - 实机点完整套动作栈后停在 `lie`：`src=/src/assets/pets/classic/lie/00.png`，图片区域 231×140，横躺落在窗口底部，白线不再出现。
 - 同库的 192×208 `emotes`（爬行/得意/张望/托腮）是扁平 2D 风格，和经典 3D 动作不搭；Codex 的 waiting/review 是另一套模型，暂不混入。`pnpm build` 通过。
 
+## 2026-11-17 — Phase 37：新增等待 / 检查
+
+- 继续找全身动画时，`NaiWa-Wallpaper` 的 `emotes` 是扁平 2D（爬行/得意/张望/托腮），和经典 3D 动作不搭；Codex 奶蛙仓库的 `waiting.png` / `review.png` 是 192×208 的 3D 透明 APNG，各有 6 帧，风格更接近。
+- `_qa/build-classic-codex-actions.py` 把每帧等比缩到 180×195、底部对齐到 y=204，输出 `classic/actions/wait/00–05.png` 和 `classic/actions/review/00–05.png`。
+- 动作栈插入 `think → wait → review → clap`；经典帧间隔 150ms，动作时长各 1800ms；ASCII 原色/量子分别复用 idle，HUD 为 `WAIT` / `REVIEW`，ARIA 中英同步。
+- 实机点击确认：`wait` 停在 `actions/wait/03.png`，`review` 停在 `actions/review/03.png`，画面正常。Codex 模型比 Nailong 动作帧略高瘦，但仍是圆胖 3D 奶蛙，先接进来供评估。
+- 来源/授权：`timerring/codex-pet-naiwa` 仓库 MIT；上游 Credits 中的第三方素材授权未随仓库完全明确，已在 README 标注，若需严格合规可回退这两档。`pnpm build` 通过。
+
 ## 待人工确认
 
 - 托盘菜单的物理点击仍需在桌面通知区实际点一遍；窗口 show/hide/设置/退出逻辑已实现。
