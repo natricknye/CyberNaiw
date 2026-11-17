@@ -149,7 +149,7 @@ export const PET_SKINS: readonly PetSkin[] = [
     },
     frameIntervalMs: 164,
     frameIntervalMsByState: {
-      idle: 1200,
+      idle: 600,
       beckon: 220,
       walk: 140,
       run: 90,

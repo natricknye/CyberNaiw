@@ -29,10 +29,10 @@ restored to `|`.
 ## Classic skin
 
 `naiwa-classic` is an `ImagePetSkin` using the cut-out original artwork in
-`classic/`: adult idle defaults to `classic/idle-chubby/00`–`02.png` (three
-frames from the Nailong `待机-06/01/03` art, 180×210 with a 6 px bottom margin,
-1200 ms per frame; frame 00 is the most front-facing and matches the walk/run
-art style). `adult-idle-aligned.png` remains the tall front fallback, and
+`classic/`: adult idle defaults to `classic/idle-chubby/00`–`05.png` (six
+frames from the Nailong `待机-01–06` art, 180×210 with a 6 px bottom margin,
+600 ms per frame; the loop starts on the most front-facing 06 and matches the
+walk/run art style). `adult-idle-aligned.png` remains the tall front fallback, and
 `classic/idle/00`–`05.png` keeps the 3/4 side-facing alternative. Wave and baby
 idle/happy/wave remain single cut-out PNGs; the three baby images were re-cropped from the
 official juvenile sheet with a 14 px inner margin so hands, feet, and knees are
