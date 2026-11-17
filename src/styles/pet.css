@@ -227,6 +227,7 @@
   height: auto;
   width: 92%;
   max-height: 56vh;
+  filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.3));
 }
 
 .pet-shadow {
