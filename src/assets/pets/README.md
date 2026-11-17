@@ -47,15 +47,19 @@ Lanczos downscale to 524×720, no sharpening. `classic/laugh-hires/` keeps the
 tall cut-out with ×1.14 brightness and ×0.78 colour; `adult-idle.png` keeps the
 unmodified cut-out.
 
-Adult walk/run/look/think/clap/beckon/crouch live in `classic/actions/<state>/`.
-They come from the Nailong-Studio `pet/` MIT frame sequences, padded to a
-180×210 canvas and bottom-aligned to y=204 (6 px bottom margin), so feet and
-knees stay visible. Beckon uses the three `招手-01/02/04` frames at 220 ms per
-frame. The `eat` frames stay in the library but are not wired to
+Adult walk/run/look/think/wait/review/clap/beckon/crouch live in
+`classic/actions/<state>/`. They come from the Nailong-Studio `pet/` MIT frame
+sequences (wait/review use the Codex waiting/review APNGs), padded to a 180×210
+canvas and bottom-aligned to y=204 (6 px bottom margin), so feet and knees stay
+visible. Beckon uses the three `招手-01/02/04` frames at 220 ms per frame. The
+`eat` frames stay in the library but are not wired to
 the left-click stack: the open-mouth head-back pose reads as a laugh. Use
 `frameIntervalMsByState` for per-action cadence; the global `frameIntervalMs`
 remains the laugh interval. Image skins may declare a separate `babyFrames`
-map; otherwise the adult map is used for both ages.
+map; otherwise the adult map is used for both ages. Lie-down lives in
+`classic/lie/00–01.png` on a 560×340 (2×) canvas at 800 ms per frame; the
+source went through OpenCV FSRCNN x4 super-resolution, bilateral filtering and
+alpha anti-aliasing to remove jaggies and the light ground line.
 
 ## Adding an image skin
 
