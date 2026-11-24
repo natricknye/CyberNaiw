@@ -4,7 +4,15 @@ export interface PointLike {
   target: EventTarget | null;
 }
 
-const imageAlphaCache = new Map<string, CanvasRenderingContext2D>();
+// Keep only the current frame. The click-through poll visits every animation
+// frame automatically, so a per-src map would retain dozens of full-size
+// canvases (e.g. 25 laugh frames at 524×720) for no benefit.
+let imageAlphaCache: {
+  source: string;
+  width: number;
+  height: number;
+  context: CanvasRenderingContext2D;
+} | null = null;
 
 function isOpaqueImagePoint(
   image: HTMLImageElement,
@@ -26,8 +34,12 @@ function isOpaqueImagePoint(
   }
 
   const source = image.currentSrc || image.src;
-  let context = imageAlphaCache.get(source);
-  if (!context) {
+  if (
+    !imageAlphaCache ||
+    imageAlphaCache.source !== source ||
+    imageAlphaCache.width !== image.naturalWidth ||
+    imageAlphaCache.height !== image.naturalHeight
+  ) {
     const canvas = document.createElement("canvas");
     canvas.width = image.naturalWidth;
     canvas.height = image.naturalHeight;
@@ -36,11 +48,15 @@ function isOpaqueImagePoint(
       return false;
     }
     nextContext.drawImage(image, 0, 0);
-    context = nextContext;
-    imageAlphaCache.set(source, context);
+    imageAlphaCache = {
+      source,
+      width: image.naturalWidth,
+      height: image.naturalHeight,
+      context: nextContext,
+    };
   }
 
-  return context.getImageData(x, y, 1, 1).data[3] > 16;
+  return imageAlphaCache.context.getImageData(x, y, 1, 1).data[3] > 16;
 }
 
 /**

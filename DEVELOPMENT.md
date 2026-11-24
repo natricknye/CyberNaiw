@@ -97,6 +97,7 @@ CyberNaiwa/
 - Tauri 的 `setIgnoreCursorEvents` 只能整窗开关，不能按像素设置；这里用 `useClickThrough` 每 32ms 读取全局光标，换算到窗口 client 坐标后再做命中检测。
 - 命中角色（ASCII tone 格 / 图片 alpha >16）时关闭穿透；透明边、气泡、HUD、阴影和窗口空白处保持穿透。
 - 窗口移动或缩放后下一帧重新读取 `innerPosition()`；IPC 短暂失败按 500ms 重试，连续 8 次失败才回退为普通矩形窗口，避免启动瞬间的失败把穿透永久卡死。
+- 图片 alpha 命中只缓存当前帧的 canvas；点击穿透轮询会自动经过每一帧，若按 `src` 永久缓存，大笑 25 帧会常驻约 37MB 的额外 canvas。
 - 透明边不能拖动，拖动只能抓角色；这是点击穿透的直接取舍。
 
 ## 角色状态机
@@ -171,12 +172,14 @@ CyberNaiwa/
 ## 本地命令
 
 ```bash
-pnpm install
-pnpm dev                 # 浏览器预览
-pnpm build               # tsc + vite build
-pnpm tauri dev           # 真实桌宠
-pnpm tauri build --bundles nsis
+corepack pnpm install
+corepack pnpm dev                 # 浏览器预览
+corepack pnpm build               # tsc + vite build
+corepack pnpm tauri dev           # 真实桌宠
+corepack pnpm tauri build --bundles nsis
 ```
+
+`src-tauri/tauri.conf.json` 的 `beforeDevCommand` / `beforeBuildCommand` 也使用 `corepack pnpm`，避免子进程 PATH 里没有独立 pnpm 时启动失败。
 
 Rust 检查：
 
@@ -295,4 +298,6 @@ cargo check --manifest-path src-tauri/Cargo.toml
 - 2026-11-17 add the adult `lie` (躺平) action: remove the light ground-shadow line from the two source frames, compose a wide 280×170 canvas with a width-based CSS rule, use 2 frames at 800 ms and a 2600 ms flow; classic uses the wide frames and ASCII aliases to crouch.
 - 2026-11-17 add the adult `wait` and `review` actions from the Codex pet's 6-frame waiting/review APNGs, scaled to 180×195 and bottom-aligned at y=204; insert them after `think`, use 150 ms/frame and 1800 ms flows, and alias them to idle in both ASCII sets.
 - 2026-11-17 rebuild the lie frames at 560×340 with a local OpenCV 5 pipeline: alpha crop, ground-line cleanup, transparent-area inpaint, FSRCNN x4 super-resolution, bilateral filtering, a largest-component signed-distance alpha with a 4 px feather, and a small bottom connected-component cleanup. This removes the silhouette jaggies and white ground blob while preserving the belly, eye highlights and natural contact shadow; the lie image also gets a softer CSS drop shadow.
+- 2026-11-25 switch Tauri's `beforeDevCommand` / `beforeBuildCommand` to `corepack pnpm` so `tauri dev` no longer depends on a separate pnpm on PATH, and replace the per-`src` alpha-canvas map with a single-frame cache so click-through polling does not retain every laugh frame.
+- 2026-11-25 bump the app to 0.2.3 and build a local NSIS installer; the public README release links stay on the already-published 0.2.2.
 - 2026-11-16 bump to 0.2.1 and replace `docs/settings.png` with the 赛博奶蛙 settings screenshot (原色模式/量子模式, no sleep copy, version 0.2.1).

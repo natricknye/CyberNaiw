@@ -317,6 +317,18 @@
 - 输出改为 560×340（2×）画布，底部 y=328（12px 底边距），浏览器显示时再缩小，边缘更平滑；最后的连通域清理只删除底部面积 <200、y>280 的小亮块，保留肚皮、眼睛高光和自然的接触阴影。
 - 预览对比 `_qa/art/lie-display-compare.png`（按实际 231×140 显示尺寸）：旧帧底部白线和台阶状边缘明显，新帧白斑消失、轮廓平滑；剩下的一条很细暗线是贴地接触阴影，不是白线。`pnpm build` 通过。
 
+## 2026-11-25 — Phase 39：启动稳定性与命中缓存优化
+
+- 服务器重启后 `tauri dev` 因 `beforeDevCommand: pnpm dev` 找不到 pnpm 而失败；改为 `corepack pnpm dev` / `corepack pnpm build`，项目不再依赖子进程 PATH 里独立安装的 pnpm。
+- 点击穿透的图片 alpha 命中从按 `src` 永久缓存改为单帧缓存：轮询会自动经过大笑 25 帧，旧实现会额外常驻约 37MB canvas；现在只保留当前帧。
+- `pnpm build` 通过；`corepack pnpm tauri dev` 可正常启动。
+
+## 2026-11-25 — Phase 40：0.2.3 本地构建
+
+- 版本从 0.2.2 升到 0.2.3：`package.json`、`src-tauri/tauri.conf.json`、`src-tauri/Cargo.toml` 和设置页默认版本号同步。README 里已发布的 v0.2.2 Release 链接保持不动，0.2.3 目前是本地构建，不上传未存在的 release。
+- `corepack pnpm tauri build --bundles nsis` 构建本地 NSIS 安装包；产物路径 `src-tauri/target/release/bundle/nsis/`。
+- 这次包含 6 帧待机、招手、等待、检查、躺平、右键菜单、双击大笑、walk/run 静音、系统级透明穿透和 CV 躺平帧。
+
 ## 待人工确认
 
 - 托盘菜单的物理点击仍需在桌面通知区实际点一遍；窗口 show/hide/设置/退出逻辑已实现。
