@@ -57,35 +57,11 @@ for (const key of Object.keys(CLASSIC_ACTION_MODULES).sort()) {
   );
 }
 
-// The adult action stack is shared by all three art forms. Most ASCII actions
-// still reuse the closest existing pose; `beckon` has its own three-frame
-// conversion. Never point a left-click action at happy/click: those frames are
-// the laugh, and the laugh must only be reachable through right-click.
-const ADULT_ASCII_FRAMES: FrameMap = {
-  ...CYBER_NAIWA_FRAMES,
-  run: CYBER_NAIWA_FRAMES.walk,
-  look: CYBER_NAIWA_FRAMES.idle,
-  think: CYBER_NAIWA_FRAMES.idle,
-  wait: CYBER_NAIWA_FRAMES.idle,
-  review: CYBER_NAIWA_FRAMES.idle,
-  clap: CYBER_NAIWA_FRAMES.wave,
-  eat: CYBER_NAIWA_FRAMES.idle,
-  crouch: CYBER_NAIWA_FRAMES.wave,
-  lie: CYBER_NAIWA_FRAMES.crouch,
-};
-
-const ADULT_ASCII_CYBER_FRAMES: FrameMap = {
-  ...CYBER_NAIWA_CYBER_FRAMES,
-  run: CYBER_NAIWA_CYBER_FRAMES.walk,
-  look: CYBER_NAIWA_CYBER_FRAMES.idle,
-  think: CYBER_NAIWA_CYBER_FRAMES.idle,
-  wait: CYBER_NAIWA_CYBER_FRAMES.idle,
-  review: CYBER_NAIWA_CYBER_FRAMES.idle,
-  clap: CYBER_NAIWA_CYBER_FRAMES.wave,
-  eat: CYBER_NAIWA_CYBER_FRAMES.idle,
-  crouch: CYBER_NAIWA_CYBER_FRAMES.wave,
-  lie: CYBER_NAIWA_CYBER_FRAMES.crouch,
-};
+// Every adult action state has its own ASCII frame set. The sequences came
+// from the classic 3D action frames, so walk/run/look/think/wait/review/clap/
+// eat/crouch/lie no longer alias idle or wave. Never point a left-click action
+// at happy/click: those frames are the laugh, and the laugh must only be
+// reachable through right-click.
 
 export type PetSkinKind = "ascii" | "image";
 
@@ -129,9 +105,9 @@ export const PET_SKINS: readonly PetSkin[] = [
     name: "Cyber Naiwa",
     kind: "ascii",
     credit: "Original ASCII art for CyberNaiwa",
-    frames: ADULT_ASCII_FRAMES,
+    frames: CYBER_NAIWA_FRAMES,
     babyFrames: CYBER_NAIWA_BABY_FRAMES,
-    cyberFrames: ADULT_ASCII_CYBER_FRAMES,
+    cyberFrames: CYBER_NAIWA_CYBER_FRAMES,
     cyberBabyFrames: CYBER_NAIWA_CYBER_BABY_FRAMES,
   },
   {

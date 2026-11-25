@@ -1,6 +1,6 @@
 [package]
 name = "cybernaiwa"
-version = "0.2.3"
+version = "0.2.4"
 description = "A cyber ASCII frog that lives on your desktop"
 authors = ["CyberNaiwa contributors"]
 edition = "2024"

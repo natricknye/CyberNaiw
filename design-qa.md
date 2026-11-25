@@ -330,6 +330,13 @@
 - 生产 exe 冒烟：`src-tauri/target/release/cybernaiwa.exe` 启动后 `plugin:app|version` 返回 0.2.3，舞台为成年奶家经典；点击进入 `wave`，资源从打包后的 `/assets/adult-wave-Bl1zlSR9.png` 加载。
 - 这次包含 6 帧待机、招手、等待、检查、躺平、右键菜单、双击大笑、walk/run 静音、系统级透明穿透和 CV 躺平帧。
 
+## 2026-11-25 — Phase 41：奶家经典动作全量映射到 ASCII
+
+- 用户要求原色/量子赛博的 idle 也从经典 6 帧待机复刻，并且每个经典动作都要有独立 ASCII 动作，不再复用 idle/wave。
+- `_qa/convert-classic-actions-to-ascii.py` 批量转换 11 组：idle 6、walk 8、run 8、look/think/wait/review/clap 各 6、eat 5、crouch 8、lie 2；180×210 动作用 `FixedSide 230`、中心 `(90,102)`，躺平用 `FixedSide 560`、中心 `(280,170)`；同时生成 112×70 和 128×80。
+- 两套成年 JSON 现在各有 15 个状态：`naiwa-frames.json` 974,695 bytes，`naiwa-cyber-frames.json` 1,269,935 bytes；`index.ts` 删除所有动作 alias，ASCII 直接用各自帧。idle 间隔从 1200ms 改为 600ms；经典 6 帧和 ASCII 6 帧同步。
+- 对照图 `_qa/art/ascii-actions-sheet.png`：walk/run/look/think/wait/review/clap/eat/crouch/lie 都是独立姿态，lie 是宽低的横躺 ASCII。单击测试 `idle → wave` 正常；`pnpm build` 通过。
+
 ## 待人工确认
 
 - 托盘菜单的物理点击仍需在桌面通知区实际点一遍；窗口 show/hide/设置/退出逻辑已实现。

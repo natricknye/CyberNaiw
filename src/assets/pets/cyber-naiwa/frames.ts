@@ -77,7 +77,7 @@ export function toneForChar(char: string): AsciiTone {
 // Most new adult actions reuse the closest existing ASCII pose but keep their
 // own cadence; `beckon` has a dedicated three-frame wave.
 export const FRAME_INTERVAL_MS: Record<PetAnimationState, number> = {
-  idle: 1200,
+  idle: 600,
   walk: 260,
   happy: 164,
   click: 164,

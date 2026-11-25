@@ -12,12 +12,15 @@ characters to colour tones and declares frame timing. The grids use printable
 ASCII only and were pixel-mapped from official reference images; those ASCII
 reference images are not shipped in this repository.
 
-The adult JSON now covers six base poses: idle/walk/happy/click/wave/beckon; the baby keeps the original five. `beckon`
-has its own three-frame 112×70/128×80 conversion; `index.ts` aliases the other
-newer adult states to the closest existing pose: run→walk, look/think→idle,
-clap→wave, eat→idle, crouch→wave. The laugh (`happy`/`click`) is deliberately
-never used by a left-click action. The HUD label, frame interval and action
-duration still come from the real state, and the baby never uses these aliases.
+The adult JSON now covers 15 action states: idle 6, walk 8, run 8,
+look/think/wait/review/clap 6 each, eat 5, crouch 8, lie 2, happy/click 25 each,
+wave 2, and beckon 3. Every adult action has dedicated 112×70/128×80 frames;
+`index.ts` no longer aliases idle or wave. The six idle frames come from
+`classic/idle-chubby/00–05` with a fixed 230 px crop centred at (90,102) and a
+600 ms cadence; the other actions use the same crop from their classic frames.
+The laugh (`happy`/`click`) is deliberately never used by a left-click action.
+The HUD label, frame interval and action duration still come from the real
+state, and the baby keeps its original five states without these frames.
 Adult `wave` is regenerated from `classic/adult-wave.png` with a fixed 430 px
 crop centred at (148,206), not by padding the old cut frames. The shadowed
 shins use `%` (shade gold) and only the feet keep the brown `|` tone, so the

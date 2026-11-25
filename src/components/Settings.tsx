@@ -12,7 +12,7 @@ import "../styles/settings.css";
 
 export default function Settings() {
   const { settings, loaded, status, error, update } = useSettings();
-  const [version, setVersion] = useState("0.2.3");
+  const [version, setVersion] = useState("0.2.4");
   const [aboutOpen, setAboutOpen] = useState(false);
 
   const strings = UI_STRINGS[settings.language];
