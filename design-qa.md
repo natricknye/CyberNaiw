@@ -326,7 +326,8 @@
 ## 2026-11-25 — Phase 40：0.2.3 本地构建
 
 - 版本从 0.2.2 升到 0.2.3：`package.json`、`src-tauri/tauri.conf.json`、`src-tauri/Cargo.toml` 和设置页默认版本号同步。README 里已发布的 v0.2.2 Release 链接保持不动，0.2.3 目前是本地构建，不上传未存在的 release。
-- `corepack pnpm tauri build --bundles nsis` 构建本地 NSIS 安装包；产物路径 `src-tauri/target/release/bundle/nsis/`。
+- `corepack pnpm tauri build --bundles nsis` 构建本地 NSIS 安装包：`src-tauri/target/release/bundle/nsis/CyberNaiwa_0.2.3_x64-setup.exe`，6,663,820 bytes（约 6.36 MiB）。
+- 生产 exe 冒烟：`src-tauri/target/release/cybernaiwa.exe` 启动后 `plugin:app|version` 返回 0.2.3，舞台为成年奶家经典；点击进入 `wave`，资源从打包后的 `/assets/adult-wave-Bl1zlSR9.png` 加载。
 - 这次包含 6 帧待机、招手、等待、检查、躺平、右键菜单、双击大笑、walk/run 静音、系统级透明穿透和 CV 躺平帧。
 
 ## 待人工确认
