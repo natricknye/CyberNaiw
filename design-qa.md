@@ -343,7 +343,8 @@
 - 发布前发现远端 `dev/master` 停在 v0.2.2 `2b5f47f`，本地 `dev` 是从 v0.2.0 分出来的 rebase 副本；本地 `efde177` 与 `2b5f47f` 树完全一致，用 `git merge -s ours origin/dev` 接上远端历史并保留本地 0.2.3/0.2.4 树。
 - `corepack pnpm build` 通过；`corepack pnpm tauri build --bundles nsis` 生成 `CyberNaiwa_0.2.4_x64-setup.exe`，6,720,512 bytes（约 6.41 MiB），SHA256 `E823947FD8B9CF806FC4496A61F3B5A9574D9F8C9ACF747D8F0A5B24D183794E`。
 - 生产 exe 冒烟：`plugin:app|version` 返回 0.2.4；原色赛博皮肤；idle 轮播 6 个不同哈希（`4740932 / acc04c4e / 59aba968 / 8cf9c8a8 / ec5966c5 / 1e92b185`），与新 JSON 的 6 帧 idle 一一对应；截图 `_qa/art/release-0.2.4-pet.png`。
-- README/README.en 下载链接改为 v0.2.4；GitHub 上原本只有 v0.2.2 tag、没有 v0.2.2 release，v0.2.4 一并补上公开 release（Windows NSIS + CI macOS arm64 DMG）。
+- README/README.en 下载链接改为 v0.2.4；GitHub 上原本只有 v0.2.2 tag、没有 v0.2.2 release，v0.2.4 已补上公开 release（Windows NSIS + CI macOS arm64 DMG）。
+- 已推送 `dev`、快进 `master`、推送 tag `v0.2.4`；tag CI run `45537130295` 的 Windows/macOS 两个 job 均成功。release 资产回下载校验通过：Windows 6,720,512 bytes / `E823947FD8B9CF806FC4496A61F3B5A9574D9F8C9ACF747D8F0A5B24D183794E`，macOS DMG 9,603,225 bytes / `0603C8AB7FA6B50B3085D257E838975C831D670B65A253A80817A866346B4EF1`；地址 `https://github.com/natricknye/CyberNaiw/releases/tag/v0.2.4`。
 
 ## 待人工确认
 
