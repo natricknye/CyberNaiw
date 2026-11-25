@@ -337,6 +337,14 @@
 - 两套成年 JSON 现在各有 15 个状态：`naiwa-frames.json` 974,695 bytes，`naiwa-cyber-frames.json` 1,269,935 bytes；`index.ts` 删除所有动作 alias，ASCII 直接用各自帧。idle 间隔从 1200ms 改为 600ms；经典 6 帧和 ASCII 6 帧同步。
 - 对照图 `_qa/art/ascii-actions-sheet.png`：walk/run/look/think/wait/review/clap/eat/crouch/lie 都是独立姿态，lie 是宽低的横躺 ASCII。单击测试 `idle → wave` 正常；`pnpm build` 通过。
 
+## 2026-11-25 — Phase 42：0.2.4 发布
+
+- 0.2.3 的本地安装包已经存在且冒烟过，ASCII 全量映射后再复用 0.2.3 会出现“同版本不同二进制”，因此版本升到 0.2.4：`package.json`、`src-tauri/tauri.conf.json`、`src-tauri/Cargo.toml`、`Cargo.lock`、设置页默认版本同步。
+- 发布前发现远端 `dev/master` 停在 v0.2.2 `2b5f47f`，本地 `dev` 是从 v0.2.0 分出来的 rebase 副本；本地 `efde177` 与 `2b5f47f` 树完全一致，用 `git merge -s ours origin/dev` 接上远端历史并保留本地 0.2.3/0.2.4 树。
+- `corepack pnpm build` 通过；`corepack pnpm tauri build --bundles nsis` 生成 `CyberNaiwa_0.2.4_x64-setup.exe`，6,720,512 bytes（约 6.41 MiB），SHA256 `E823947FD8B9CF806FC4496A61F3B5A9574D9F8C9ACF747D8F0A5B24D183794E`。
+- 生产 exe 冒烟：`plugin:app|version` 返回 0.2.4；原色赛博皮肤；idle 轮播 6 个不同哈希（`4740932 / acc04c4e / 59aba968 / 8cf9c8a8 / ec5966c5 / 1e92b185`），与新 JSON 的 6 帧 idle 一一对应；截图 `_qa/art/release-0.2.4-pet.png`。
+- README/README.en 下载链接改为 v0.2.4；GitHub 上原本只有 v0.2.2 tag、没有 v0.2.2 release，v0.2.4 一并补上公开 release（Windows NSIS + CI macOS arm64 DMG）。
+
 ## 待人工确认
 
 - 托盘菜单的物理点击仍需在桌面通知区实际点一遍；窗口 show/hide/设置/退出逻辑已实现。
